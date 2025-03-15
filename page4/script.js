@@ -23,4 +23,13 @@ document.getElementById('loginForm').addEventListener('submit', function(event) 
         message.style.color = 'red';
         
     }
+    if (username ==='mayank' && password === 'mayank') {
+        message.textContent = 'Login successful!';
+        message.style.color = 'green';
+        window.location.href = 'https://www.youtube.com/shorts/wGiDmoBN_NA'; // Redirect to Google
+    } else {
+        message.textContent = 'Invalid username or password';
+        message.style.color = 'red';
+        
+    }
 });
