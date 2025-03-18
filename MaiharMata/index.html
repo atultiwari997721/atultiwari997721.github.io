@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TESTING T-2</title>
+    <style>
+        body {
+            background-image:url("bci.png");
+            font-family: Arial, sans-serif;
+            text-align: center;
+            
+        }
+        #searchBar {
+            padding: 6px;
+            width: 25%;
+            margin: 10px auto;
+            display: block;
+            font-size: 12px;
+            border: 4px solid #5a0848;
+            border-radius: 10px;
+            outline: none;
+            transition: 0.3s;
+            cursor: pointer;
+            background-color: #d284cf;
+        }
+        #searchBar:focus {
+            border-color: #6ad2d2;
+        }
+        @media (max-width: 768px) {
+            #searchBar {
+                width: 50%;
+                font-size: 14px;
+            }
+        }
+        @media (max-width: 480px) {
+            #searchBar {
+                width: 70%;
+                font-size: 16px;
+            }
+        }
+        .gallery {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 25px;
+            padding: 20px;
+        }
+        .photo {
+            width: 300px;
+            height: 600px;
+            object-fit: cover;
+            border-radius: 15px;
+            cursor: pointer;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+        @media (max-width: 768px) {
+            .photo {
+                width: 250px;
+                height: 250px;
+            }
+        }
+        @media (max-width: 480px) {
+            .photo {
+                width: 200px;
+                height: 200px;
+            }
+        }
+        .photo:hover {
+            transform: scale(1.1);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+        .fullscreen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: rgba(0, 0, 0, 0.8);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            animation: fadeIn 0.3s;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        .fullscreen img {
+            max-width: 90%;
+            max-height: 80%;
+            border: 5px solid white;
+            border-radius: 15px;
+            position: relative;
+            animation: glow 1.5s infinite alternate;
+        }
+        @keyframes glow {
+            0% { box-shadow: 0 0 30px rgba(8, 167, 111, 0.8); }
+            100% { box-shadow: 0 0 50px rgb(8, 157, 95); }
+        }
+        .glitter {
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            background: radial-gradient(circle, rgb(181, 179, 35) 0%, rgba(169, 0, 0, 0) 70%);
+            border-radius: 50%;
+            opacity: 0.9;
+            animation: fall 10s linear infinite;
+        }
+        @keyframes fall {
+            0% { transform: translateY(-10vh) translateX(0); opacity: 1; }
+            100% { transform: translateY(100vh) translateX(20px); opacity: 0; }
+        }
+        .download-btn {
+            margin-top: 15px;
+            background: #7bc209;
+            color: white;
+            padding: 12px 20px;
+            border: none;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: 0.3s;
+        }
+        .download-btn:hover {
+            background: #ff3e55;
+        }
+        .close-btn {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: white;
+            color: black;
+            padding: 10px;
+            border: none;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 18px;
+        }
+    </style>
+</head>
+<body>
+    <input type="date" id="searchBar" onclick="this.showPicker()">
+    <div class="gallery" id="gallery">
+        <img src="maihar-mata-2025-02-10.jpeg" class="photo" data-date="2025-02-10">
+        <img src="maihar-mata-2025-02-11.jpeg" class="photo" data-date="2025-02-11">
+        <img src="maihar-mata-2025-02-12.jpeg" class="photo" data-date="2025-02-12">
+        <img src="maihar-mata-2025-02-13.jpeg" class="photo" data-date="2025-02-13">
+        <img src="maihar-mata-2025-02-14.jpeg" class="photo" data-date="2025-02-14">
+        <img src="maihar-mata-2025-02-15.jpeg" class="photo" data-date="2025-02-15">
+        <img src="maihar-mata-2025-02-16.jpeg" class="photo" data-date="2025-02-16">
+        <img src="maihar-mata-2025-02-17.jpeg" class="photo" data-date="2025-02-17">
+        <img src="maihar-mata-2025-02-18.jpeg" class="photo" data-date="2025-02-18">
+        <img src="maihar-mata-2025-02-19.jpeg" class="photo" data-date="2025-02-19">
+        <img src="maihar-mata-2025-02-20.jpeg" class="photo" data-date="2025-02-20">
+        <img src="maihar-mata-2025-02-21.jpeg" class="photo" data-date="2025-02-21">
+        <img src="maihar-mata-2025-02-22.jpeg" class="photo" data-date="2025-02-22">
+        <img src="maihar-mata-2025-02-23.jpeg" class="photo" data-date="2025-02-23">
+        <img src="maihar-mata-2025-02-24.jpeg" class="photo" data-date="2025-02-24">
+        <img src="maihar-mata-2025-02-25.jpeg" class="photo" data-date="2025-02-25">
+        <img src="maihar-mata-2025-02-26.jpeg" class="photo" data-date="2025-02-26">
+        <img src="maihar-mata-2025-02-27.jpeg" class="photo" data-date="2025-02-27">
+        <img src="maihar-mata-2025-02-28.jpeg" class="photo" data-date="2025-02-28">
+        <img src="maihar-mata-2025-03-01.jpeg" class="photo" data-date="2025-03-01">
+        <img src="maihar-mata-2025-03-02.jpeg" class="photo" data-date="2025-03-02">
+        <img src="maihar-mata-2025-03-03.jpeg" class="photo" data-date="2025-03-03">
+        <img src="maihar-mata-2025-03-04.jpeg" class="photo" data-date="2025-03-04">
+        <img src="maihar-mata-2025-03-05.jpeg" class="photo" data-date="2025-03-05">
+        <img src="maihar-mata-2025-03-06.jpeg" class="photo" data-date="2025-03-06">
+        <img src="maihar-mata-2025-03-07.jpeg" class="photo" data-date="2025-03-07">
+        <img src="maihar-mata-2025-03-08.jpeg" class="photo" data-date="2025-03-08">
+        <img src="maihar-mata-2025-03-09.jpeg" class="photo" data-date="2025-03-09">
+        <img src="maihar-mata-2025-03-10.jpeg" class="photo" data-date="2025-03-10">
+        <img src="maihar-mata-2025-03-11.jpeg" class="photo" data-date="2025-03-11">
+        <img src="maihar-mata-2025-03-12.jpeg" class="photo" data-date="2025-03-12">
+        <img src="maihar-mata-2025-03-13.jpeg" class="photo" data-date="2025-03-13">
+        <img src="maihar-mata-2025-03-14.jpeg" class="photo" data-date="2025-03-14">
+        <img src="maihar-mata-2025-03-15.jpeg" class="photo" data-date="2025-03-15">
+        <img src="maihar-mata-2025-03-16.jpeg" class="photo" data-date="2025-03-16">
+        <img src="maihar-mata-2025-03-17.jpeg" class="photo" data-date="2025-03-17">
+        <img src="maihar-mata-2025-03-18.jpeg" class="photo" data-date="2025-03-18">
+        <img src="maihar-mata-2025-03-19.jpeg" class="photo" data-date="2025-03-19">
+        <img src="maihar-mata-2025-03-20.jpeg" class="photo" data-date="2025-03-20">
+        <img src="maihar-mata-2025-03-21.jpeg" class="photo" data-date="2025-03-21">
+        <img src="maihar-mata-2025-03-22.jpeg" class="photo" data-date="2025-03-22">
+        <img src="maihar-mata-2025-03-23.jpeg" class="photo" data-date="2025-03-23">
+        <img src="maihar-mata-2025-03-24.jpeg" class="photo" data-date="2025-03-24">
+        <img src="maihar-mata-2025-03-25.jpeg" class="photo" data-date="2025-03-25">
+        <img src="maihar-mata-2025-03-26.jpeg" class="photo" data-date="2025-03-26">
+        <img src="maihar-mata-2025-03-27.jpeg" class="photo" data-date="2025-03-27">
+        <img src="maihar-mata-2025-03-28.jpeg" class="photo" data-date="2025-03-28">
+        <img src="maihar-mata-2025-03-29.jpeg" class="photo" data-date="2025-03-29">
+        <img src="maihar-mata-2025-03-30.jpeg" class="photo" data-date="2025-03-30">
+        <img src="maihar-mata-2025-03-31.jpeg" class="photo" data-date="2025-03-31">
+
+    </div>
+
+    <div id="fullscreenContainer" class="fullscreen" style="display: none;">
+        <button class="close-btn" onclick="closeFullscreen()">×</button>
+        <img id="fullscreenImage" src="" alt="Full Screen Image">
+        <a id="downloadLink" class="download-btn" download>Download</a>
+    </div>
+
+    <script>
+        document.getElementById('searchBar').addEventListener('input', function() {
+            let searchValue = this.value.trim();
+            document.querySelectorAll('.photo').forEach(photo => {
+                photo.style.display = photo.getAttribute('data-date') === searchValue || searchValue === '' ? 'block' : 'none';
+            });
+        });
+        document.querySelectorAll('.photo').forEach(photo => {
+            photo.addEventListener('click', function() {
+                let fullscreenContainer = document.getElementById('fullscreenContainer');
+                let fullscreenImage = document.getElementById('fullscreenImage');
+                let downloadLink = document.getElementById('downloadLink');
+                
+                fullscreenImage.src = this.src;
+                downloadLink.href = this.src;
+                downloadLink.setAttribute('download', this.src.split('/').pop());
+                fullscreenContainer.style.display = 'flex';
+
+                for (let i = 0; i < 50; i++) {
+                    let glitter = document.createElement('div');
+                    glitter.classList.add('glitter');
+                    glitter.style.left = Math.random() * 100 + 'vw';
+                    glitter.style.animationDuration = Math.random() * 3 + 2 + 's';
+                    fullscreenContainer.appendChild(glitter);
+                    setTimeout(() => glitter.remove(), 5000);
+                }
+            });
+        });
+        
+        function closeFullscreen() {
+            let fullscreenContainer = document.getElementById('fullscreenContainer');
+            fullscreenContainer.style.display = 'none';
+            fullscreenContainer.innerHTML = '<button class="close-btn" onclick="closeFullscreen()">×</button><img id="fullscreenImage" src="" alt="Full Screen Image"><a id="downloadLink" class="download-btn" download>Download</a>';
+        }
+    </script>
+</body>
+</html>
