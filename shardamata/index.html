@@ -204,6 +204,12 @@
     </div>
 
     <script>
+         document.getElementById('searchBar').addEventListener('input', function() {
+            let searchValue = this.value.trim();
+            document.querySelectorAll('.photo').forEach(photo => {
+                photo.style.display = photo.getAttribute('data-date') === searchValue || searchValue === '' ? 'block' : 'none';
+            });
+        });
         document.querySelectorAll('.photo').forEach(photo => {
             photo.addEventListener('click', function() {
                 let fullscreenContainer = document.getElementById('fullscreenContainer');
