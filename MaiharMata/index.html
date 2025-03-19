@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TESTING T-2</title>
+    <title>Maihar Mata</title>
     <style>
         body {
             background-image:url("bci.png");
@@ -204,7 +204,7 @@
     </div>
 
     <script>
-        document.getElementById('searchBar').addEventListener('input', function() {
+         document.getElementById('searchBar').addEventListener('input', function() {
             let searchValue = this.value.trim();
             document.querySelectorAll('.photo').forEach(photo => {
                 photo.style.display = photo.getAttribute('data-date') === searchValue || searchValue === '' ? 'block' : 'none';
