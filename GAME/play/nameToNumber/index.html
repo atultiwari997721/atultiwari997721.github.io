@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Name Number Calculator</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f2f2f2;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+    }
+
+    .container {
+      background: white;
+      padding: 30px;
+      border-radius: 15px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+      text-align: center;
+    }
+
+    input {
+      padding: 10px;
+      margin-top: 10px;
+      width: 200px;
+      font-size: 16px;
+    }
+
+    button {
+      margin-top: 10px;
+      padding: 10px 20px;
+      font-size: 16px;
+      background: #007bff;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+    }
+
+    .result {
+      margin-top: 20px;
+      font-size: 18px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Name to Number</h1>
+    <input type="text" id="nameInput" placeholder="Enter your name" />
+    <button onclick="calculateNameValue()">Calculate</button>
+    <div class="result" id="resultBox"></div>
+  </div>
+
+  <script>
+    function calculateNameValue() {
+      const name = document.getElementById('nameInput').value;
+
+      fetch('http://127.0.0.1:5000/calculate', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ name })
+      })
+      .then(response => response.json())
+      .then(data => {
+        document.getElementById('resultBox').innerText = 
+          `Total value: ${data.total}, Final digit: ${data.digit}`;
+      })
+      .catch(err => {
+        document.getElementById('resultBox').innerText = 'Error: ' + err;
+      });
+    }
+  </script>
+</body>
+</html>
