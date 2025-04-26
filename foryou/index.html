@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>For Puchuu 🌸</title>
+  <title>For You</title>
   <style>
     body {
       margin: 0;
@@ -16,12 +16,13 @@
       height: 100vh;
       font-family: 'Poppins', sans-serif;
       overflow: hidden;
+      flex-direction: column;
     }
     .container {
       background: rgba(255, 255, 255, 0.8);
       padding: 30px;
       border-radius: 20px;
-      box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+      box-shadow: 0 8px 32px rgba(31, 38, 135, 0.37);
       text-align: center;
       backdrop-filter: blur(8px);
       transition: all 0.5s ease;
@@ -46,26 +47,27 @@
       cursor: pointer;
       width: 100%;
       transition: background 0.3s;
+      margin-top: 20px;
     }
     button:hover {
       background: #ff1493;
     }
-    #videoContainer, #message {
+    #videoContainer, #message, #thankYouMessage, #forgiveButtonContainer {
       display: none;
       flex-direction: column;
       align-items: center;
       justify-content: center;
       text-align: center;
       width: 90%;
+      margin-top: 20px;
     }
     video {
       width: 100%;
       max-width: 500px;
       border-radius: 20px;
-      margin-bottom: 20px;
     }
-    #message {
-      font-size: 5em;
+    #message, #thankYouMessage {
+      font-size: 4em;
       color: #f0d27f;
       animation: fadeIn 3s forwards;
       padding: 20px;
@@ -96,8 +98,16 @@
   </video>
 </div>
 
+<div id="forgiveButtonContainer">
+  <button onclick="forgive()">Jao Maf Kiya... Piggi 🌸</button>
+</div>
+
+<div id="thankYouMessage">
+  🌸THANKUUU PUCHUU 🌸
+</div>
+
 <script>
-  const correctPassword = "puchu123"; // <-- Set your password here!
+  const correctPassword = "puchuu123"; // <-- Set your password here!
 
   function checkPassword() {
     const input = document.getElementById('passwordInput').value;
@@ -111,11 +121,20 @@
         const videoContainer = document.getElementById('videoContainer');
         videoContainer.style.display = 'flex';
         const video = document.getElementById('videoPlayer');
-        video.play();
+
+        video.onended = function() {
+          videoContainer.style.display = 'none';
+          document.getElementById('forgiveButtonContainer').style.display = 'flex';
+        };
       }, 3000); // Show "Sorry Puchuu" for 3 seconds
     } else {
       alert('Wrong password! Try again.');
     }
+  }
+
+  function forgive() {
+    document.getElementById('forgiveButtonContainer').style.display = 'none';
+    document.getElementById('thankYouMessage').style.display = 'flex';
   }
 </script>
 
