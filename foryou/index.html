@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>For You</title>
+  <title>For You🌸</title>
   <style>
     body {
       margin: 0;
@@ -67,11 +67,11 @@
       border-radius: 20px;
     }
     #message, #thankYouMessage {
-      font-size: 4em;
-      color: #f0d27f;
-      animation: fadeIn 3s forwards;
-      padding: 20px;
-    }
+        font-size: 5em;
+        color: #f0d27f;
+        animation: fadeIn 3s forwards;
+        padding: 20px;
+      }
     @keyframes fadeIn {
       from { opacity: 0; }
       to { opacity: 1; }
@@ -92,22 +92,22 @@
 </div>
 
 <div id="videoContainer">
-  <video id="videoPlayer" controls autoplay>
+  <video id="videoPlayer" controls playsinline>
     <source src="sorry puchu.mp4" type="video/mp4">
     Your browser does not support the video tag.
   </video>
 </div>
 
 <div id="forgiveButtonContainer">
-  <button onclick="forgive()">Jao Maf Kiya... Piggi 🌸</button>
+  <button onclick="forgive()">Jao Maf Kiya PIGGIII...🌸</button>
 </div>
 
 <div id="thankYouMessage">
-  🌸THANKUUU PUCHUU 🌸
+    🌸 THANKUUU PUCHUU 🌸
 </div>
 
 <script>
-  const correctPassword = "puchuu123"; // <-- Set your password here!
+  const correctPassword = "puchu123"; // <-- Set your password here!
 
   function checkPassword() {
     const input = document.getElementById('passwordInput').value;
@@ -121,6 +121,7 @@
         const videoContainer = document.getElementById('videoContainer');
         videoContainer.style.display = 'flex';
         const video = document.getElementById('videoPlayer');
+        video.play(); // Force video to play with sound
 
         video.onended = function() {
           videoContainer.style.display = 'none';
