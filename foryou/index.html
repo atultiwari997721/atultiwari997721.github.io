@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>For Puchuu 🌸</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      background: url('https://wallsdesk.com/wp-content/uploads/2017/01/Blue-Flowers-Wallpapers-HD.jpg') no-repeat center center fixed;
+      background-size: cover;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      font-family: 'Poppins', sans-serif;
+      overflow: hidden;
+    }
+    .container {
+      background: rgba(255, 255, 255, 0.8);
+      padding: 30px;
+      border-radius: 20px;
+      box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+      text-align: center;
+      backdrop-filter: blur(8px);
+      transition: all 0.5s ease;
+      width: 90%;
+      max-width: 400px;
+    }
+    input[type="password"] {
+      padding: 12px;
+      border: none;
+      border-radius: 10px;
+      margin-bottom: 20px;
+      width: 100%;
+      font-size: 18px;
+    }
+    button {
+      padding: 12px 24px;
+      background: #ff69b4;
+      border: none;
+      border-radius: 20px;
+      color: white;
+      font-size: 18px;
+      cursor: pointer;
+      width: 100%;
+      transition: background 0.3s;
+    }
+    button:hover {
+      background: #ff1493;
+    }
+    #videoContainer, #message {
+      display: none;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      width: 90%;
+    }
+    video {
+      width: 100%;
+      max-width: 500px;
+      border-radius: 20px;
+      margin-bottom: 20px;
+    }
+    #message {
+      font-size: 5em;
+      color: #f0d27f;
+      animation: fadeIn 3s forwards;
+      padding: 20px;
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="container" id="loginContainer">
+  <h2>Enter the Secret Password 🌸</h2>
+  <input type="password" id="passwordInput" placeholder="Password">
+  <br>
+  <button onclick="checkPassword()">Submit</button>
+</div>
+
+<div id="message">
+  Sorry Puchuu 💖
+</div>
+
+<div id="videoContainer">
+  <video id="videoPlayer" controls autoplay>
+    <source src="sorry puchu.mp4" type="video/mp4">
+    Your browser does not support the video tag.
+  </video>
+</div>
+
+<script>
+  const correctPassword = "puchu123"; // <-- Set your password here!
+
+  function checkPassword() {
+    const input = document.getElementById('passwordInput').value;
+    if (input === correctPassword) {
+      document.getElementById('loginContainer').style.display = 'none';
+      const message = document.getElementById('message');
+      message.style.display = 'flex';
+
+      setTimeout(() => {
+        message.style.display = 'none';
+        const videoContainer = document.getElementById('videoContainer');
+        videoContainer.style.display = 'flex';
+        const video = document.getElementById('videoPlayer');
+        video.play();
+      }, 3000); // Show "Sorry Puchuu" for 3 seconds
+    } else {
+      alert('Wrong password! Try again.');
+    }
+  }
+</script>
+
+</body>
+</html>
