@@ -28,7 +28,7 @@ function proceedFurther() {
   const total = cart.reduce((sum, item) => sum + item.price, 0);
   message += `\nTotal: $${total.toFixed(2)}`;
   const encodedMessage = encodeURIComponent(message);
-  const whatsappNumber = "+917828706954"; // Use country code, e.g., 911234567890 for India
+  const whatsappNumber = ""; // Use country code, e.g., 911234567890 for India
   const whatsappURL = `https://wa.me/${whatsappNumber}?text=${encodedMessage}`;
 
 
