@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Amazon Clone</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <header>
+    <h1>Amazon Clone</h1>
+    <a href="cart.html">🛒 Cart</a>
+  </header>
+
+  <nav class="category-nav">
+    <button onclick="showCategory('Electronics')">Electronics</button>
+    <button onclick="showCategory('Clothing')">Clothing</button>
+    <button onclick="showCategory('Books')">Books</button>
+  </nav>
+
+  <main id="products-container" class="product-container"></main>
+
+  <script src="products.js"></script>
+  <script src="script.js"></script>
+</body>
+</html>
