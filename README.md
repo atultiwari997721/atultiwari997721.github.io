@@ -11,5 +11,5 @@
 <h1><a href="https://atultiwari997721.github.io/text-to-speech/index.html">Text To Speech</a></h1>
 <h1><a href="https://atultiwari997721.github.io/text-to-speechForPhone/index.html">Text To Speech For Phone</a></h1>
 <h1><a href="https://atultiwari997721.github.io/passwordManager">Password Manager</a></h1>
-<h1><a href="https://atultiwari997721.github.io/website">Website"s Impotant Links </a></h1>
+<h1><a href="https://atultiwari997721.github.io/websites">Website"s Impotant Links </a></h1>
 
