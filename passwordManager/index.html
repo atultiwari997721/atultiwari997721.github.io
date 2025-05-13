@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Secure Password Vault</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: #eef3f7;
+      margin: 0;
+      padding: 0;
+    }
+
+    .container {
+      max-width: 550px;
+      margin: 4rem auto;
+      background: white;
+      padding: 2rem;
+      border-radius: 16px;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+    }
+
+    h2 {
+      text-align: center;
+      color: #2c3e50;
+    }
+
+    input {
+      width: 100%;
+      padding: 0.75rem;
+      margin: 0.5rem 0;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      font-size: 1rem;
+    }
+
+    button {
+      width: 100%;
+      padding: 0.75rem;
+      margin-top: 0.75rem;
+      background-color: #3498db;
+      color: white;
+      font-size: 1rem;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background-color: #2980b9;
+    }
+
+    .entry {
+      background: #f5f9fc;
+      margin-top: 1rem;
+      padding: 0.75rem;
+      border-radius: 10px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.06);
+    }
+
+    .entry .label {
+      font-weight: bold;
+      color: #2c3e50;
+      font-size: 1.1rem;
+      margin-bottom: 0.25rem;
+    }
+
+    .entry .actions {
+      margin-top: 0.5rem;
+      display: flex;
+      gap: 10px;
+    }
+
+    .entry button {
+      width: auto;
+      padding: 0.4rem 0.8rem;
+      font-size: 0.9rem;
+    }
+
+    .entry button.remove {
+      background-color: #e74c3c;
+    }
+
+    .entry button.remove:hover {
+      background-color: #c0392b;
+    }
+
+    .entry button.copy {
+      background-color: #27ae60;
+    }
+
+    .entry button.copy:hover {
+      background-color: #1e874e;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h2>🔐 Secure Password Vault</h2>
+    <input type="text" id="label" placeholder="Website (e.g. Gmail)">
+    <input type="password" id="password" placeholder="Password">
+    <input type="password" id="master" placeholder="Master Password">
+    <button onclick="addPassword()">Add Password</button>
+
+    <div id="passwordList"></div>
+  </div>
+
+  <script>
+    window.onload = loadPasswords;
+
+    function loadPasswords() {
+      const list = document.getElementById("passwordList");
+      list.innerHTML = '';
+      const stored = JSON.parse(localStorage.getItem("passwords")) || [];
+      stored.forEach((entry, index) => renderPassword(entry, index));
+    }
+
+    function addPassword() {
+      const label = document.getElementById('label').value.trim();
+      const password = document.getElementById('password').value;
+      const master = document.getElementById('master').value;
+
+      if (!label || !password || !master) {
+        alert("Please fill in all fields.");
+        return;
+      }
+
+      const encryptedPassword = CryptoJS.AES.encrypt(password, master).toString();
+
+      const stored = JSON.parse(localStorage.getItem("passwords")) || [];
+      stored.push({ label, encryptedPassword });
+      localStorage.setItem("passwords", JSON.stringify(stored));
+
+      loadPasswords();
+
+      // Clear inputs
+      document.getElementById('label').value = '';
+      document.getElementById('password').value = '';
+      document.getElementById('master').value = '';
+    }
+
+    function renderPassword(entry, index) {
+      const div = document.createElement('div');
+      div.className = 'entry';
+
+      const labelDiv = document.createElement('div');
+      labelDiv.className = 'label';
+      labelDiv.textContent = entry.label;
+
+      const hiddenText = document.createElement('div');
+      hiddenText.style.color = '#888';
+      hiddenText.textContent = "Password: •••••••••";
+
+      const actions = document.createElement('div');
+      actions.className = 'actions';
+
+      const copyBtn = document.createElement('button');
+      copyBtn.textContent = "Copy";
+      copyBtn.className = 'copy';
+      copyBtn.onclick = function () {
+        const auth = prompt("Enter master password to copy:");
+        try {
+          const decrypted = CryptoJS.AES.decrypt(entry.encryptedPassword, auth);
+          const originalPassword = decrypted.toString(CryptoJS.enc.Utf8);
+
+          if (!originalPassword) {
+            alert("❌ Incorrect master password.");
+            return;
+          }
+
+          navigator.clipboard.writeText(originalPassword).then(() => {
+            alert("✅ Password copied to clipboard!");
+          });
+        } catch (e) {
+          alert("Decryption error.");
+        }
+      };
+
+      const removeBtn = document.createElement('button');
+      removeBtn.textContent = "Remove";
+      removeBtn.className = 'remove';
+      removeBtn.onclick = function () {
+        if (confirm("Delete this password?")) {
+          const stored = JSON.parse(localStorage.getItem("passwords")) || [];
+          stored.splice(index, 1);
+          localStorage.setItem("passwords", JSON.stringify(stored));
+          loadPasswords();
+        }
+      };
+
+      actions.appendChild(copyBtn);
+      actions.appendChild(removeBtn);
+
+      div.appendChild(labelDiv);
+      div.appendChild(hiddenText);
+      div.appendChild(actions);
+
+      document.getElementById('passwordList').appendChild(div);
+    }
+  </script>
+</body>
+</html>
