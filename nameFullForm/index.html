@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Name Full Form Generator</title>
+  <style>
+    :root {
+      --bg-light: #ffffff;
+      --text-light: #333;
+      --primary-light: #66a6ff;
+
+      --bg-dark: #1e1e1e;
+      --text-dark: #eee;
+      --primary-dark: #4f83cc;
+    }
+
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(135deg, #89f7fe 0%, #66a6ff 100%);
+      color: var(--text-light);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      transition: all 0.3s ease;
+    }
+
+    .dark-mode {
+      background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
+      color: var(--text-dark);
+    }
+
+    .container {
+      background: var(--bg-light);
+      padding: 2rem;
+      border-radius: 20px;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+      text-align: center;
+      max-width: 500px;
+      width: 90%;
+      transition: all 0.3s ease;
+    }
+
+    .dark-mode .container {
+      background: #2c2c2c;
+      color: var(--text-dark);
+    }
+
+    h1 {
+      margin-bottom: 1rem;
+      font-size: 1.9rem;
+    }
+
+    input {
+      padding: 0.9rem 1rem;
+      width: 100%;
+      margin-bottom: 1rem;
+      border: 2px solid #ddd;
+      border-radius: 10px;
+      font-size: 1.1rem;
+    }
+
+    button {
+      padding: 0.9rem 1.5rem;
+      background-color: var(--primary-light);
+      color: white;
+      border: none;
+      border-radius: 10px;
+      font-size: 1.1rem;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+      width: 100%;
+      margin-bottom: 1rem;
+    }
+
+    .dark-mode button {
+      background-color: var(--primary-dark);
+    }
+
+    button:hover {
+      opacity: 0.9;
+    }
+
+    .dark-toggle-btn {
+      background-color: #444;
+      color: white;
+      border: none;
+      margin-top: 0.5rem;
+      padding: 0.7rem 1rem;
+      border-radius: 8px;
+      font-size: 0.95rem;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+
+    .dark-mode .dark-toggle-btn {
+      background-color: #ddd;
+      color: #111;
+    }
+
+    .result {
+      margin-top: 1.5rem;
+      font-size: 1.1rem;
+      font-weight: bold;
+      word-wrap: break-word;
+    }
+
+    @media (max-width: 600px) {
+      h1 {
+        font-size: 1.1rem;
+      }
+
+      input, button {
+        font-size: 1rem;
+        padding: 0.8rem;
+      }
+
+      .result {
+        font-size: 1rem;
+      }
+
+      .dark-toggle-btn {
+        font-size: 0.9rem;
+        padding: 0.6rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>✨ Name Full Form Generator ✨</h1>
+    <input type="text" id="nameInput" placeholder="Enter your name" />
+    <button onclick="generateFullForm()">Generate</button>
+    <div class="result" id="result"></div>
+    <button class="dark-toggle-btn" onclick="toggleDarkMode()">🌙 Toggle Dark Mode</button>
+  </div>
+
+  <script>
+    const adjectivePool = {
+      A:  ["Amazing", "Awesome", "Admirable", "Affectionate", "Angelic", "Appreciative", "Ambitious", "Attractive", "Artistic", "Authentic", "Altruistic", "Able","Agreeablee", "Abundant", "Amicable","Active","Adaptable","Astounding","Auspicious"],
+      B: ["Brilliant", "Bold", "Blessed", "Beautiful"],
+      C: ["Creative", "Charming", "Cheerful", "Confident"],
+      D: ["Dazzling", "Dedicated", "Dynamic", "Delightful"],
+      E: ["Elegant", "Energetic", "Empathetic", "Excellent"],
+      F: ["Fantastic", "Friendly", "Fearless", "Faithful"],
+      G: ["Graceful", "Generous", "Genuine", "Gentle"],
+      H: ["Honest", "Hopeful", "Humble", "Helpful"],
+      I: ["Inspiring", "Imaginative", "Innovative", "Idealistic"],
+      J: ["Joyful", "Just", "Jovial", "Judicious"],
+      K: ["Kind-hearted", "Knowledgeable", "Keen", "Kind"],
+      L: ["Lovely", "Loyal", "Lively", "Logical"],
+      M: ["Motivated", "Mindful", "Magical", "Modest"],
+      N: ["Noble", "Nice", "Neat", "Nurturing"],
+      O: ["Outstanding", "Optimistic", "Original", "Observant"],
+      P: ["Passionate", "Peaceful", "Positive", "Patient"],
+      Q: ["Quick-witted", "Quiet", "Quirky", "Qualified"],
+      R: ["Radiant", "Reliable", "Resilient", "Respectful"],
+      S: ["Smart", "Sincere", "Strong", "Supportive"],
+      T: ["Talented", "Trustworthy", "Thankful", "Thoughtful"],
+      U: ["Unique", "Understanding", "Upbeat", "Unstoppable"],
+      V: ["Valiant", "Vibrant", "Versatile", "Virtuous"],
+      W: ["Wise", "Warm-hearted", "Witty", "Welcoming"],
+      X: ["Xenial", "Xtraordinary", "Xpressive", "Xtatic"],
+      Y: ["Youthful", "Yearning", "Yielding", "Yare"],
+      Z: ["Zestful", "Zealous", "Zany", "Zappy"]
+    };
+
+    function getRandomAdjective(letter) {
+      const options = adjectivePool[letter];
+      if (!options) return "(No word found)";
+      return options[Math.floor(Math.random() * options.length)];
+    }
+
+    function generateFullForm() {
+      const name = document.getElementById('nameInput').value.trim().toUpperCase();
+      const resultDiv = document.getElementById('result');
+
+      if (!name) {
+        resultDiv.innerText = "Please enter your name!";
+        return;
+      }
+
+      const specialNames = {
+        "SHREYA": "Oww Full form kya karogi jaan kar ganda he matlab hota hai aap rahne dijiye",
+        "OPENAI": "🤖 Powered by intelligence and innovation. Welcome, AI lover!"
+      };
+
+      if (specialNames[name]) {
+        resultDiv.innerHTML = specialNames[name];
+        return;
+      }
+
+      let fullForm = '';
+      for (let char of name) {
+        const word = getRandomAdjective(char);
+        fullForm += `<div><b>${char}</b> - ${word}</div>`;
+      }
+
+      resultDiv.innerHTML = fullForm;
+    }
+
+    function toggleDarkMode() {
+      document.body.classList.toggle("dark-mode");
+    }
+  </script>
+</body>
+</html>
