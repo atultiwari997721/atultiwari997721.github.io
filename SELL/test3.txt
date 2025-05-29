@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sell Your Product - Details</title>
+    <link rel="stylesheet" href="style.css"> </head>
+<body>
+    <header class="detail-header">
+        <h1>Sell Your Product</h1>
+        <p>Please confirm details and provide your contact information.</p>
+    </header>
+
+    <main class="product-detail-container">
+        <section class="product-detail-info">
+            <img id="product-image" src="" alt="Product Image">
+            <h2 id="product-name">Product Name Loading...</h2>
+            <p id="product-description">Description Loading...</p>
+            <p class="price" id="product-price">Price Loading...</p>
+        </section>
+
+        <section class="user-details-form">
+            <h3>Your Contact Details</h3>
+            <form id="contact-form">
+                <label for="name">Your Name:</label>
+                <input type="text" id="name" name="name" required placeholder="Enter your full name">
+
+                <label for="email">Your Email:</label>
+                <input type="email" id="email" name="email" required placeholder="Enter your email address">
+
+                <label for="phone">Your Phone Number:</label>
+                <input type="tel" id="phone" name="phone" required placeholder="e.g., +91 9876543210">
+
+                <label for="address">Your Address:</label>
+                <textarea id="address" name="address" rows="4" required placeholder="Street, City, State, Pin Code"></textarea>
+
+                <div class="form-buttons">
+                    <button type="submit" class="form-btn btn-continue">Continue</button>
+                    <a id="whatsapp-link" href="#" class="form-btn btn-whatsapp-form" target="_blank">WhatsApp Us</a>
+                </div>
+            </form>
+        </section>
+    </main>
+
+    <footer>
+        <p>&copy; 2025 Your Store Name. All rights reserved.</p>
+    </footer>
+
+    <script>
+        // This script runs specifically on product-detail.html
+        document.addEventListener('DOMContentLoaded', () => {
+            // Function to apply theme (re-using the logic from script.js)
+            function applyThemeOnDetail(theme) {
+                const body = document.body;
+                if (theme === 'dark-theme') {
+                    body.classList.remove('light-theme');
+                    body.classList.add('dark-theme');
+                } else {
+                    body.classList.remove('dark-theme');
+                    body.classList.add('light-theme');
+                }
+            }
+
+            // Load theme preference from local storage on this page
+            const savedTheme = localStorage.getItem('theme');
+            if (savedTheme) {
+                applyThemeOnDetail(savedTheme);
+            } else {
+                // Default to light theme if no preference saved
+                applyThemeOnDetail('light-theme');
+            }
+
+
+            // Retrieve product ID from URL
+            const urlParams = new URLSearchParams(window.location.search);
+            const productId = urlParams.get('id');
+
+            // Define your product data (this should ideally come from a central source or API)
+            // For now, it's a duplicate of the data in script.js and electronics-script.js
+            const allProductsData = [
+                {
+                    id: 1,
+                    name: 'Stylish Watch',
+                    description: 'A classic and elegant watch suitable for all occasions. High-quality materials and durable design. Perfect for daily wear or special events.',
+                    price: '₹1,500',
+                    image: 'https://th.bing.com/th/id/OIP.gp5F7b3A5S3WFd0HfWxgAQAAAA?w=227&h=180&c=7&r=0&o=5&dpr=2&pid=1.7'
+                },
+                {
+                    id: 2,
+                    name: 'Wireless Headphones',
+                    description: 'Immersive sound with active noise cancellation. Enjoy crystal-clear audio and comfortable earcups for hours of listening pleasure.',
+                    price: '₹2,999',
+                    image: 'https://th.bing.com/th/id/OIP.gp5F7b3A5S3WFd0HfWxgAQAAAA?w=227&h=180&c=7&r=0&o=5&dpr=2&pid=1.7'
+                },
+                {
+                    id: 3,
+                    name: 'Smart Fitness Tracker',
+                    description: 'Track your steps, heart rate, sleep, and calories burned with precision. Syncs with your smartphone for detailed health insights.',
+                    price: '₹999',
+                    image: 'https://th.bing.com/th/id/OIP.gp5F7b3A5S3WFd0HfWxgAQAAAA?w=227&h=180&c=7&r=0&o=5&dpr=2&pid=1.7'
+                },
+                {
+                    id: 4,
+                    name: 'Portable Bluetooth Speaker',
+                    description: 'Powerful sound in a compact and durable design. Perfect for outdoor adventures or enhancing your home audio experience.',
+                    price: '₹1,250',
+                    image: 'https://th.bing.com/th/id/OIP.gp5F7b3A5S3WFd0HfWxgAQAAAA?w=227&h=180&c=7&r=0&o=5&dpr=2&pid=1.7'
+                },
+                {
+                    id: 5,
+                    name: 'Designer Sunglasses',
+                    description: 'Protect your eyes with style and clarity. UV400 protection and a lightweight frame for all-day comfort.',
+                    price: '₹750',
+                    image: 'https://th.bing.com/th/id/OIP.gp5F7b3A5S3WFd0HfWxgAQAAAA?w=227&h=180&c=7&r=0&o=5&dpr=2&pid=1.7'
+                },
+                // --- NEW ELECTRONIC PRODUCTS ADDED BELOW ---
+                {
+                    id: 101, // Unique ID for electronics
+                    name: 'Gaming Laptop',
+                    description: 'High-performance gaming laptop with RTX 4080 and 32GB RAM.',
+                    price: '₹95,000',
+                    image: 'https://th.bing.com/th/id/OIP.U9Jc3_3iE4Wj2YvU1l-S6gHaE7?w=280&h=186&c=7&r=0&o=5&dpr=2&pid=1.7' // Example image
+                },
+                {
+                    id: 102,
+                    name: '4K Smart TV',
+                    description: 'Immersive 65-inch 4K Smart TV with HDR and voice control.',
+                    price: '₹55,000',
+                    image: 'https://th.bing.com/th/id/OIP.aJ7bFpWd-1i52tB_pP0r8gAAAA?w=275&h=183&c=7&r=0&o=5&dpr=2&pid=1.7' // Example image
+                },
+                {
+                    id: 103,
+                    name: 'Noise-Cancelling Earbuds',
+                    description: 'Compact and powerful earbuds with active noise cancellation and long battery life.',
+                    price: '₹4,500',
+                    image: 'https://th.bing.com/th/id/OIP.XG2t8lQpUaB740LdI809CQAAAA?w=192&h=180&c=7&r=0&o=5&dpr=2&pid=1.7' // Example image
+                },
+                {
+                    id: 104,
+                    name: 'Digital Camera',
+                    description: 'Professional mirrorless camera with 24MP sensor and 4K video recording.',
+                    price: '₹42,000',
+                    image: 'https://th.bing.com/th/id/OIP.l_n2W73Z7Vj-4hKjX-2DPAAAAA?w=192&h=180&c=7&r=0&o=5&dpr=2&pid=1.7' // Example image
+                },
+                {
+                    id: 105,
+                    name: 'Robot Vacuum Cleaner',
+                    description: 'Smart robot vacuum with mapping technology and strong suction power.',
+                    price: '₹18,000',
+                    image: 'https://th.bing.com/th/id/OIP.sJ1M0W4LzSjj5GjS9MhS9AAAAAA?w=180&h=180&c=7&r=0&o=5&dpr=2&pid=1.7' // Example image
+                }
+                // --- END NEW ELECTRONIC PRODUCTS ---
+            ];
+
+            let product = null;
+            if (productId) {
+                // Find the product by ID
+                product = allProductsData.find(p => p.id === parseInt(productId));
+            }
+
+            const productImage = document.getElementById('product-image');
+            const productName = document.getElementById('product-name');
+            const productDescription = document.getElementById('product-description');
+            const productPrice = document.getElementById('product-price');
+            const whatsappLink = document.getElementById('whatsapp-link');
+
+            if (product) {
+                productImage.src = product.image;
+                productImage.alt = product.name;
+                productName.textContent = product.name;
+                productDescription.textContent = product.description;
+                productPrice.textContent = product.price;
+
+                // Update WhatsApp link with product name
+                const whatsappPhoneNumber = 'YOUR_PHONE_NUMBER'; // <--- REPLACE THIS WITH YOUR ACTUAL WHATSAPP NUMBER
+                const whatsappMessage = `Hello, I'm interested in selling my ${encodeURIComponent(product.name)} (ID: ${product.id}). Could you please guide me on the process?`;
+                whatsappLink.href = `https://wa.me/${whatsappPhoneNumber}?text=${whatsappMessage}`;
+
+            } else {
+                // Handle case where product ID is not found or not provided
+                productName.textContent = 'Product Not Found';
+                productDescription.textContent = 'The product you are trying to sell could not be found. Please go back to the main page and select an item.';
+                productPrice.textContent = '';
+                productImage.style.display = 'none'; // Hide image
+                whatsappLink.style.display = 'none'; // Hide WhatsApp button
+            }
+
+            // Handle form submission
+            const contactForm = document.getElementById('contact-form');
+            contactForm.addEventListener('submit', (event) => {
+                event.preventDefault(); // Prevent default form submission (page reload)
+
+                const name = document.getElementById('name').value;
+                const email = document.getElementById('email').value;
+                const phone = document.getElementById('phone').value;
+                const address = document.getElementById('address').value;
+
+                let submissionMessage = `Thank you, ${name}!\n`;
+                if (product) {
+                    submissionMessage += `You are interested in selling: ${product.name} (ID: ${product.id})\n`;
+                }
+                submissionMessage += `Your Email: ${email}\n`;
+                submissionMessage += `Your Phone: ${phone}\n`;
+                submissionMessage += `Your Address: ${address}\n\n`;
+                submissionMessage += "We have received your details and will contact you shortly regarding your submission.";
+
+                alert(submissionMessage); // For demonstration, show an alert
+
+                // In a real application, you would send this data to a server here.
+                // You could use `fetch` API to send a POST request.
+                /*
+                const formData = {
+                    productId: product ? product.id : null,
+                    productName: product ? product.name : 'Unknown Product',
+                    userName: name,
+                    userEmail: email,
+                    userPhone: phone,
+                    userAddress: address
+                };
+
+                fetch('/submit-sell-details', { // Replace with your actual server endpoint
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(formData),
+                })
+                .then(response => response.json())
+                .then(data => {
+                    console.log('Success:', data);
+                    alert('Your details have been submitted successfully!');
+                    contactForm.reset(); // Clear the form
+                    // Optionally redirect to a thank you page
+                    // window.location.href = 'thank-you.html';
+                })
+                .catch((error) => {
+                    console.error('Error:', error);
+                    alert('There was an error submitting your details. Please try again.');
+                });
+                */
+
+                // Clear the form after submission (if not redirecting)
+                contactForm.reset();
+            });
+        });
+    </script>
+</body>
+</html>
