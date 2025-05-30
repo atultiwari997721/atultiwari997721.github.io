@@ -191,9 +191,7 @@
     <div class="container">
         <button id="themeToggle" class="theme-toggle-button">Switch to Light Theme</button>
         <h1>My Curated Links</h1>
-        <p class="intro-text">
-            Here are some of my most important web links. To add or change links, simply edit this HTML file.
-        </p>
+      
 
         <div class="links-grid">
             <div class="link-card">
