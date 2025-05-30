@@ -197,33 +197,35 @@
 
         <div class="links-grid">
             <div class="link-card">
-                <a href="https://mail.google.com/" target="_blank" rel="noopener noreferrer">Gmail</a>
-                <p>https://mail.google.com/</p>
+                <a href="https://atultiwari997721.github.io/MaiharMata" target="_blank" rel="noopener noreferrer">Maihar Mata Darshan</a>
+                
             </div>
 
             <div class="link-card">
-                <a href="https://calendar.google.com/" target="_blank" rel="noopener noreferrer">Google Calendar</a>
-                <p>https://calendar.google.com/</p>
+                <a href="https://atultiwari997721.github.io/main" target="_blank" rel="noopener noreferrer">Important Web Links</a>
             </div>
 
             <div class="link-card">
-                <a href="https://github.com/" target="_blank" rel="noopener noreferrer">GitHub</a>
-                <p>https://github.com/</p>
+                <a href="https://atultiwari997721.github.io/GAME" target="_blank" rel="noopener noreferrer">Play Games</a>
+           
             </div>
 
             <div class="link-card">
-                <a href="https://www.linkedin.com/" target="_blank" rel="noopener noreferrer">LinkedIn</a>
-                <p>https://www.linkedin.com/</p>
+                <a href="https://atultiwari997721.github.io/fun" target="_blank" rel="noopener noreferrer">Shre with Your Friends For Fun</a>
+        
             </div>
 
             <div class="link-card">
-                <a href="https://stackoverflow.com/" target="_blank" rel="noopener noreferrer">Stack Overflow</a>
-                <p>https://stackoverflow.com/</p>
+                <a href="https://atultiwari997721.github.io/passwordManager/" target="_blank" rel="noopener noreferrer">Password Manager/a>
+ 
             </div>
 
             <div class="link-card">
-                <a href="https://chat.openai.com/" target="_blank" rel="noopener noreferrer">ChatGPT</a>
-                <p>https://chat.openai.com/</p>
+                <a href="https://atultiwari997721.github.io/email_Validation/" target="_blank" rel="noopener noreferrer">Email Validation/</a>
+    
+            </div>
+            <div class="link-card">
+                <a href="https://atultiwari997721.github.io/text-to-speechForPhone/" target="_blank" rel="noopener noreferrer">Text To Speech//</a>
             </div>
 
             </div>
