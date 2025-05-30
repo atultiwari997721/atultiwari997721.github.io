@@ -216,18 +216,16 @@
             </div>
 
             <div class="link-card">
-                <a href="https://atultiwari997721.github.io/passwordManager/" target="_blank" rel="noopener noreferrer">Password Manager/a>
- 
-            </div>
+                <a href="https://atultiwari997721.github.io/passwordManager/" target="_blank" rel="noopener noreferrer">Password Manager>
 
+            </div>
             <div class="link-card">
                 <a href="https://atultiwari997721.github.io/email_Validation/" target="_blank" rel="noopener noreferrer">Email Validation/</a>
     
             </div>
+            
             <div class="link-card">
                 <a href="https://atultiwari997721.github.io/text-to-speechForPhone/" target="_blank" rel="noopener noreferrer">Text To Speech//</a>
-            </div>
-
             </div>
     </div>
 
