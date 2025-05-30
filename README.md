@@ -229,7 +229,7 @@
                 <a href="https://atultiwari997721.github.io/text-to-speechForPhone/" target="_blank" rel="noopener noreferrer">Text To Speech</a>
             </div>
             <div class="link-card">
-                <a href="https://atultiwari997721.github.io/protfolio/" target="_blank" rel="noopener noreferrer">My Portfolio</a>
+                <a href="https://atultiwari997721.github.io/portfolio/" target="_blank" rel="noopener noreferrer">My Portfolio</a>
             </div>
 
             <div class="link-card">
