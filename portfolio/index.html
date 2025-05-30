@@ -37,7 +37,8 @@
         /* Enlarge cursor on interactive elements */
         a:hover .custom-cursor,
         button:hover .custom-cursor,
-        .project-card:hover .custom-cursor {
+        .project-card:hover .custom-cursor,
+        .image-flip-container:hover .custom-cursor { /* Add hover for image container */
             width: 24px;
             height: 24px;
             background-color: #a052ee; /* Lighter purple on hover */
@@ -137,6 +138,17 @@
             height: 100%;
         }
 
+        /* Keyframes for the language bar fill animation */
+        @keyframes fillBar {
+            from { width: 0%; }
+            to { /* width will be set by inline style */ }
+        }
+
+        .language-bar > div {
+            animation: fillBar 1.5s ease-out forwards; /* Apply animation to each bar segment */
+            /* Individual animation delays can be added here if desired for sequential fill */
+        }
+
         /* Updated language colors and percentages */
         .lang-python { background-color: #3572A5; } /* Python blue */
         .lang-html { background-color: #e34c26; } /* HTML orange */
@@ -205,19 +217,70 @@
             justify-content: flex-end; /* Align image to the right */
         }
 
-        .right-aligned-content img {
-            max-width: 100%;
+        /* Image Flip Container */
+        .image-flip-container {
+            perspective: 1000px; /* For 3D flip effect */
+            width: 300px; /* Match image width */
+            height: 180px; /* Match image height */
+            cursor: pointer; /* Indicate it's clickable */
             border-radius: 12px;
-            border: 1px solid #30363d; /* Border for the image */
             box-shadow: 0 4px 15px rgba(0, 0, 0, 0.6);
             transition: transform 0.3s ease, box-shadow 0.3s ease;
         }
 
-        .right-aligned-content img:hover {
+        .image-flip-container:hover {
             transform: scale(1.02);
             box-shadow: 0 8px 25px rgba(0, 0, 0, 0.8);
         }
 
+        .image-flip-inner {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            text-align: center;
+            transition: transform 0.6s;
+            transform-style: preserve-3d;
+        }
+
+        .image-flip-container.flipped .image-flip-inner {
+            transform: rotateY(180deg);
+        }
+
+        .image-flip-front, .image-flip-back {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            -webkit-backface-visibility: hidden; /* Safari */
+            backface-visibility: hidden;
+            border-radius: 12px;
+            border: 1px solid #30363d;
+            overflow: hidden; /* Ensure content stays within bounds */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .image-flip-front img {
+            max-width: 100%;
+            max-height: 100%;
+            display: block; /* Remove extra space below image */
+            object-fit: cover; /* Cover the container */
+            transition: filter 0.5s ease; /* Added filter transition for hue change */
+        }
+
+        .image-flip-back {
+            background-color: #1a202c; /* Background for the back side */
+            color: #e6edf3;
+            transform: rotateY(180deg);
+            padding: 20px;
+            box-sizing: border-box;
+            font-size: 1.5em; /* Larger font for name */
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
         /* Projects Section */
         .projects-section {
             background-color: #0d1117;
@@ -354,7 +417,7 @@
             .custom-cursor {
                 display: none;
             }
-            .project-card, .project-card a {
+            .project-card, .project-card a, .image-flip-container {
                 cursor: pointer; /* Restore default pointer for interactive elements on mobile */
             }
         }
@@ -362,7 +425,6 @@
 </head>
 <body>
     <div class="custom-cursor"></div>
-
     <div class="container">
         <header>
             <h1>Hi 👋 ! My name is Atul and I'm a coding enthusiast, from India</h1>
@@ -426,7 +488,16 @@
                 <img src="https://img.shields.io/badge/-Git-F05032?style=flat&logo=git&logoColor=white" alt="Git">
             </div>
             <div class="right-aligned-content">
-                <img src="https://th.bing.com/th/id/OIP.bvgoD6T5A0tFKatIktU-OgAAAA?w=225&h=180&c=7&r=0&o=5&dpr=2&pid=1.7" alt="Your Workspace">
+                <div class="image-flip-container" id="imageFlipContainer">
+                    <div class="image-flip-inner">
+                        <div class="image-flip-front">
+                            <img id="workspaceImage" src="https://th.bing.com/th/id/OIP.bvgoD6T5A0tFKatIktU-OgAAAA?w=225&h=180&c=7&r=0&o=5&dpr=2&pid=1.7" alt="Your Workspace">
+                        </div>
+                        <div class="image-flip-back">
+                            <p>Atul Tiwari</p>
+                        </div>
+                    </div>
+                </div>
             </div>
         </section>
 
@@ -465,6 +536,9 @@
     <script>
         const customCursor = document.querySelector('.custom-cursor');
         const interactiveElements = document.querySelectorAll('a, button, .project-card');
+        const imageFlipContainer = document.getElementById('imageFlipContainer');
+        const workspaceImage = document.getElementById('workspaceImage');
+        let hueRotation = 0; // Initial hue rotation
 
         // Move custom cursor with mouse
         document.addEventListener('mousemove', (e) => {
@@ -494,6 +568,19 @@
                 };
             });
         });
+
+        // Image flip and color change on click
+        imageFlipContainer.addEventListener('click', () => {
+            // Toggle flip class
+            imageFlipContainer.classList.toggle('flipped');
+
+            // Change image hue
+            hueRotation = (hueRotation + 60) % 360; // Increment hue by 60 degrees, cycle every 360
+            workspaceImage.style.filter = `hue-rotate(${hueRotation}deg)`;
+        });
+
+        // Removed window.onload = startImageFlipAnimation; to disable automatic flip
+        // Removed startImageFlipAnimation function as it's no longer needed
     </script>
 </body>
 </html>
