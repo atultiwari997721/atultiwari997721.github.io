@@ -1,0 +1,1985 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>C/C++/Python Quiz</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        /* Custom CSS from style.css */
+        body {
+            margin: 0;
+            font-family: 'Inter', sans-serif;
+        }
+    </style>
+</head>
+<body class="font-inter antialiased">
+    <div id="app">
+        </div>
+
+    <script>
+        // JavaScript from script.js
+        // Mock data for languages, topics, and questions
+        const quizData = {
+            languages: [
+                { id: 'c', name: 'C' },
+                { id: 'cpp', name: 'C++' },
+                { id: 'python', name: 'Python' },
+            ],
+            topics: {
+                c: [
+                    { id: 'c_basics', name: 'C Basics' },
+                    { id: 'c_pointers', name: 'Pointers' },
+                    { id: 'c_arrays', name: 'Arrays' },
+                    { id: 'c_strings', name: 'Strings' },
+                    { id: 'c_functions', name: 'Functions' },
+                    { id: 'c_structs_unions', name: 'Structs and Unions' },
+                    { id: 'c_file_io', name: 'File I/O' },
+                    { id: 'c_memory_management', name: 'Memory Management' },
+                    { id: 'c_preprocessor', name: 'Preprocessor Directives' },
+                    { id: 'c_data_structures', name: 'Data Structures' },
+                ],
+                cpp: [
+                    { id: 'cpp_basics', name: 'C++ Basics' },
+                    { id: 'cpp_oop', name: 'Object-Oriented Programming' },
+                    { id: 'cpp_stl', name: 'Standard Template Library (STL)' },
+                    { id: 'cpp_pointers_references', name: 'Pointers and References' },
+                    { id: 'cpp_inheritance_polymorphism', name: 'Inheritance and Polymorphism' },
+                    { id: 'cpp_templates', name: 'Templates' },
+                    { id: 'cpp_exceptions', name: 'Exception Handling' },
+                    { id: 'cpp_file_io', name: 'File I/O' },
+                    { id: 'cpp_memory_management', name: 'Memory Management' },
+                    { id: 'cpp_smart_pointers', name: 'Smart Pointers' },
+                ],
+                python: [
+                    { id: 'py_basics', name: 'Python Basics' },
+                    { id: 'py_data_types', name: 'Data Types' },
+                    { id: 'py_control_flow', name: 'Control Flow' },
+                    { id: 'py_functions', name: 'Functions' },
+                    { id: 'py_oop', name: 'Object-Oriented Programming' },
+                    { id: 'py_modules', name: 'Modules and Packages' },
+                    { id: 'py_error_handling', name: 'Error Handling' },
+                    { id: 'py_file_io', name: 'File I/O' },
+                    { id: 'py_data_structures', name: 'Data Structures' },
+                    { id: 'py_decorators', name: 'Decorators' },
+                    { id: 'py_generators', name: 'Generators' },
+                    { id: 'py_concurrency', name: 'Concurrency' },
+                    { id: 'py_regex', name: 'Regular Expressions' },
+                    { id: 'py_web', name: 'Web Development Basics' },
+                    { id: 'py_testing', name: 'Testing' },
+                    { id: 'py_databases', name: 'Database Interaction' },
+                    { id: 'py_networking', name: 'Networking' },
+                    { id: 'py_algorithms', name: 'Algorithms' },
+                    { id: 'py_data_science', name: 'Data Science Basics' },
+                    { id: 'py_gui', name: 'GUI Programming' },
+                ],
+            },
+            questions: [
+                // --- C Questions (Example Set) ---
+                {
+                    id: 'c_q1', language: 'c', topic: 'c_basics',
+                    questionText: 'What is the correct way to declare a constant integer in C?',
+                    options: ['const int x = 10;', 'int const x = 10;', '#define x 10', 'All of the above'],
+                    correctAnswer: 'All of the above',
+                },
+                {
+                    id: 'c_q2', language: 'c', topic: 'c_basics',
+                    questionText: 'Which function is used to output data to the console in C?',
+                    options: ['cout', 'printf()', 'print', 'display()'],
+                    correctAnswer: 'printf()',
+                },
+                {
+                    id: 'c_q3', language: 'c', topic: 'c_basics',
+                    questionText: 'What is the entry point of a C program?',
+                    options: ['start()', 'run()', 'main()', 'begin()'],
+                    correctAnswer: 'main()',
+                },
+                {
+                    id: 'c_q4', language: 'c', topic: 'c_basics',
+                    questionText: 'Which header file is required for `malloc()` and `free()` functions?',
+                    options: ['<stdio.h>', '<stdlib.h>', '<string.h>', '<math.h>'],
+                    correctAnswer: '<stdlib.h>',
+                },
+                {
+                    id: 'c_q5', language: 'c', topic: 'c_basics',
+                    questionText: 'What does `sizeof()` operator return?',
+                    options: ['The value of the variable', 'The memory address of the variable', 'The size of the variable in bytes', 'The type of the variable'],
+                    correctAnswer: 'The size of the variable in bytes',
+                },
+                {
+                    id: 'c_q21', language: 'c', topic: 'c_basics',
+                    questionText: 'Which of the following is a valid C identifier?',
+                    options: ['1variable', '_variable', 'variable-name', 'variable name'],
+                    correctAnswer: '_variable',
+                },
+                {
+                    id: 'c_q22', language: 'c', topic: 'c_basics',
+                    questionText: 'What is the purpose of the `return 0;` statement in `main()`?',
+                    options: ['Indicates an error occurred', 'Indicates successful execution', 'Returns control to the calling function', 'Ends the program abruptly'],
+                    correctAnswer: 'Indicates successful execution',
+                },
+                {
+                    id: 'c_q23', language: 'c', topic: 'c_basics',
+                    questionText: 'Which format specifier is used for printing a float value in C?',
+                    options: ['%d', '%f', '%c', '%s'],
+                    correctAnswer: '%f',
+                },
+                {
+                    id: 'c_q24', language: 'c', topic: 'c_basics',
+                    questionText: 'What is the size of `char` data type in C?',
+                    options: ['1 byte', '2 bytes', '4 bytes', 'Depends on the system'],
+                    correctAnswer: '1 byte',
+                },
+                {
+                    id: 'c_q25', language: 'c', topic: 'c_basics',
+                    questionText: 'Which operator is used to compare two values for equality in C?',
+                    options: ['=', '==', '!=', '<>'],
+                    correctAnswer: '==',
+                },
+                {
+                    id: 'c_q6', language: 'c', topic: 'c_pointers',
+                    questionText: 'What is a pointer in C?',
+                    options: ['A variable that stores a memory address', 'A variable that stores a value', 'A function that returns a value', 'A data type'],
+                    correctAnswer: 'A variable that stores a memory address',
+                },
+                {
+                    id: 'c_q7', language: 'c', topic: 'c_pointers',
+                    questionText: 'What does the `*` operator do when used with a pointer?',
+                    options: ['Takes the address of a variable', 'Dereferences a pointer (accesses the value at the address)', 'Multiplies two numbers', 'Declares a pointer'],
+                    correctAnswer: 'Dereferences a pointer (accesses the value at the address)',
+                },
+                {
+                    id: 'c_q8', language: 'c', topic: 'c_pointers',
+                    questionText: 'What is a NULL pointer?',
+                    options: ['A pointer that points to an invalid memory location', 'A pointer that points to the first memory location', 'A pointer that has been initialized to zero', 'A pointer that cannot be dereferenced'],
+                    correctAnswer: 'A pointer that has been initialized to zero',
+                },
+                {
+                    id: 'c_q9', language: 'c', topic: 'c_pointers',
+                    questionText: 'Which of the following is true about pointer arithmetic?',
+                    options: ['You can add or subtract integers from pointers', 'You can multiply pointers', 'You can divide pointers', 'You can only assign pointers to other pointers'],
+                    correctAnswer: 'You can add or subtract integers from pointers',
+                },
+                {
+                    id: 'c_q10', language: 'c', topic: 'c_pointers',
+                    questionText: 'What is the purpose of `void *` in C?',
+                    options: ['It declares a pointer to a void function', 'It declares a pointer that can point to any data type', 'It declares a pointer that points to nothing', 'It is an invalid pointer declaration'],
+                    correctAnswer: 'It declares a pointer that can point to any data type',
+                },
+                {
+                    id: 'c_q26', language: 'c', topic: 'c_pointers',
+                    questionText: 'How do you get the address of a variable `x` in C?',
+                    options: ['`*x`', '`&x`', '`addr(x)`', '`value(x)`'],
+                    correctAnswer: '`&x`',
+                },
+                {
+                    id: 'c_q27', language: 'c', topic: 'c_pointers',
+                    questionText: 'If `int *p;` and `int x = 10; p = &x;`, what is the value of `*p`?',
+                    options: ['The address of x', '10', 'Garbage value', 'The address of p'],
+                    correctAnswer: '10',
+                },
+                {
+                    id: 'c_q28', language: 'c', topic: 'c_pointers',
+                    questionText: 'What is a wild pointer?',
+                    options: ['A pointer that points to a valid memory location', 'A pointer that has not been initialized', 'A pointer that points to a dynamically allocated memory', 'A pointer that points to a constant'],
+                    correctAnswer: 'A pointer that has not been initialized',
+                },
+                {
+                    id: 'c_q29', language: 'c', topic: 'c_pointers',
+                    questionText: 'What is the size of a pointer variable in C?',
+                    options: ['4 bytes', '8 bytes', 'Depends on the architecture (e.g., 4 or 8 bytes)', '1 byte'],
+                    correctAnswer: 'Depends on the architecture (e.g., 4 or 8 bytes)',
+                },
+                {
+                    id: 'c_q30', language: 'c', topic: 'c_pointers',
+                    questionText: 'Can a pointer point to a function in C?',
+                    options: ['Yes', 'No', 'Only if the function returns void', 'Only if the function takes no arguments'],
+                    correctAnswer: 'Yes',
+                },
+                { id: 'c_q11', language: 'c', topic: 'c_arrays', questionText: 'How do you declare an array of 5 integers in C?', options: ['int arr[5];', 'array<int> arr(5);', 'int arr = new int[5];', 'list<int> arr(5);'], correctAnswer: 'int arr[5];' },
+                { id: 'c_q12', language: 'c', topic: 'c_arrays', questionText: 'What is the index of the first element in a C array?', options: ['1', '0', 'Any integer', 'Depends on declaration'], correctAnswer: '0' },
+                { id: 'c_q16', language: 'c', topic: 'c_arrays', questionText: 'What is the maximum size of an array in C?', options: ['Limited by available memory', '256 elements', '65536 elements', '1024 elements'], correctAnswer: 'Limited by available memory' },
+                {
+                    id: 'c_q31', language: 'c', topic: 'c_arrays',
+                    questionText: 'How do you initialize an array `int arr[3] = {1, 2, 3};`?',
+                    options: ['`int arr[3] = {1, 2, 3};`', '`int arr[] = {1, 2, 3};`', 'Both A and B', '`int arr = {1, 2, 3};`'],
+                    correctAnswer: 'Both A and B',
+                },
+                {
+                    id: 'c_q32', language: 'c', topic: 'c_arrays',
+                    questionText: 'What is an array in C?',
+                    options: ['A collection of elements of different data types', 'A collection of elements of the same data type stored in contiguous memory locations', 'A dynamic data structure', 'A pointer to a memory location'],
+                    correctAnswer: 'A collection of elements of the same data type stored in contiguous memory locations',
+                },
+                {
+                    id: 'c_q33', language: 'c', topic: 'c_arrays',
+                    questionText: 'Can you change the size of an array after it is declared in C?',
+                    options: ['Yes, using `realloc()`', 'No, arrays have a fixed size', 'Yes, using `malloc()`', 'Only for character arrays'],
+                    correctAnswer: 'No, arrays have a fixed size',
+                },
+                {
+                    id: 'c_q34', language: 'c', topic: 'c_arrays',
+                    questionText: 'What is a multi-dimensional array in C?',
+                    options: ['An array of pointers', 'An array of arrays', 'An array that stores multiple data types', 'An array that can grow dynamically'],
+                    correctAnswer: 'An array of arrays',
+                },
+                {
+                    id: 'c_q35', language: 'c', topic: 'c_arrays',
+                    questionText: 'If you declare `int arr[5];`, what is `arr` without an index?',
+                    options: ['The first element of the array', 'The size of the array', 'A pointer to the first element of the array', 'An error'],
+                    correctAnswer: 'A pointer to the first element of the array',
+                },
+                { id: 'c_q13', language: 'c', topic: 'c_strings', questionText: 'Which function is used to copy one string to another in C?', options: ['strcopy()', 'strcpy()', 'string_copy()', 'copy_str()'], correctAnswer: 'strcpy()' },
+                { id: 'c_q17', language: 'c', topic: 'c_strings', questionText: 'Which character marks the end of a string in C?', options: ['`\\n`', '`\\0`', '`.`', '`\\t`'], correctAnswer: '`\\0`' },
+                {
+                    id: 'c_q36', language: 'c', topic: 'c_strings',
+                    questionText: 'Which function is used to find the length of a string in C?',
+                    options: ['`strlen()`', '`strlength()`', '`length()`', '`size()`'],
+                    correctAnswer: '`strlen()`',
+                },
+                {
+                    id: 'c_q37', language: 'c', topic: 'c_strings',
+                    questionText: 'How do you declare a string in C?',
+                    options: ['`string s;`', '`char s[10];`', '`String s = "hello";`', '`char *s;`'],
+                    correctAnswer: '`char s[10];`',
+                },
+                {
+                    id: 'c_q38', language: 'c', topic: 'c_strings',
+                    questionText: 'Which function is used to concatenate two strings in C?',
+                    options: ['`strcat()`', '`strjoin()`', '`concat()`', '`append()`'],
+                    correctAnswer: '`strcat()`',
+                },
+                {
+                    id: 'c_q39', language: 'c', topic: 'c_strings',
+                    questionText: 'What is the purpose of `strcmp()` function?',
+                    options: ['To copy strings', 'To compare two strings', 'To find a substring', 'To convert string to integer'],
+                    correctAnswer: 'To compare two strings',
+                },
+                {
+                    id: 'c_q40', language: 'c', topic: 'c_strings',
+                    questionText: 'Is a string in C an array of characters?',
+                    options: ['Yes', 'No', 'Only if declared with `char*`', 'Only if declared with a fixed size'],
+                    correctAnswer: 'Yes',
+                },
+                { id: 'c_q14', language: 'c', topic: 'c_functions', questionText: 'What is a function prototype in C?', options: ['The function definition', 'A declaration of a function that specifies its name, return type, and parameters', 'The call to a function', 'The memory address of a function'], correctAnswer: 'A declaration of a function that specifies its name, return type, and parameters' },
+                { id: 'c_q18', language: 'c', topic: 'c_functions', questionText: 'What is pass by value in C functions?', options: ['The function receives the memory address of the argument', 'The function receives a copy of the argument\'s value', 'The function receives a pointer to the argument', 'The function receives the original variable'], correctAnswer: 'The function receives a copy of the argument\'s value' },
+                {
+                    id: 'c_q41', language: 'c', topic: 'c_functions',
+                    questionText: 'What is the purpose of the `void` keyword as a return type?',
+                    options: ['The function returns an integer', 'The function returns nothing', 'The function returns a pointer', 'The function returns a character'],
+                    correctAnswer: 'The function returns nothing',
+                },
+                {
+                    id: 'c_q42', language: 'c', topic: 'c_functions',
+                    questionText: 'What is a recursive function?',
+                    options: ['A function that calls another function', 'A function that calls itself', 'A function that returns a pointer', 'A function that takes no arguments'],
+                    correctAnswer: 'A function that calls itself',
+                },
+                {
+                    id: 'c_q43', language: 'c', topic: 'c_functions',
+                    questionText: 'What is the scope of a local variable in a C function?',
+                    options: ['Throughout the entire program', 'Only within the function where it is declared', 'Only within the block where it is declared', 'Only within the file where it is declared'],
+                    correctAnswer: 'Only within the block where it is declared',
+                },
+                {
+                    id: 'c_q44', language: 'c', topic: 'c_functions',
+                    questionText: 'Can a C function return multiple values?',
+                    options: ['Yes, using arrays', 'Yes, using pointers', 'No, only one value can be returned directly', 'Both A and B'],
+                    correctAnswer: 'No, only one value can be returned directly',
+                },
+                {
+                    id: 'c_q45', language: 'c', topic: 'c_functions',
+                    questionText: 'What is the difference between function declaration and definition?',
+                    options: ['Declaration provides details, definition just names it', 'Declaration names it, definition provides details', 'No difference', 'Declaration is for C++, definition is for C'],
+                    correctAnswer: 'Declaration names it, definition provides details',
+                },
+                { id: 'c_q15', language: 'c', topic: 'c_structs_unions', questionText: 'What is the difference between a `struct` and a `union` in C?', options: ['`struct` members share memory, `union` members have separate memory', '`union` members share memory, `struct` members have separate memory', 'No difference', '`struct` is for C++, `union` is for C'], correctAnswer: '`union` members share memory, `struct` members have separate memory' },
+                { id: 'c_q19', language: 'c', topic: 'c_structs_unions', questionText: 'How do you access members of a `struct` using a pointer to the `struct`?', options: ['Using the `.` operator', 'Using the `->` operator', 'Using the `*` operator', 'Using the `&` operator'], correctAnswer: 'Using the `->` operator' },
+                {
+                    id: 'c_q46', language: 'c', topic: 'c_structs_unions',
+                    questionText: 'What is a `struct` in C?',
+                    options: ['A user-defined data type that allows to combine data items of different kinds', 'A built-in data type', 'A function that returns multiple values', 'A pointer to a memory location'],
+                    correctAnswer: 'A user-defined data type that allows to combine data items of different kinds',
+                },
+                {
+                    id: 'c_q47', language: 'c', topic: 'c_structs_unions',
+                    questionText: 'What is the size of a `union`?',
+                    options: ['Sum of all member sizes', 'Size of the largest member', 'Average of all member sizes', 'Fixed size of 4 bytes'],
+                    correctAnswer: 'Size of the largest member',
+                },
+                {
+                    id: 'c_q48', language: 'c', topic: 'c_structs_unions',
+                    questionText: 'Can a `struct` contain another `struct`?',
+                    options: ['Yes', 'No', 'Only if they are of the same type', 'Only if the inner struct is a pointer'],
+                    correctAnswer: 'Yes',
+                },
+                {
+                    id: 'c_q49', language: 'c', topic: 'c_structs_unions',
+                    questionText: 'What is a bit field in a `struct`?',
+                    options: ['A member that stores a single bit', 'A field that can store multiple bits', 'A way to specify the width of a field in bits', 'A field that is always 1 byte'],
+                    correctAnswer: 'A way to specify the width of a field in bits',
+                },
+                {
+                    id: 'c_q50', language: 'c', topic: 'c_structs_unions',
+                    questionText: 'What is `typedef` used for with `struct`?',
+                    options: ['To define a new struct', 'To create an alias for a struct type', 'To allocate memory for a struct', 'To initialize a struct'],
+                    correctAnswer: 'To create an alias for a struct type',
+                },
+                { id: 'c_q20', language: 'c', topic: 'c_file_io', questionText: 'Which function is used to open a file in C?', options: ['`open()`', '`fopen()`', '`file_open()`', '`create_file()`'], correctAnswer: '`fopen()`' },
+                {
+                    id: 'c_q51', language: 'c', topic: 'c_file_io',
+                    questionText: 'Which mode is used to open a file for writing, creating it if it does not exist, and truncating it if it does?',
+                    options: ['`"r"`', '`"a"`', '`"w"`', '`"x"`'],
+                    correctAnswer: '`"w"`',
+                },
+                {
+                    id: 'c_q52', language: 'c', topic: 'c_file_io',
+                    questionText: 'Which function is used to close a file in C?',
+                    options: ['`close()`', '`fclose()`', '`file_close()`', '`endfile()`'],
+                    correctAnswer: '`fclose()`',
+                },
+                {
+                    id: 'c_q53', language: 'c', topic: 'c_file_io',
+                    questionText: 'What does `feof()` function do?',
+                    options: ['Checks for file open error', 'Checks for end-of-file indicator', 'Checks for file write error', 'Checks for file read error'],
+                    correctAnswer: 'Checks for end-of-file indicator',
+                },
+                {
+                    id: 'c_q54', language: 'c', topic: 'c_file_io',
+                    questionText: 'Which function is used to read a character from a file?',
+                    options: ['`fgetc()`', '`fscanf()`', '`fread()`', '`gets()`'],
+                    correctAnswer: '`fgetc()`',
+                },
+                {
+                    id: 'c_q55', language: 'c', topic: 'c_file_io',
+                    questionText: 'What is the purpose of `fseek()`?',
+                    options: ['To move the file pointer to a specific location', 'To read from a file', 'To write to a file', 'To close a file'],
+                    correctAnswer: 'To move the file pointer to a specific location',
+                },
+                {
+                    id: 'c_q56', language: 'c', topic: 'c_memory_management',
+                    questionText: 'Which function is used for dynamic memory allocation in C?',
+                    options: ['`new`', '`alloc()`', '`malloc()`', '`create()`'],
+                    correctAnswer: '`malloc()`',
+                },
+                {
+                    id: 'c_q57', language: 'c', topic: 'c_memory_management',
+                    questionText: 'What is the purpose of `free()` function?',
+                    options: ['To allocate memory', 'To deallocate dynamically allocated memory', 'To initialize memory', 'To check memory status'],
+                    correctAnswer: 'To deallocate dynamically allocated memory',
+                },
+                {
+                    id: 'c_q58', language: 'c', topic: 'c_memory_management',
+                    questionText: 'What is the difference between `malloc()` and `calloc()`?',
+                    options: ['`malloc()` initializes memory to zero, `calloc()` does not', '`calloc()` initializes memory to zero, `malloc()` does not', '`malloc()` is for single block, `calloc()` is for multiple blocks', 'No difference'],
+                    correctAnswer: '`calloc()` initializes memory to zero, `malloc()` does not',
+                },
+                {
+                    id: 'c_q59', language: 'c', topic: 'c_memory_management',
+                    questionText: 'What does `realloc()` do?',
+                    options: ['Frees memory', 'Allocates new memory', 'Changes the size of a previously allocated memory block', 'Initializes memory'],
+                    correctAnswer: 'Changes the size of a previously allocated memory block',
+                },
+                {
+                    id: 'c_q60', language: 'c', topic: 'c_memory_management',
+                    questionText: 'What is a memory leak?',
+                    options: ['When memory is allocated but never freed', 'When too much memory is freed', 'When memory is accessed illegally', 'When memory is corrupted'],
+                    correctAnswer: 'When memory is allocated but never freed',
+                },
+                {
+                    id: 'c_q61', language: 'c', topic: 'c_preprocessor',
+                    questionText: 'What does `#include` directive do?',
+                    options: ['Includes a library', 'Includes a header file content into the source file', 'Includes a function', 'Includes a variable'],
+                    correctAnswer: 'Includes a header file content into the source file',
+                },
+                {
+                    id: 'c_q62', language: 'c', topic: 'c_preprocessor',
+                    questionText: 'What is the purpose of `#define`?',
+                    options: ['To declare a function', 'To define a macro or constant', 'To include a file', 'To create a variable'],
+                    correctAnswer: 'To define a macro or constant',
+                },
+                {
+                    id: 'c_q63', language: 'c', topic: 'c_preprocessor',
+                    questionText: 'What does `#ifdef` do?',
+                    options: ['Checks if a macro is defined', 'Defines a macro', 'Undefines a macro', 'Includes a file conditionally'],
+                    correctAnswer: 'Checks if a macro is defined',
+                },
+                {
+                    id: 'c_q64', language: 'c', topic: 'c_preprocessor',
+                    questionText: 'What is a preprocessor directive?',
+                    options: ['A command for the compiler', 'A command for the linker', 'A command for the preprocessor to process before compilation', 'A command for the operating system'],
+                    correctAnswer: 'A command for the preprocessor to process before compilation',
+                },
+                {
+                    id: 'c_q65', language: 'c', topic: 'c_preprocessor',
+                    questionText: 'What is the difference between `#include <file.h>` and `#include "file.h"`?',
+                    options: ['No difference', 'Angle brackets search standard directories, quotes search current directory first', 'Angle brackets search current directory, quotes search standard directories', 'Angle brackets are for C++, quotes are for C'],
+                    correctAnswer: 'Angle brackets search standard directories, quotes search current directory first',
+                },
+                {
+                    id: 'c_q66', language: 'c', topic: 'c_data_structures',
+                    questionText: 'What is a linked list?',
+                    options: ['A collection of elements stored in contiguous memory', 'A linear data structure where elements are not stored at contiguous memory locations', 'A tree-like data structure', 'A hash table'],
+                    correctAnswer: 'A linear data structure where elements are not stored at contiguous memory locations',
+                },
+                {
+                    id: 'c_q67', language: 'c', topic: 'c_data_structures',
+                    questionText: 'Which data structure follows the First-In, First-Out (FIFO) principle?',
+                    options: ['Stack', 'Queue', 'Array', 'Linked List'],
+                    correctAnswer: 'Queue',
+                },
+                {
+                    id: 'c_q68', language: 'c', topic: 'c_data_structures',
+                    questionText: 'What is a stack?',
+                    options: ['A FIFO data structure', 'A LIFO data structure', 'A random access data structure', 'A sorted data structure'],
+                    correctAnswer: 'A LIFO data structure',
+                },
+                {
+                    id: 'c_q69', language: 'c', topic: 'c_data_structures',
+                    questionText: 'What is the time complexity of searching an element in a sorted array using binary search?',
+                    options: ['O(n)', 'O(log n)', 'O(n^2)', 'O(1)'],
+                    correctAnswer: 'O(log n)',
+                },
+                {
+                    id: 'c_q70', language: 'c', topic: 'c_data_structures',
+                    questionText: 'What is a tree data structure?',
+                    options: ['A linear data structure', 'A non-linear data structure with a hierarchical relationship between nodes', 'A circular data structure', 'A flat data structure'],
+                    correctAnswer: 'A non-linear data structure with a hierarchical relationship between nodes',
+                },
+
+
+                // --- C++ Questions (Example Set) ---
+                {
+                    id: 'cpp_q1', language: 'cpp', topic: 'cpp_basics',
+                    questionText: 'Which keyword is used to define a class in C++?',
+                    options: ['struct', 'object', 'class', 'type'],
+                    correctAnswer: 'class',
+                },
+                {
+                    id: 'cpp_q2', language: 'cpp', topic: 'cpp_basics',
+                    questionText: 'Which operator is used for dynamic memory allocation in C++?',
+                    options: ['malloc', 'calloc', 'new', 'alloc'],
+                    correctAnswer: 'new',
+                },
+                {
+                    id: 'cpp_q3', language: 'cpp', topic: 'cpp_basics',
+                    questionText: 'What is the purpose of `std::cout`?',
+                    options: ['To read input from the console', 'To write output to the console', 'To declare a variable', 'To perform mathematical operations'],
+                    correctAnswer: 'To write output to the console',
+                },
+                {
+                    id: 'cpp_q4', language: 'cpp', topic: 'cpp_basics',
+                    questionText: 'Which of the following is a correct way to include a header file in C++?',
+                    options: ['#include "header.h"', '#include <header.h>', 'Both A and B', 'import header.h'],
+                    correctAnswer: 'Both A and B',
+                },
+                {
+                    id: 'cpp_q5', language: 'cpp', topic: 'cpp_basics',
+                    questionText: 'What is the default access specifier for members of a class in C++?',
+                    options: ['public', 'private', 'protected', 'none'],
+                    correctAnswer: 'private',
+                },
+                {
+                    id: 'cpp_q21', language: 'cpp', topic: 'cpp_basics',
+                    questionText: 'Which operator is used for input in C++?',
+                    options: ['`<<`', '`>>`', '`=`', '`+`'],
+                    correctAnswer: '`>>`',
+                },
+                {
+                    id: 'cpp_q22', language: 'cpp', topic: 'cpp_basics',
+                    questionText: 'What is a namespace in C++?',
+                    options: ['A keyword for defining classes', 'A mechanism to group related entities to avoid name collisions', 'A type of variable', 'A function declaration'],
+                    correctAnswer: 'A mechanism to group related entities to avoid name collisions',
+                },
+                {
+                    id: 'cpp_q23', language: 'cpp', topic: 'cpp_basics',
+                    questionText: 'Which of the following is a valid comment in C++?',
+                    options: ['``', '`# comment`', '`// comment`', '`/* comment`'],
+                    correctAnswer: '`// comment`',
+                },
+                {
+                    id: 'cpp_q24', language: 'cpp', topic: 'cpp_basics',
+                    questionText: 'What is the purpose of `using namespace std;`?',
+                    options: ['To include the standard library', 'To avoid writing `std::` before standard library components', 'To define a new namespace', 'To import all functions'],
+                    correctAnswer: 'To avoid writing `std::` before standard library components',
+                },
+                {
+                    id: 'cpp_q25', language: 'cpp', topic: 'cpp_basics',
+                    questionText: 'What is the role of the `main` function in a C++ program?',
+                    options: ['It is an optional function', 'It is the entry point of the program', 'It is used for debugging', 'It is a constructor'],
+                    correctAnswer: 'It is the entry point of the program',
+                },
+                {
+                    id: 'cpp_q6', language: 'cpp', topic: 'cpp_oop',
+                    questionText: 'Which OOP concept allows a class to inherit properties and methods from another class?',
+                    options: ['Encapsulation', 'Polymorphism', 'Abstraction', 'Inheritance'],
+                    correctAnswer: 'Inheritance',
+                },
+                {
+                    id: 'cpp_q7', language: 'cpp', topic: 'cpp_oop',
+                    questionText: 'What is method overloading in C++?',
+                    options: ['Defining multiple methods with the same name but different parameters', 'Defining multiple methods with the same name and same parameters', 'Overriding a method in a derived class', 'Defining a method that takes no arguments'],
+                    correctAnswer: 'Defining multiple methods with the same name but different parameters',
+                },
+                {
+                    id: 'cpp_q8', language: 'cpp', topic: 'cpp_oop',
+                    questionText: 'What is a virtual function used for in C++?',
+                    options: ['To make a function non-overridable', 'To achieve runtime polymorphism', 'To define a function that does nothing', 'To make a function static'],
+                    correctAnswer: 'To achieve runtime polymorphism',
+                },
+                {
+                    id: 'cpp_q9', language: 'cpp', topic: 'cpp_oop',
+                    questionText: 'Which access specifier allows members to be accessed within the class and by derived classes?',
+                    options: ['public', 'private', 'protected', 'default'],
+                    correctAnswer: 'protected',
+                },
+                {
+                    id: 'cpp_q10', language: 'cpp', topic: 'cpp_oop',
+                    questionText: 'What is a constructor in C++?',
+                    options: ['A special function that destroys an object', 'A special function that initializes an object', 'A regular member function', 'A function that returns a value'],
+                    correctAnswer: 'A special function that initializes an object',
+                },
+                {
+                    id: 'cpp_q26', language: 'cpp', topic: 'cpp_oop',
+                    questionText: 'What is encapsulation in C++?',
+                    options: ['Binding data and methods that operate on the data into a single unit', 'Hiding data from outside access', 'Creating multiple objects', 'Inheriting properties'],
+                    correctAnswer: 'Binding data and methods that operate on the data into a single unit',
+                },
+                {
+                    id: 'cpp_q27', language: 'cpp', topic: 'cpp_oop',
+                    questionText: 'What is a destructor in C++?',
+                    options: ['A function that initializes an object', 'A function that cleans up resources when an object is destroyed', 'A regular member function', 'A function that returns a value'],
+                    correctAnswer: 'A function that cleans up resources when an object is destroyed',
+                },
+                {
+                    id: 'cpp_q28', language: 'cpp', topic: 'cpp_oop',
+                    questionText: 'What is abstraction in C++?',
+                    options: ['Showing only essential features and hiding implementation details', 'Combining data and functions', 'Creating objects', 'Reusing code'],
+                    correctAnswer: 'Showing only essential features and hiding implementation details',
+                },
+                {
+                    id: 'cpp_q29', language: 'cpp', topic: 'cpp_oop',
+                    questionText: 'Can a class have multiple constructors in C++?',
+                    options: ['No', 'Yes, through constructor overloading', 'Only if they have different return types', 'Only if they are virtual'],
+                    correctAnswer: 'Yes, through constructor overloading',
+                },
+                {
+                    id: 'cpp_q30', language: 'cpp', topic: 'cpp_oop',
+                    questionText: 'What is the `this` pointer in C++?',
+                    options: ['A pointer to the current object', 'A pointer to the parent object', 'A pointer to a static member', 'A pointer to a global variable'],
+                    correctAnswer: 'A pointer to the current object',
+                },
+                { id: 'cpp_q11', language: 'cpp', topic: 'cpp_stl', questionText: 'Which STL container provides dynamic arrays?', options: ['`std::list`', '`std::vector`', '`std::map`', '`std::set`'], correctAnswer: '`std::vector`' },
+                { id: 'cpp_q16', language: 'cpp', topic: 'cpp_stl', questionText: 'Which STL container stores elements in a sorted order and allows fast lookups?', options: ['`std::vector`', '`std::list`', '`std::set`', '`std::deque`'], correctAnswer: '`std::set`' },
+                {
+                    id: 'cpp_q31', language: 'cpp', topic: 'cpp_stl',
+                    questionText: 'Which STL container implements a double-ended queue?',
+                    options: ['`std::vector`', '`std::list`', '`std::deque`', '`std::queue`'],
+                    correctAnswer: '`std::deque`',
+                },
+                {
+                    id: 'cpp_q32', language: 'cpp', topic: 'cpp_stl',
+                    questionText: 'What is an iterator in STL?',
+                    options: ['A pointer to a container', 'An object that points to an element in a container', 'A function that iterates over a container', 'A type of container'],
+                    correctAnswer: 'An object that points to an element in a container',
+                },
+                {
+                    id: 'cpp_q33', language: 'cpp', topic: 'cpp_stl',
+                    questionText: 'Which STL algorithm is used to sort elements in a range?',
+                    options: ['`std::find`', '`std::copy`', '`std::sort`', '`std::unique`'],
+                    correctAnswer: '`std::sort`',
+                },
+                {
+                    id: 'cpp_q34', language: 'cpp', topic: 'cpp_stl',
+                    questionText: 'Which STL container stores key-value pairs in a sorted order?',
+                    options: ['`std::vector`', '`std::map`', '`std::list`', '`std::set`'],
+                    correctAnswer: '`std::map`',
+                },
+                {
+                    id: 'cpp_q35', language: 'cpp', topic: 'cpp_stl',
+                    questionText: 'What is the purpose of `std::pair`?',
+                    options: ['To store a single value', 'To store two heterogeneous values as a single unit', 'To store a list of values', 'To store a map of values'],
+                    correctAnswer: 'To store two heterogeneous values as a single unit',
+                },
+                { id: 'cpp_q12', language: 'cpp', topic: 'cpp_pointers_references', questionText: 'What is the main difference between a pointer and a reference in C++?', options: ['Pointers can be null, references cannot', 'References can be reassigned, pointers cannot', 'Pointers are safer than references', 'No significant difference'], correctAnswer: 'Pointers can be null, references cannot' },
+                { id: 'cpp_q17', language: 'cpp', topic: 'cpp_pointers_references', questionText: 'What is a dangling pointer?', options: ['A pointer that points to a valid memory location', 'A pointer that points to a deallocated memory location', 'A pointer that points to a NULL address', 'A pointer that is not initialized'], correctAnswer: 'A pointer that points to a deallocated memory location' },
+                {
+                    id: 'cpp_q36', language: 'cpp', topic: 'cpp_pointers_references',
+                    questionText: 'How do you declare a reference to an integer `x` in C++?',
+                    options: ['`int *ref = &x;`', '`int &ref = x;`', '`int ref = x;`', '`int ref = *x;`'],
+                    correctAnswer: '`int &ref = x;`',
+                },
+                {
+                    id: 'cpp_q37', language: 'cpp', topic: 'cpp_pointers_references',
+                    questionText: 'Can a reference be reassigned to refer to a different variable after initialization?',
+                    options: ['Yes', 'No', 'Only if it\'s a const reference', 'Only if it\'s a pointer reference'],
+                    correctAnswer: 'No',
+                },
+                {
+                    id: 'cpp_q38', language: 'cpp', topic: 'cpp_pointers_references',
+                    questionText: 'What is a smart pointer in C++?',
+                    options: ['A regular pointer with extra features', 'A pointer that automatically manages memory', 'A pointer that points to a smart object', 'A pointer that cannot be dereferenced'],
+                    correctAnswer: 'A pointer that automatically manages memory',
+                },
+                {
+                    id: 'cpp_q39', language: 'cpp', topic: 'cpp_pointers_references',
+                    questionText: 'Which smart pointer ensures exclusive ownership of the pointed-to object?',
+                    options: ['`std::shared_ptr`', '`std::weak_ptr`', '`std::unique_ptr`', '`std::auto_ptr`'],
+                    correctAnswer: '`std::unique_ptr`',
+                },
+                {
+                    id: 'cpp_q40', language: 'cpp', topic: 'cpp_pointers_references',
+                    questionText: 'What is the purpose of `const` with pointers?',
+                    options: ['To make the pointer itself constant', 'To make the data pointed to by the pointer constant', 'Both A and B', 'To make the pointer null'],
+                    correctAnswer: 'Both A and B',
+                },
+                { id: 'cpp_q13', language: 'cpp', topic: 'cpp_inheritance_polymorphism', questionText: 'What is a pure virtual function in C++?', options: ['A function that can be overridden', 'A virtual function that must be implemented by derived classes', 'A function that takes no arguments', 'A function that returns void'], correctAnswer: 'A virtual function that must be implemented by derived classes' },
+                { id: 'cpp_q18', language: 'cpp', topic: 'cpp_inheritance_polymorphism', questionText: 'What is the diamond problem in C++ inheritance?', options: ['A problem with multiple inheritance where a class inherits from two classes that have a common base class', 'A problem with single inheritance where a class inherits from a base class', 'A problem with virtual functions', 'A problem with abstract classes'], correctAnswer: 'A problem with multiple inheritance where a class inherits from two classes that have a common base class' },
+                {
+                    id: 'cpp_q41', language: 'cpp', topic: 'cpp_inheritance_polymorphism',
+                    questionText: 'What is an abstract class in C++?',
+                    options: ['A class that cannot be instantiated and may contain pure virtual functions', 'A class that can only be inherited', 'A class with no members', 'A class that is always public'],
+                    correctAnswer: 'A class that cannot be instantiated and may contain pure virtual functions',
+                },
+                {
+                    id: 'cpp_q42', language: 'cpp', topic: 'cpp_inheritance_polymorphism',
+                    questionText: 'What is method overriding?',
+                    options: ['Defining a method with the same name in the same class', 'Defining a method with the same name and signature in a derived class', 'Defining multiple methods with different parameters', 'Defining a static method'],
+                    correctAnswer: 'Defining a method with the same name and signature in a derived class',
+                },
+                {
+                    id: 'cpp_q43', language: 'cpp', topic: 'cpp_inheritance_polymorphism',
+                    questionText: 'What is runtime polymorphism achieved through in C++?',
+                    options: ['Function overloading', 'Operator overloading', 'Virtual functions and pointers/references', 'Templates'],
+                    correctAnswer: 'Virtual functions and pointers/references',
+                },
+                {
+                    id: 'cpp_q44', language: 'cpp', topic: 'cpp_inheritance_polymorphism',
+                    questionText: 'What is the purpose of the `virtual` keyword?',
+                    options: ['To make a function static', 'To enable dynamic dispatch (runtime polymorphism)', 'To make a function private', 'To make a function inline'],
+                    correctAnswer: 'To enable dynamic dispatch (runtime polymorphism)',
+                },
+                {
+                    id: 'cpp_q45', language: 'cpp', topic: 'cpp_inheritance_polymorphism',
+                    questionText: 'What is a base class?',
+                    options: ['A class that inherits from another class', 'A class from which other classes inherit', 'A class that has no members', 'A class that is always abstract'],
+                    correctAnswer: 'A class from which other classes inherit',
+                },
+                { id: 'cpp_q14', language: 'cpp', topic: 'cpp_templates', questionText: 'What is the purpose of templates in C++?', options: ['To create generic functions and classes that work with any data type', 'To define constants', 'To handle exceptions', 'To manage memory'], correctAnswer: 'To create generic functions and classes that work with any data type' },
+                { id: 'cpp_q19', language: 'cpp', topic: 'cpp_templates', questionText: 'What is template metaprogramming?', options: ['Writing programs that generate other programs at compile time', 'Writing programs that use templates at runtime', 'Writing programs that use generic algorithms', 'Writing programs that use function templates'], correctAnswer: 'Writing programs that generate other programs at compile time' },
+                {
+                    id: 'cpp_q46', language: 'cpp', topic: 'cpp_templates',
+                    questionText: 'What is a function template?',
+                    options: ['A template for a class', 'A blueprint for creating functions that can operate on different data types', 'A function that takes a template as an argument', 'A function that returns a template'],
+                    correctAnswer: 'A blueprint for creating functions that can operate on different data types',
+                },
+                {
+                    id: 'cpp_q47', language: 'cpp', topic: 'cpp_templates',
+                    questionText: 'What is a class template?',
+                    options: ['A template for a function', 'A blueprint for creating classes that can work with different data types', 'A class that uses templates internally', 'A class that generates templates'],
+                    correctAnswer: 'A blueprint for creating classes that can work with different data types',
+                },
+                {
+                    id: 'cpp_q48', language: 'cpp', topic: 'cpp_templates',
+                    questionText: 'Can templates be specialized for specific data types?',
+                    options: ['No', 'Yes, through template specialization', 'Only for primitive types', 'Only for user-defined types'],
+                    correctAnswer: 'Yes, through template specialization',
+                },
+                {
+                    id: 'cpp_q49', language: 'cpp', topic: 'cpp_templates',
+                    questionText: 'What is the primary benefit of using templates?',
+                    options: ['Code reusability and type safety', 'Faster execution speed', 'Smaller executable size', 'Easier debugging'],
+                    correctAnswer: 'Code reusability and type safety',
+                },
+                {
+                    id: 'cpp_q50', language: 'cpp', topic: 'cpp_templates',
+                    questionText: 'What is a non-type template parameter?',
+                    options: ['A template parameter that is a type', 'A template parameter that is a value (e.g., an integer)', 'A template parameter that is a function', 'A template parameter that is a class'],
+                    correctAnswer: 'A template parameter that is a value (e.g., an integer)',
+                },
+                { id: 'cpp_q15', language: 'cpp', topic: 'cpp_exceptions', questionText: 'Which keywords are used for exception handling in C++?', options: ['`try`, `catch`, `finally`', '`try`, `except`, `else`', '`try`, `catch`, `throw`', '`begin`, `end`, `error`'], correctAnswer: '`try`, `catch`, `throw`' },
+                { id: 'cpp_q20', language: 'cpp', topic: 'cpp_exceptions', questionText: 'When is the `catch` block executed in C++ exception handling?', options: ['Always', 'When an exception is thrown in the `try` block and a matching `catch` handler is found', 'When the `try` block completes successfully', 'Never'], correctAnswer: 'When an exception is thrown in the `try` block and a matching `catch` handler is found' },
+                {
+                    id: 'cpp_q51', language: 'cpp', topic: 'cpp_exceptions',
+                    questionText: 'What is the purpose of the `throw` keyword?',
+                    options: ['To define an exception', 'To catch an exception', 'To re-throw an exception', 'To signal that an error has occurred'],
+                    correctAnswer: 'To signal that an error has occurred',
+                },
+                {
+                    id: 'cpp_q52', language: 'cpp', topic: 'cpp_exceptions',
+                    questionText: 'What happens if an exception is thrown but not caught?',
+                    options: ['The program continues normally', 'The program terminates abnormally', 'The exception is ignored', 'The `main` function restarts'],
+                    correctAnswer: 'The program terminates abnormally',
+                },
+                {
+                    id: 'cpp_q53', language: 'cpp', topic: 'cpp_exceptions',
+                    questionText: 'What is an exception specification in C++?',
+                    options: ['A list of exceptions a function might throw', 'A way to define custom exceptions', 'A mechanism to handle exceptions', 'A way to ignore exceptions'],
+                    correctAnswer: 'A list of exceptions a function might throw',
+                },
+                {
+                    id: 'cpp_q54', language: 'cpp', topic: 'cpp_exceptions',
+                    questionText: 'Can you have multiple `catch` blocks for a single `try` block?',
+                    options: ['No', 'Yes', 'Only if they catch the same type of exception', 'Only if they catch different types of exceptions'],
+                    correctAnswer: 'Yes',
+                },
+                {
+                    id: 'cpp_q55', language: 'cpp', topic: 'cpp_exceptions',
+                    questionText: 'What is the purpose of `std::exception`?',
+                    options: ['It is a base class for all standard C++ exceptions', 'It is a function that throws exceptions', 'It is a keyword for exception handling', 'It is a type of error'],
+                    correctAnswer: 'It is a base class for all standard C++ exceptions',
+                },
+                {
+                    id: 'cpp_q56', language: 'cpp', topic: 'cpp_file_io',
+                    questionText: 'Which class is used for output file stream in C++?',
+                    options: ['`ifstream`', '`ofstream`', '`fstream`', '`iostream`'],
+                    correctAnswer: '`ofstream`',
+                },
+                {
+                    id: 'cpp_q57', language: 'cpp', topic: 'cpp_file_io',
+                    questionText: 'How do you check if a file opened successfully in C++?',
+                    options: ['Using `file.good()`', 'Using `file.is_open()`', 'Using `file.exists()`', 'Using `file.status()`'],
+                    correctAnswer: 'Using `file.is_open()`',
+                },
+                {
+                    id: 'cpp_q58', language: 'cpp', topic: 'cpp_file_io',
+                    questionText: 'Which operator is used to write data to an output file stream?',
+                    options: ['`>>`', '`<<`', '`=`', '`+`'],
+                    correctAnswer: '`<<`',
+                },
+                {
+                    id: 'cpp_q59', language: 'cpp', topic: 'cpp_file_io',
+                    questionText: 'What is the purpose of `std::getline()`?',
+                    options: ['To read a single character', 'To read a line of text from an input stream', 'To write a line of text to an output stream', 'To check for end of file'],
+                    correctAnswer: 'To read a line of text from an input stream',
+                },
+                {
+                    id: 'cpp_q60', language: 'cpp', topic: 'cpp_file_io',
+                    questionText: 'Which header file is typically included for file I/O operations in C++?',
+                    options: ['`<iostream>`', '`<fstream>`', '`<string>`', '`<vector>`'],
+                    correctAnswer: '`<fstream>`',
+                },
+                {
+                    id: 'cpp_q61', language: 'cpp', topic: 'cpp_memory_management',
+                    questionText: 'What is the purpose of `delete` operator in C++?',
+                    options: ['To allocate memory', 'To deallocate memory allocated with `new`', 'To initialize memory', 'To check memory status'],
+                    correctAnswer: 'To deallocate memory allocated with `new`',
+                },
+                {
+                    id: 'cpp_q62', language: 'cpp', topic: 'cpp_memory_management',
+                    questionText: 'What is the difference between `new` and `malloc` in C++?',
+                    options: ['`new` calls constructors, `malloc` does not', '`malloc` calls constructors, `new` does not', '`new` is for C, `malloc` is for C++', 'No difference'],
+                    correctAnswer: '`new` calls constructors, `malloc` does not',
+                },
+                {
+                    id: 'cpp_q63', language: 'cpp', topic: 'cpp_memory_management',
+                    questionText: 'What is a heap in C++ memory management?',
+                    options: ['Static memory', 'Stack memory', 'Dynamically allocated memory', 'Global memory'],
+                    correctAnswer: 'Dynamically allocated memory',
+                },
+                {
+                    id: 'cpp_q64', language: 'cpp', topic: 'cpp_memory_management',
+                    questionText: 'What is the purpose of `new[]` and `delete[]`?',
+                    options: ['To allocate/deallocate single objects', 'To allocate/deallocate arrays of objects', 'To allocate/deallocate pointers', 'To allocate/deallocate functions'],
+                    correctAnswer: 'To allocate/deallocate arrays of objects',
+                },
+                {
+                    id: 'cpp_q65', language: 'cpp', topic: 'cpp_memory_management',
+                    questionText: 'What is RAII (Resource Acquisition Is Initialization)?',
+                    options: ['A memory allocation technique', 'A programming idiom where resource acquisition is tied to object lifetime', 'A type of smart pointer', 'A debugging technique'],
+                    correctAnswer: 'A programming idiom where resource acquisition is tied to object lifetime',
+                },
+                {
+                    id: 'cpp_q66', language: 'cpp', topic: 'cpp_smart_pointers',
+                    questionText: 'Which smart pointer allows multiple pointers to share ownership of an object?',
+                    options: ['`std::unique_ptr`', '`std::shared_ptr`', '`std::weak_ptr`', '`std::auto_ptr`'],
+                    correctAnswer: '`std::shared_ptr`',
+                },
+                {
+                    id: 'cpp_q67', language: 'cpp', topic: 'cpp_smart_pointers',
+                    questionText: 'What is the purpose of `std::weak_ptr`?',
+                    options: ['To manage exclusive ownership', 'To provide non-owning (weak) references to objects managed by `shared_ptr`', 'To manage raw pointers', 'To manage arrays'],
+                    correctAnswer: 'To provide non-owning (weak) references to objects managed by `shared_ptr`',
+                },
+                {
+                    id: 'cpp_q68', language: 'cpp', topic: 'cpp_smart_pointers',
+                    questionText: 'When should you use `std::unique_ptr`?',
+                    options: ['When you need shared ownership', 'When you need exclusive ownership and automatic memory management', 'When you need a raw pointer', 'When you need to avoid circular references'],
+                    correctAnswer: 'When you need exclusive ownership and automatic memory management',
+                },
+                {
+                    id: 'cpp_q69', language: 'cpp', topic: 'cpp_smart_pointers',
+                    questionText: 'What is the `get()` method of a smart pointer used for?',
+                    options: ['To get the value pointed to', 'To get the raw pointer managed by the smart pointer', 'To get the size of the object', 'To get the type of the object'],
+                    correctAnswer: 'To get the raw pointer managed by the smart pointer',
+                },
+                {
+                    id: 'cpp_q70', language: 'cpp', topic: 'cpp_smart_pointers',
+                    questionText: 'Can `std::unique_ptr` be copied?',
+                    options: ['Yes', 'No, it can only be moved', 'Only if the object is primitive', 'Only if it is a const unique_ptr'],
+                    correctAnswer: 'No, it can only be moved',
+                },
+
+
+                // --- Python Questions (Example Set) ---
+                {
+                    id: 'py_q1', language: 'python', topic: 'py_basics',
+                    questionText: 'Which keyword is used to define a function in Python?',
+                    options: ['function', 'def', 'func', 'define'],
+                    correctAnswer: 'def',
+                },
+                {
+                    id: 'py_q2', language: 'python', topic: 'py_basics',
+                    questionText: 'What is the output of `print(type([]))` in Python?',
+                    options: ['<class \'list\'>', '<class \'array\'>', '<class \'tuple\'>', '<class \'dict\'>'],
+                    correctAnswer: '<class \'list\'>',
+                },
+                {
+                    id: 'py_q3', language: 'python', topic: 'py_basics',
+                    questionText: 'Which of the following is NOT a valid variable name in Python?',
+                    options: ['_my_var', 'myVar', '2myvar', 'my_var2'],
+                    correctAnswer: '2myvar',
+                },
+                {
+                    id: 'py_q4', language: 'python', topic: 'py_basics',
+                    questionText: 'How do you comment out multiple lines in Python?',
+                    options: ['// This is a comment', '/* This is a comment */', 'Using triple quotes (single or double)', '# This is a comment'],
+                    correctAnswer: 'Using triple quotes (single or double)',
+                },
+                {
+                    id: 'py_q5', language: 'python', topic: 'py_basics',
+                    questionText: 'What is the correct way to import a module named `math` in Python?',
+                    options: ['include math', 'import math', 'use math', 'require math'],
+                    correctAnswer: 'import math',
+                },
+                {
+                    id: 'py_q36', language: 'python', topic: 'py_basics',
+                    questionText: 'What is the purpose of `pip` in Python?',
+                    options: ['A built-in data type', 'A package installer for Python', 'A code editor', 'A debugger'],
+                    correctAnswer: 'A package installer for Python',
+                },
+                {
+                    id: 'py_q37', language: 'python', topic: 'py_basics',
+                    questionText: 'Which of the following is used to read input from the user in Python?',
+                    options: ['`print()`', '`input()`', '`get()`', '`read()`'],
+                    correctAnswer: '`input()`',
+                },
+                {
+                    id: 'py_q38', language: 'python', topic: 'py_basics',
+                    questionText: 'What is the output of `5 // 2` in Python?',
+                    options: ['2.5', '2', '3', 'Error'],
+                    correctAnswer: '2',
+                },
+                {
+                    id: 'py_q39', language: 'python', topic: 'py_basics',
+                    questionText: 'Which operator is used for exponentiation in Python?',
+                    options: ['`^`', '`**`', '`//`', '`%`'],
+                    correctAnswer: '`**`',
+                },
+                {
+                    id: 'py_q40', language: 'python', topic: 'py_basics',
+                    questionText: 'What is the correct way to declare a multi-line string in Python?',
+                    options: ['Using single quotes', 'Using double quotes', 'Using triple quotes (single or double)', 'Using backticks'],
+                    correctAnswer: 'Using triple quotes (single or double)',
+                },
+                {
+                    id: 'py_q6', language: 'python', topic: 'py_data_types',
+                    questionText: 'Which of the following is an immutable data type in Python?',
+                    options: ['list', 'dictionary', 'set', 'tuple'],
+                    correctAnswer: 'tuple',
+                },
+                {
+                    id: 'py_q7', language: 'python', topic: 'py_data_types',
+                    questionText: 'What is the result of `3 + 2 * 4` in Python?',
+                    options: ['20', '11', '14', 'Error'],
+                    correctAnswer: '11',
+                },
+                {
+                    id: 'py_q8', language: 'python', topic: 'py_data_types',
+                    questionText: 'Which method is used to add an element to the end of a list in Python?',
+                    options: ['insert()', 'add()', 'append()', 'put()'],
+                    correctAnswer: 'append()',
+                },
+                {
+                    id: 'py_q9', language: 'python', topic: 'py_data_types',
+                    questionText: 'How do you create an empty dictionary in Python?',
+                    options: ['{}', 'dict()', 'Both A and B', '[]'],
+                    correctAnswer: 'Both A and B',
+                },
+                {
+                    id: 'py_q10', language: 'python', topic: 'py_data_types',
+                    questionText: 'What is the purpose of the `len()` function in Python?',
+                    options: ['To convert to lowercase', 'To check if a variable is empty', 'To get the length of an object', 'To concatenate strings'],
+                    correctAnswer: 'To get the length of an object',
+                },
+                {
+                    id: 'py_q41', language: 'python', topic: 'py_data_types',
+                    questionText: 'Which data type is used to store a sequence of characters in Python?',
+                    options: ['char', 'string', 'str', 'text'],
+                    correctAnswer: 'str',
+                },
+                {
+                    id: 'py_q42', language: 'python', topic: 'py_data_types',
+                    questionText: 'What is a boolean data type in Python?',
+                    options: ['A type that stores numbers', 'A type that stores text', 'A type that stores `True` or `False` values', 'A type that stores lists'],
+                    correctAnswer: 'A type that stores `True` or `False` values',
+                },
+                {
+                    id: 'py_q43', language: 'python', topic: 'py_data_types',
+                    questionText: 'How do you convert an integer to a string in Python?',
+                    options: ['`int_to_str()`', '`str()`', '`to_string()`', '`convert()`'],
+                    correctAnswer: '`str()`',
+                },
+                {
+                    id: 'py_q44', language: 'python', topic: 'py_data_types',
+                    questionText: 'What is slicing in Python lists?',
+                    options: ['Adding elements to a list', 'Removing elements from a list', 'Extracting a portion of a list', 'Sorting a list'],
+                    correctAnswer: 'Extracting a portion of a list',
+                },
+                {
+                    id: 'py_q45', language: 'python', topic: 'py_data_types',
+                    questionText: 'What is the difference between a list and a tuple in Python?',
+                    options: ['Lists are immutable, tuples are mutable', 'Lists are ordered, tuples are unordered', 'Lists are mutable, tuples are immutable', 'No difference'],
+                    correctAnswer: 'Lists are mutable, tuples are immutable',
+                },
+                {
+                    id: 'py_q11', language: 'python', topic: 'py_control_flow',
+                    questionText: 'Which loop is used to iterate over a sequence (like a list or tuple) in Python?',
+                    options: ['while loop', 'do-while loop', 'for loop', 'repeat loop'],
+                    correctAnswer: 'for loop',
+                },
+                {
+                    id: 'py_q12', language: 'python', topic: 'py_control_flow',
+                    questionText: 'What does the `break` statement do in a loop?',
+                    options: ['Skips the current iteration', 'Exits the loop entirely', 'Restarts the loop', 'Continues to the next loop'],
+                    correctAnswer: 'Exits the loop entirely',
+                },
+                {
+                    id: 'py_q13', language: 'python', topic: 'py_control_flow',
+                    questionText: 'Which statement is used for conditional execution in Python?',
+                    options: ['switch', 'case', 'if-elif-else', 'choose'],
+                    correctAnswer: 'if-elif-else',
+                },
+                {
+                    id: 'py_q14', language: 'python', topic: 'py_control_flow',
+                    questionText: 'What is the purpose of the `pass` statement in Python?',
+                    options: ['It is used to skip a block of code', 'It is a null operation; nothing happens when it executes', 'It is used to exit a function', 'It is used to define a placeholder variable'],
+                    correctAnswer: 'It is a null operation; nothing happens when it executes',
+                },
+                {
+                    id: 'py_q15', language: 'python', topic: 'py_control_flow',
+                    questionText: 'How do you write an `else if` condition in Python?',
+                    options: ['else if', 'elif', 'elseif', 'else_if'],
+                    correctAnswer: 'elif',
+                },
+                {
+                    id: 'py_q46', language: 'python', topic: 'py_control_flow',
+                    questionText: 'What does the `continue` statement do in a loop?',
+                    options: ['Exits the loop', 'Skips the rest of the current iteration and moves to the next', 'Restarts the loop', 'Ends the program'],
+                    correctAnswer: 'Skips the rest of the current iteration and moves to the next',
+                },
+                {
+                    id: 'py_q47', language: 'python', topic: 'py_control_flow',
+                    questionText: 'What is the purpose of the `range()` function in a `for` loop?',
+                    options: ['To define a list of numbers', 'To generate a sequence of numbers', 'To check if a number is in a range', 'To calculate the range of values'],
+                    correctAnswer: 'To generate a sequence of numbers',
+                },
+                {
+                    id: 'py_q48', language: 'python', topic: 'py_control_flow',
+                    questionText: 'Which keyword is used to exit a function in Python?',
+                    options: ['`exit`', '`quit`', '`return`', '`break`'],
+                    correctAnswer: '`return`',
+                },
+                {
+                    id: 'py_q49', language: 'python', topic: 'py_control_flow',
+                    questionText: 'What is a nested loop?',
+                    options: ['A loop that runs once', 'A loop inside another loop', 'A loop that never ends', 'A loop that iterates over a nested list'],
+                    correctAnswer: 'A loop inside another loop',
+                },
+                {
+                    id: 'py_q50', language: 'python', topic: 'py_control_flow',
+                    questionText: 'What is the purpose of the `else` block with a `for` loop in Python?',
+                    options: ['It executes if the loop is terminated by `break`', 'It executes if the loop completes without a `break`', 'It always executes after the loop', 'It is an error'],
+                    correctAnswer: 'It executes if the loop completes without a `break`',
+                },
+                {
+                    id: 'py_q16', language: 'python', topic: 'py_functions',
+                    questionText: 'What is a lambda function in Python?',
+                    options: ['A function that takes no arguments', 'An anonymous function', 'A function that returns another function', 'A function defined inside another function'],
+                    correctAnswer: 'An anonymous function',
+                },
+                {
+                    id: 'py_q17', language: 'python', topic: 'py_functions',
+                    questionText: 'What is the purpose of the `return` statement in a function?',
+                    options: ['To print a value to the console', 'To exit the function and send a value back to the caller', 'To define a variable', 'To call another function'],
+                    correctAnswer: 'To exit the function and send a value back to the caller',
+                },
+                {
+                    id: 'py_q18', language: 'python', topic: 'py_functions',
+                    questionText: 'Which type of argument allows passing a variable number of non-keyword arguments to a function?',
+                    options: ['Keyword arguments', 'Default arguments', 'Arbitrary arguments (*args)', 'Positional arguments'],
+                    correctAnswer: 'Arbitrary arguments (*args)',
+                },
+                {
+                    id: 'py_q19', language: 'python', topic: 'py_functions',
+                    questionText: 'What is a docstring in Python?',
+                    options: ['A single-line comment', 'A string literal used to document a module, class, function, or method', 'A type of variable', 'A special keyword for functions'],
+                    correctAnswer: 'A string literal used to document a module, class, function, or method',
+                },
+                {
+                    id: 'py_q20', language: 'python', topic: 'py_functions',
+                    questionText: 'What is recursion in Python?',
+                    options: ['A function calling itself', 'A function that never ends', 'A function that takes no arguments', 'A function that returns a boolean value'],
+                    correctAnswer: 'A function calling itself',
+                },
+                {
+                    id: 'py_q51', language: 'python', topic: 'py_functions',
+                    questionText: 'What is a default argument in a Python function?',
+                    options: ['An argument that must always be provided', 'An argument with a predefined value if not supplied by the caller', 'An argument that can be skipped', 'An argument that is always a string'],
+                    correctAnswer: 'An argument with a predefined value if not supplied by the caller',
+                },
+                {
+                    id: 'py_q52', language: 'python', topic: 'py_functions',
+                    questionText: 'What is the purpose of `**kwargs` in a function definition?',
+                    options: ['To accept a variable number of positional arguments', 'To accept a variable number of keyword arguments', 'To accept a fixed number of arguments', 'To accept no arguments'],
+                    correctAnswer: 'To accept a variable number of keyword arguments',
+                },
+                {
+                    id: 'py_q53', language: 'python', topic: 'py_functions',
+                    questionText: 'What is a higher-order function in Python?',
+                    options: ['A function that returns multiple values', 'A function that takes another function as an argument or returns a function', 'A function that is defined at the top level of a module', 'A function that uses recursion'],
+                    correctAnswer: 'A function that takes another function as an argument or returns a function',
+                },
+                {
+                    id: 'py_q54', language: 'python', topic: 'py_functions',
+                    questionText: 'What is the scope of a global variable in Python?',
+                    options: ['Only within the function where it is declared', 'Only within the module where it is declared', 'Throughout the entire program', 'Only within the class where it is declared'],
+                    correctAnswer: 'Throughout the entire program',
+                },
+                {
+                    id: 'py_q55', language: 'python', topic: 'py_functions',
+                    questionText: 'How do you define a function that takes no arguments in Python?',
+                    options: ['`def func():`', '`def func(void):`', '`def func(None):`', '`def func(0):`'],
+                    correctAnswer: '`def func():`',
+                },
+                {
+                    id: 'py_q21', language: 'python', topic: 'py_oop',
+                    questionText: 'What does OOP stand for?',
+                    options: ['Object-Oriented Programming', 'Ordered Object Protocol', 'Original Object Paradigm', 'Optimal Object Processing'],
+                    correctAnswer: 'Object-Oriented Programming',
+                },
+                {
+                    id: 'py_q22', language: 'python', topic: 'py_oop',
+                    questionText: 'Which method is automatically called when an object is created from a class in Python?',
+                    options: ['`__new__`', '`__init__`', '`__call__`', '`__create__`'],
+                    correctAnswer: '`__init__`',
+                },
+                {
+                    id: 'py_q23', language: 'python', topic: 'py_oop',
+                    questionText: 'What is encapsulation in OOP?',
+                    options: ['Hiding the implementation details and exposing only the necessary functionalities', 'Creating multiple objects from a single class', 'Allowing objects to take on many forms', 'Inheriting properties from a parent class'],
+                    correctAnswer: 'Hiding the implementation details and exposing only the necessary functionalities',
+                },
+                {
+                    id: 'py_q24', language: 'python', topic: 'py_oop',
+                    questionText: 'What is polymorphism in Python?',
+                    options: ['The ability of an object to take on many forms', 'The process of creating multiple instances of a class', 'The concept of bundling data and methods that operate on the data within one unit', 'The mechanism of creating a new class from an existing class'],
+                    correctAnswer: 'The ability of an object to take on many forms',
+                },
+                {
+                    id: 'py_q25', language: 'python', topic: 'py_oop',
+                    questionText: 'Which keyword is used to refer to the instance of a class in Python?',
+                    options: ['`this`', '`self`', '`me`', '`instance`'],
+                    correctAnswer: '`self`',
+                },
+                {
+                    id: 'py_q56', language: 'python', topic: 'py_oop',
+                    questionText: 'What is inheritance in Python OOP?',
+                    options: ['A mechanism to create new classes from existing classes', 'A way to hide data', 'A way to define functions', 'A way to create objects'],
+                    correctAnswer: 'A mechanism to create new classes from existing classes',
+                },
+                {
+                    id: 'py_q57', language: 'python', topic: 'py_oop',
+                    questionText: 'What is a class variable in Python?',
+                    options: ['A variable specific to an object instance', 'A variable shared by all instances of a class', 'A local variable inside a method', 'A global variable'],
+                    correctAnswer: 'A variable shared by all instances of a class',
+                },
+                {
+                    id: 'py_q58', language: 'python', topic: 'py_oop',
+                    questionText: 'What is method overriding in Python?',
+                    options: ['Defining a method with the same name in the same class', 'Defining a method in a subclass with the same name as a method in its superclass', 'Defining multiple methods with different parameters', 'Defining a static method'],
+                    correctAnswer: 'Defining a method in a subclass with the same name as a method in its superclass',
+                },
+                {
+                    id: 'py_q59', language: 'python', topic: 'py_oop',
+                    questionText: 'What is an abstract method in Python?',
+                    options: ['A method that has no implementation and must be overridden by subclasses', 'A method that is always static', 'A method that returns nothing', 'A method that takes no arguments'],
+                    correctAnswer: 'A method that has no implementation and must be overridden by subclasses',
+                },
+                {
+                    id: 'py_q60', language: 'python', topic: 'py_oop',
+                    questionText: 'What is the purpose of the `super()` function in Python?',
+                    options: ['To call a method from a sibling class', 'To call a method from the parent class', 'To call a method from a child class', 'To call a static method'],
+                    correctAnswer: 'To call a method from the parent class',
+                },
+                { id: 'py_q26', language: 'python', topic: 'py_modules', questionText: 'How do you install a Python package using pip?', options: ['`pip install package_name`', '`install package_name`', '`python install package_name`', '`get package_name`'], correctAnswer: '`pip install package_name`' },
+                { id: 'py_q31', language: 'python', topic: 'py_modules', questionText: 'What is the purpose of `__init__.py` file in a Python package?', options: ['It marks a directory as a Python package', 'It contains the main function of the package', 'It is used for package documentation', 'It defines the package version'], correctAnswer: 'It marks a directory as a Python package' },
+                {
+                    id: 'py_q61', language: 'python', topic: 'py_modules',
+                    questionText: 'How do you import a specific function `func` from a module `mod`?',
+                    options: ['`import mod.func`', '`from mod import func`', '`include mod.func`', '`require func from mod`'],
+                    correctAnswer: '`from mod import func`',
+                },
+                {
+                    id: 'py_q62', language: 'python', topic: 'py_modules',
+                    questionText: 'What is the purpose of `as` keyword during import?',
+                    options: ['To create an alias for the imported module or function', 'To specify the version of the module', 'To define a new module', 'To install a module'],
+                    correctAnswer: 'To create an alias for the imported module or function',
+                },
+                {
+                    id: 'py_q63', language: 'python', topic: 'py_modules',
+                    questionText: 'What is the `sys` module used for?',
+                    options: ['Mathematical operations', 'System-specific parameters and functions', 'File I/O operations', 'Web development'],
+                    correctAnswer: 'System-specific parameters and functions',
+                },
+                {
+                    id: 'py_q64', language: 'python', topic: 'py_modules',
+                    questionText: 'What is a package in Python?',
+                    options: ['A single Python file', 'A collection of modules in directories', 'A built-in data type', 'A type of function'],
+                    correctAnswer: 'A collection of modules in directories',
+                },
+                {
+                    id: 'py_q65', language: 'python', topic: 'py_modules',
+                    questionText: 'What is the difference between a module and a package?',
+                    options: ['A module is a single file, a package is a directory containing modules', 'A package is a single file, a module is a directory', 'No difference', 'Modules are for functions, packages are for classes'],
+                    correctAnswer: 'A module is a single file, a package is a directory containing modules',
+                },
+                { id: 'py_q27', language: 'python', topic: 'py_error_handling', questionText: 'Which block is used to handle exceptions in Python?', options: ['`try-catch`', '`try-except`', '`try-finally`', '`try-error`'], correctAnswer: '`try-except`' },
+                { id: 'py_q32', language: 'python', topic: 'py_error_handling', questionText: 'Which exception is raised when a variable is not found?', options: ['`TypeError`', '`ValueError`', '`NameError`', '`AttributeError`'], correctAnswer: '`NameError`' },
+                {
+                    id: 'py_q66', language: 'python', topic: 'py_error_handling',
+                    questionText: 'What is the purpose of the `finally` block in exception handling?',
+                    options: ['It executes only if an exception occurs', 'It executes only if no exception occurs', 'It always executes, regardless of whether an exception occurred or not', 'It is optional and rarely used'],
+                    correctAnswer: 'It always executes, regardless of whether an exception occurred or not',
+                },
+                {
+                    id: 'py_q67', language: 'python', topic: 'py_error_handling',
+                    questionText: 'How do you raise a custom exception in Python?',
+                    options: ['`create Exception("Error")`', '`throw Exception("Error")`', '`raise Exception("Error")`', '`error("Error")`'],
+                    correctAnswer: '`raise Exception("Error")`',
+                },
+                {
+                    id: 'py_q68', language: 'python', topic: 'py_error_handling',
+                    questionText: 'What is a `TypeError`?',
+                    options: ['An error when a variable is not defined', 'An error when an operation is performed on an object of an inappropriate type', 'An error when a file is not found', 'An error when memory is full'],
+                    correctAnswer: 'An error when an operation is performed on an object of an inappropriate type',
+                },
+                {
+                    id: 'py_q69', language: 'python', topic: 'py_error_handling',
+                    questionText: 'What is the purpose of `assert` statement in Python?',
+                    options: ['To raise an exception', 'To test a condition and raise an `AssertionError` if false', 'To define a variable', 'To print a message'],
+                    correctAnswer: 'To test a condition and raise an `AssertionError` if false',
+                },
+                {
+                    id: 'py_q70', language: 'python', topic: 'py_error_handling',
+                    questionText: 'Can you handle multiple specific exceptions in Python?',
+                    options: ['No, only one `except` block is allowed', 'Yes, by using multiple `except` blocks', 'Only using a generic `except` block', 'Only if they are related exceptions'],
+                    correctAnswer: 'Yes, by using multiple `except` blocks',
+                },
+                { id: 'py_q28', language: 'python', topic: 'py_file_io', questionText: 'Which mode is used to open a file for writing, creating it if it does not exist, and truncating it if it does?', options: ['`"r"`', '`"a"`', '`"w"`', '`"x"`'], correctAnswer: '`"w"`' },
+                { id: 'py_q33', language: 'python', topic: 'py_file_io', questionText: 'How do you read the entire content of a file into a single string in Python?', options: ['`file.readline()`', '`file.readlines()`', '`file.read()`', '`file.get_content()`'], correctAnswer: '`file.read()`' },
+                {
+                    id: 'py_q71', language: 'python', topic: 'py_file_io',
+                    questionText: 'Which keyword is used to ensure a file is properly closed, even if errors occur?',
+                    options: ['`try-except`', '`with open(...) as file:`', '`finally`', '`close()`'],
+                    correctAnswer: '`with open(...) as file:`',
+                },
+                {
+                    id: 'py_q72', language: 'python', topic: 'py_file_io',
+                    questionText: 'What does the `"a"` mode do when opening a file?',
+                    options: ['Reads the file', 'Writes to the beginning of the file', 'Appends to the end of the file', 'Creates a new file for writing'],
+                    correctAnswer: 'Appends to the end of the file',
+                },
+                {
+                    id: 'py_q73', language: 'python', topic: 'py_file_io',
+                    questionText: 'Which method is used to write a list of strings to a file?',
+                    options: ['`file.write()`', '`file.writeline()`', '`file.writelines()`', '`file.put()`'],
+                    correctAnswer: '`file.writelines()`',
+                },
+                {
+                    id: 'py_q74', language: 'python', topic: 'py_file_io',
+                    questionText: 'What is the purpose of `json` module in Python?',
+                    options: ['To handle text files', 'To work with CSV files', 'To encode and decode JSON data', 'To work with binary files'],
+                    correctAnswer: 'To encode and decode JSON data',
+                },
+                {
+                    id: 'py_q75', language: 'python', topic: 'py_file_io',
+                    questionText: 'How do you check if a file exists in Python?',
+                    options: ['`os.path.exists("file.txt")`', '`file.exists("file.txt")`', '`checkfile("file.txt")`', '`has_file("file.txt")`'],
+                    correctAnswer: '`os.path.exists("file.txt")`',
+                },
+                { id: 'py_q29', language: 'python', topic: 'py_data_structures', questionText: 'What is the primary characteristic of a `set` in Python?', options: ['Ordered and mutable', 'Unordered and allows duplicate elements', 'Ordered and allows duplicate elements', 'Unordered and contains unique elements'], correctAnswer: 'Unordered and contains unique elements' },
+                { id: 'py_q34', language: 'python', topic: 'py_data_structures', questionText: 'Which data structure follows the Last-In, First-Out (LIFO) principle?', options: ['Queue', 'List', 'Stack', 'Set'], correctAnswer: 'Stack' },
+                {
+                    id: 'py_q76', language: 'python', topic: 'py_data_structures',
+                    questionText: 'What is a dictionary in Python?',
+                    options: ['An ordered collection of items', 'An unordered collection of key-value pairs', 'A collection of unique elements', 'A fixed-size array'],
+                    correctAnswer: 'An unordered collection of key-value pairs',
+                },
+                {
+                    id: 'py_q77', language: 'python', topic: 'py_data_structures',
+                    questionText: 'Which method is used to remove an element from a dictionary by its key?',
+                    options: ['`remove()`', '`delete()`', '`pop()`', '`discard()`'],
+                    correctAnswer: '`pop()`',
+                },
+                {
+                    id: 'py_q78', language: 'python', topic: 'py_data_structures',
+                    questionText: 'What is a list comprehension in Python?',
+                    options: ['A way to create a list using a `for` loop in a single line', 'A method to sort a list', 'A way to combine two lists', 'A function that returns a list'],
+                    correctAnswer: 'A way to create a list using a `for` loop in a single line',
+                },
+                {
+                    id: 'py_q79', language: 'python', topic: 'py_data_structures',
+                    questionText: 'What is the difference between `list.append()` and `list.extend()`?',
+                    options: ['`append()` adds a single element, `extend()` adds elements from an iterable', '`extend()` adds a single element, `append()` adds elements from an iterable', 'No difference', '`append()` is faster'],
+                    correctAnswer: '`append()` adds a single element, `extend()` adds elements from an iterable',
+                },
+                {
+                    id: 'py_q80', language: 'python', topic: 'py_data_structures',
+                    questionText: 'What is a tuple in Python?',
+                    options: ['A mutable, ordered sequence of items', 'An immutable, ordered sequence of items', 'A mutable, unordered collection of unique items', 'An immutable, unordered collection of key-value pairs'],
+                    correctAnswer: 'An immutable, ordered sequence of items',
+                },
+                { id: 'py_q30', language: 'python', topic: 'py_decorators', questionText: 'What is the purpose of a decorator in Python?', options: ['To modify a function without changing its source code', 'To define a class method', 'To create a new function', 'To handle errors'], correctAnswer: 'To modify a function without changing its source code' },
+                { id: 'py_q35', language: 'python', topic: 'py_decorators', questionText: 'What is the syntax to apply a decorator named `my_decorator` to a function `my_function`?', options: ['`@my_decorator def my_function():`', '`def my_function() @my_decorator:`', '`my_function = my_decorator(my_function)`', 'Both A and C'], correctAnswer: 'Both A and C' },
+                {
+                    id: 'py_q81', language: 'python', topic: 'py_decorators',
+                    questionText: 'What does a decorator function typically return?',
+                    options: ['A boolean value', 'The original function', 'A new, modified function', 'None'],
+                    correctAnswer: 'A new, modified function',
+                },
+                {
+                    id: 'py_q82', language: 'python', topic: 'py_decorators',
+                    questionText: 'Can you chain multiple decorators on a single function?',
+                    options: ['No', 'Yes', 'Only if they are built-in decorators', 'Only if they are custom decorators'],
+                    correctAnswer: 'Yes',
+                },
+                {
+                    id: 'py_q83', language: 'python', topic: 'py_decorators',
+                    questionText: 'What is the purpose of `@property` decorator?',
+                    options: ['To define a static method', 'To define a class method', 'To turn a method into a read-only attribute', 'To define a constructor'],
+                    correctAnswer: 'To turn a method into a read-only attribute',
+                },
+                {
+                    id: 'py_q84', language: 'python', topic: 'py_decorators',
+                    questionText: 'What is a class decorator?',
+                    options: ['A decorator applied to a function within a class', 'A decorator applied to an entire class', 'A decorator that modifies class instances', 'A decorator that modifies class variables'],
+                    correctAnswer: 'A decorator applied to an entire class',
+                },
+                {
+                    id: 'py_q85', language: 'python', topic: 'py_decorators',
+                    questionText: 'What is the `functools.wraps` decorator used for?',
+                    options: ['To apply multiple decorators', 'To preserve the metadata of the original function when using decorators', 'To create a new function', 'To optimize function calls'],
+                    correctAnswer: 'To preserve the metadata of the original function when using decorators',
+                },
+                {
+                    id: 'py_q86', language: 'python', topic: 'py_generators',
+                    questionText: 'What is a generator in Python?',
+                    options: ['A function that returns a list', 'A function that returns an iterator that produces a sequence of values using `yield`', 'A function that generates random numbers', 'A function that generates code'],
+                    correctAnswer: 'A function that returns an iterator that produces a sequence of values using `yield`',
+                },
+                {
+                    id: 'py_q87', language: 'python', topic: 'py_generators',
+                    questionText: 'Which keyword is used in a generator function?',
+                    options: ['`return`', '`yield`', '`generate`', '`produce`'],
+                    correctAnswer: '`yield`',
+                },
+                {
+                    id: 'py_q88', language: 'python', topic: 'py_generators',
+                    questionText: 'What is the primary advantage of using generators?',
+                    options: ['They are faster than regular functions', 'They consume less memory as they produce values on demand (lazy evaluation)', 'They can handle exceptions better', 'They are easier to debug'],
+                    correctAnswer: 'They consume less memory as they produce values on demand (lazy evaluation)',
+                },
+                {
+                    id: 'py_q89', language: 'python', topic: 'py_generators',
+                    questionText: 'What is a generator expression?',
+                    options: ['A function that uses `yield`', 'A compact way to create a generator without defining a function', 'A way to define a list', 'A way to define a dictionary'],
+                    correctAnswer: 'A compact way to create a generator without defining a function',
+                },
+                {
+                    id: 'py_q90', language: 'python', topic: 'py_generators',
+                    questionText: 'Can a generator be iterated multiple times?',
+                    options: ['Yes', 'No, once exhausted, it cannot be restarted without recreating it', 'Only if it is a simple generator', 'Only if it uses `return`'],
+                    correctAnswer: 'No, once exhausted, it cannot be restarted without recreating it',
+                },
+                {
+                    id: 'py_q91', language: 'python', topic: 'py_concurrency',
+                    questionText: 'What is concurrency in Python?',
+                    options: ['Running multiple tasks simultaneously on multiple CPU cores', 'Handling multiple tasks by interleaving their execution over time', 'Running a single task very fast', 'Executing tasks sequentially'],
+                    correctAnswer: 'Handling multiple tasks by interleaving their execution over time',
+                },
+                {
+                    id: 'py_q92', language: 'python', topic: 'py_concurrency',
+                    questionText: 'Which module is commonly used for multithreading in Python?',
+                    options: ['`multiprocessing`', '`threading`', '`asyncio`', '`concurrent`'],
+                    correctAnswer: '`threading`',
+                },
+                {
+                    id: 'py_q93', language: 'python', topic: 'py_concurrency',
+                    questionText: 'What is the Global Interpreter Lock (GIL) in Python?',
+                    options: ['A lock that allows multiple threads to execute Python bytecodes in parallel', 'A lock that allows only one thread to execute Python bytecodes at a time', 'A mechanism for managing memory', 'A tool for debugging concurrent programs'],
+                    correctAnswer: 'A lock that allows only one thread to execute Python bytecodes at a time',
+                },
+                {
+                    id: 'py_q94', language: 'python', topic: 'py_concurrency',
+                    questionText: 'Which module is best suited for CPU-bound tasks in Python?',
+                    options: ['`threading`', '`asyncio`', '`multiprocessing`', '`socket`'],
+                    correctAnswer: '`multiprocessing`',
+                },
+                {
+                    id: 'py_q95', language: 'python', topic: 'py_concurrency',
+                    questionText: 'What is asynchronous programming in Python typically achieved with?',
+                    options: ['Threads', 'Processes', '`asyncio` and `async`/`await`', 'Generators'],
+                    correctAnswer: '`asyncio` and `async`/`await`',
+                },
+                {
+                    id: 'py_q96', language: 'python', topic: 'py_regex',
+                    questionText: 'What does regex stand for?',
+                    options: ['Regular Execution', 'Regular Expression', 'Random Extraction', 'Recursive Expression'],
+                    correctAnswer: 'Regular Expression',
+                },
+                {
+                    id: 'py_q97', language: 'python', topic: 'py_regex',
+                    questionText: 'Which module is used for regular expressions in Python?',
+                    options: ['`regex`', '`re`', '`pattern`', '`match`'],
+                    correctAnswer: '`re`',
+                },
+                {
+                    id: 'py_q98', language: 'python', topic: 'py_regex',
+                    questionText: 'What does `re.search()` do?',
+                    options: ['Finds all occurrences of a pattern', 'Finds the first occurrence of a pattern anywhere in the string', 'Replaces all occurrences of a pattern', 'Splits a string by a pattern'],
+                    correctAnswer: 'Finds the first occurrence of a pattern anywhere in the string',
+                },
+                {
+                    id: 'py_q99', language: 'python', topic: 'py_regex',
+                    questionText: 'What does `.` (dot) character match in regex?',
+                    options: ['Any digit', 'Any whitespace character', 'Any character except newline', 'Any letter'],
+                    correctAnswer: 'Any character except newline',
+                },
+                {
+                    id: 'py_q100', language: 'python', topic: 'py_regex',
+                    questionText: 'What does `*` (asterisk) quantifier mean in regex?',
+                    options: ['One or more occurrences', 'Zero or one occurrence', 'Zero or more occurrences', 'Exactly one occurrence'],
+                    correctAnswer: 'Zero or more occurrences',
+                },
+                {
+                    id: 'py_q101', language: 'python', topic: 'py_web',
+                    questionText: 'Which Python framework is commonly used for web development?',
+                    options: ['Django', 'Flask', 'Both Django and Flask', 'Pygame'],
+                    correctAnswer: 'Both Django and Flask',
+                },
+                {
+                    id: 'py_q102', language: 'python', topic: 'py_web',
+                    questionText: 'What is a "route" in a web framework?',
+                    options: ['A database query', 'A URL pattern mapped to a function or view', 'A template file', 'A web server configuration'],
+                    correctAnswer: 'A URL pattern mapped to a function or view',
+                },
+                {
+                    id: 'py_q103', language: 'python', topic: 'py_web',
+                    questionText: 'What is the purpose of an ORM (Object-Relational Mapper) in web development?',
+                    options: ['To manage web server configurations', 'To map Python objects to database tables and vice-versa', 'To handle HTTP requests', 'To render HTML templates'],
+                    correctAnswer: 'To map Python objects to database tables and vice-versa',
+                },
+                {
+                    id: 'py_q104', language: 'python', topic: 'py_web',
+                    questionText: 'What is a template engine in web development?',
+                    options: ['A tool for managing databases', 'A tool for generating dynamic HTML content', 'A tool for handling user authentication', 'A tool for deploying web applications'],
+                    correctAnswer: 'A tool for generating dynamic HTML content',
+                },
+                {
+                    id: 'py_q105', language: 'python', topic: 'py_web',
+                    questionText: 'Which HTTP method is typically used to retrieve data from a server?',
+                    options: ['POST', 'PUT', 'DELETE', 'GET'],
+                    correctAnswer: 'GET',
+                },
+                {
+                    id: 'py_q106', language: 'python', topic: 'py_testing',
+                    questionText: 'Which built-in module is used for unit testing in Python?',
+                    options: ['`pytest`', '`unittest`', '`nose`', '`doctest`'],
+                    correctAnswer: '`unittest`',
+                },
+                {
+                    id: 'py_q107', language: 'python', topic: 'py_testing',
+                    questionText: 'What is a test fixture?',
+                    options: ['A single test case', 'A set of setup and teardown operations for tests', 'A type of assertion', 'A test report'],
+                    correctAnswer: 'A set of setup and teardown operations for tests',
+                },
+                {
+                    id: 'py_q108', language: 'python', topic: 'py_testing',
+                    questionText: 'What is the purpose of `assert` statements in testing?',
+                    options: ['To print messages', 'To verify that a condition is true', 'To raise exceptions', 'To define test cases'],
+                    correctAnswer: 'To verify that a condition is true',
+                },
+                {
+                    id: 'py_q109', language: 'python', topic: 'py_testing',
+                    questionText: 'What is integration testing?',
+                    options: ['Testing individual units of code in isolation', 'Testing how different parts of a system work together', 'Testing the entire system as a whole', 'Testing user interface interactions'],
+                    correctAnswer: 'Testing how different parts of a system work together',
+                },
+                {
+                    id: 'py_q110', language: 'python', topic: 'py_testing',
+                    questionText: 'What is test-driven development (TDD)?',
+                    options: ['Writing code first, then tests', 'Writing tests before writing the actual code', 'Writing tests only for bugs', 'Writing tests after deployment'],
+                    correctAnswer: 'Writing tests before writing the actual code',
+                },
+                {
+                    id: 'py_q111', language: 'python', topic: 'py_databases',
+                    questionText: 'Which module is commonly used for SQLite database interaction in Python?',
+                    options: ['`mysql.connector`', '`psycopg2`', '`sqlite3`', '`pymongo`'],
+                    correctAnswer: '`sqlite3`',
+                },
+                {
+                    id: 'py_q112', language: 'python', topic: 'py_databases',
+                    questionText: 'What does SQL stand for?',
+                    options: ['Structured Query Language', 'Standard Question Language', 'Simple Query Logic', 'Sequential Query List'],
+                    correctAnswer: 'Structured Query Language',
+                },
+                {
+                    id: 'py_q113', language: 'python', topic: 'py_databases',
+                    questionText: 'Which method is used to execute an SQL query in `sqlite3`?',
+                    options: ['`connection.run()`', '`cursor.execute()`', '`db.query()`', '`sql.run()`'],
+                    correctAnswer: '`cursor.execute()`',
+                },
+                {
+                    id: 'py_q114', language: 'python', topic: 'py_databases',
+                    questionText: 'What is the purpose of `COMMIT` in database transactions?',
+                    options: ['To undo changes', 'To save changes permanently to the database', 'To check for errors', 'To close the connection'],
+                    correctAnswer: 'To save changes permanently to the database',
+                },
+                {
+                    id: 'py_q115', language: 'python', topic: 'py_databases',
+                    questionText: 'What is a primary key in a database table?',
+                    options: ['A field that stores text data', 'A field that uniquely identifies each record in a table', 'A field that stores numbers', 'A field that can have duplicate values'],
+                    correctAnswer: 'A field that uniquely identifies each record in a table',
+                },
+                {
+                    id: 'py_q116', language: 'python', topic: 'py_networking',
+                    questionText: 'Which module is used for low-level networking in Python?',
+                    options: ['`requests`', '`http.client`', '`socket`', '`urllib`'],
+                    correctAnswer: '`socket`',
+                },
+                {
+                    id: 'py_q117', language: 'python', topic: 'py_networking',
+                    questionText: 'What is an IP address?',
+                    options: ['A unique identifier for a website', 'A numerical label assigned to each device connected to a computer network', 'A type of network cable', 'A communication protocol'],
+                    correctAnswer: 'A numerical label assigned to each device connected to a computer network',
+                },
+                {
+                    id: 'py_q118', language: 'python', topic: 'py_networking',
+                    questionText: 'Which protocol is used for secure communication over a computer network?',
+                    options: ['HTTP', 'FTP', 'SMTP', 'HTTPS'],
+                    correctAnswer: 'HTTPS',
+                },
+                {
+                    id: 'py_q119', language: 'python', topic: 'py_networking',
+                    questionText: 'What is a port number in networking?',
+                    options: ['A physical connection point', 'A logical address that identifies a specific process or service on a network device', 'A network speed indicator', 'A type of network error'],
+                    correctAnswer: 'A logical address that identifies a specific process or service on a network device',
+                },
+                {
+                    id: 'py_q120', language: 'python', topic: 'py_networking',
+                    questionText: 'What is the purpose of the `requests` library in Python?',
+                    options: ['To build web servers', 'To send HTTP requests and handle responses', 'To perform network diagnostics', 'To manage network devices'],
+                    correctAnswer: 'To send HTTP requests and handle responses',
+                },
+                {
+                    id: 'py_q121', language: 'python', topic: 'py_algorithms',
+                    questionText: 'What is a sorting algorithm?',
+                    options: ['An algorithm to search for an element', 'An algorithm to arrange elements in a specific order', 'An algorithm to find the shortest path', 'An algorithm to generate random numbers'],
+                    correctAnswer: 'An algorithm to arrange elements in a specific order',
+                },
+                {
+                    id: 'py_q122', language: 'python', topic: 'py_algorithms',
+                    questionText: 'What is the time complexity of Bubble Sort in the worst case?',
+                    options: ['O(n)', 'O(log n)', 'O(n^2)', 'O(n log n)'],
+                    correctAnswer: 'O(n^2)',
+                },
+                {
+                    id: 'py_q123', language: 'python', topic: 'py_algorithms',
+                    questionText: 'Which algorithm is used to find the shortest path in a graph with non-negative edge weights?',
+                    options: ['DFS', 'BFS', 'Dijkstra\'s algorithm', 'Prim\'s algorithm'],
+                    correctAnswer: 'Dijkstra\'s algorithm',
+                },
+                {
+                    id: 'py_q124', language: 'python', topic: 'py_algorithms',
+                    questionText: 'What is binary search?',
+                    options: ['A linear search algorithm', 'A search algorithm that works on sorted data by repeatedly dividing the search interval in half', 'A search algorithm for unsorted data', 'A search algorithm that uses hashing'],
+                    correctAnswer: 'A search algorithm that works on sorted data by repeatedly dividing the search interval in half',
+                },
+                {
+                    id: 'py_q125', language: 'python', topic: 'py_algorithms',
+                    questionText: 'What is recursion in the context of algorithms?',
+                    options: ['A function that calls another function', 'A function that solves a problem by calling itself with smaller instances of the same problem', 'A function that runs infinitely', 'A function that uses loops'],
+                    correctAnswer: 'A function that solves a problem by calling itself with smaller instances of the same problem',
+                },
+                {
+                    id: 'py_q126', language: 'python', topic: 'py_data_science',
+                    questionText: 'Which library is fundamental for numerical computing in Python data science?',
+                    options: ['`pandas`', '`matplotlib`', '`numpy`', '`scikit-learn`'],
+                    correctAnswer: '`numpy`',
+                },
+                {
+                    id: 'py_q127', language: 'python', topic: 'py_data_science',
+                    questionText: 'What is a DataFrame in `pandas`?',
+                    options: ['A 1-dimensional labeled array', 'A 2-dimensional labeled data structure with columns of potentially different types', 'A time series object', 'A statistical model'],
+                    correctAnswer: 'A 2-dimensional labeled data structure with columns of potentially different types',
+                },
+                {
+                    id: 'py_q128', language: 'python', topic: 'py_data_science',
+                    questionText: 'Which library is widely used for data visualization in Python?',
+                    options: ['`seaborn`', '`plotly`', '`matplotlib`', 'All of the above'],
+                    correctAnswer: 'All of the above',
+                },
+                {
+                    id: 'py_q129', language: 'python', topic: 'py_data_science',
+                    questionText: 'What is machine learning?',
+                    options: ['Programming computers to perform specific tasks', 'Enabling computers to learn from data without being explicitly programmed', 'Building complex databases', 'Creating graphical user interfaces'],
+                    correctAnswer: 'Enabling computers to learn from data without being explicitly programmed',
+                },
+                {
+                    id: 'py_q130', language: 'python', topic: 'py_data_science',
+                    questionText: 'What is the purpose of `scikit-learn`?',
+                    options: ['Numerical computing', 'Data visualization', 'Machine learning algorithms and tools', 'Web development'],
+                    correctAnswer: 'Machine learning algorithms and tools',
+                },
+                {
+                    id: 'py_q131', language: 'python', topic: 'py_gui',
+                    questionText: 'Which library is commonly used for GUI programming in Python?',
+                    options: ['`Django`', '`Flask`', '`Tkinter`', '`requests`'],
+                    correctAnswer: '`Tkinter`',
+                },
+                {
+                    id: 'py_q132', language: 'python', topic: 'py_gui',
+                    questionText: 'What is a widget in GUI programming?',
+                    options: ['A type of database', 'A graphical control element (e.g., button, text box)', 'A network protocol', 'A programming language'],
+                    correctAnswer: 'A graphical control element (e.g., button, text box)',
+                },
+                {
+                    id: 'py_q133', language: 'python', topic: 'py_gui',
+                    questionText: 'How do you start the event loop in Tkinter?',
+                    options: ['`root.start()`', '`root.mainloop()`', '`root.run()`', '`root.event()`'],
+                    correctAnswer: '`root.mainloop()`',
+                },
+                {
+                    id: 'py_q134', language: 'python', topic: 'py_gui',
+                    questionText: 'What is event-driven programming?',
+                    options: ['Programming that executes code sequentially', 'Programming where the flow of the program is determined by events (e.g., user clicks, key presses)', 'Programming that uses only functions', 'Programming that uses only classes'],
+                    correctAnswer: 'Programming where the flow of the program is determined by events (e.g., user clicks, key presses)',
+                },
+                {
+                    id: 'py_q135', language: 'python', topic: 'py_gui',
+                    questionText: 'What is the purpose of a callback function in GUI?',
+                    options: ['A function that is called automatically when an event occurs', 'A function that returns a value', 'A function that takes no arguments', 'A function that creates a widget'],
+                    correctAnswer: 'A function that is called automatically when an event occurs',
+                },
+            ],
+        };
+
+        // Helper function to shuffle an array
+        const shuffleArray = (array) => {
+            let currentIndex = array.length, randomIndex;
+            while (currentIndex !== 0) {
+                randomIndex = Math.floor(Math.random() * currentIndex);
+                currentIndex--;
+                [array[currentIndex], array[randomIndex]] = [
+                    array[randomIndex], array[currentIndex]];
+            }
+            return array;
+        };
+
+        // --- Global State Variables ---
+        let currentView = 'languageSelection'; // 'languageSelection', 'topicSelection', 'quiz', 'results'
+        let selectedLanguage = null;
+        let selectedTopic = null;
+        let quizQuestions = [];
+        let userAnswers = [];
+        let score = 0;
+        // Using a simple object to store previously asked question IDs for each topic
+        const previousQuizQuestionIds = {};
+
+        let currentQuestionIndex = 0;
+        let selectedOption = null;
+
+        // --- DOM Element Reference ---
+        const appDiv = document.getElementById('app');
+
+        // --- Rendering Functions for Each View ---
+
+        function renderLanguageSelection() {
+            appDiv.innerHTML = `
+                <div class="flex flex-col items-center justify-center min-h-screen bg-gradient-to-br from-blue-500 to-purple-600 p-4">
+                    <div class="bg-white p-8 rounded-xl shadow-2xl text-center max-w-md w-full">
+                        <h1 class="text-4xl font-extrabold text-gray-800 mb-8 font-inter">
+                            Choose a Language
+                        </h1>
+                        <div class="grid grid-cols-1 gap-6">
+                            ${quizData.languages.map(lang => `
+                                <button class="language-button w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-4 px-6 rounded-lg shadow-md transition duration-300 ease-in-out transform hover:scale-105 focus:outline-none focus:ring-4 focus:ring-indigo-300" data-lang-id="${lang.id}">
+                                    ${lang.name}
+                                </button>
+                            `).join('')}
+                        </div>
+                    </div>
+                </div>
+            `;
+            document.querySelectorAll('.language-button').forEach(button => {
+                button.addEventListener('click', (event) => {
+                    selectedLanguage = event.target.dataset.langId;
+                    console.log('Language selected:', selectedLanguage); // DEBUG: Log selected language
+                    currentView = 'topicSelection';
+                    render();
+                });
+            });
+        }
+
+        function renderTopicSelection() {
+            console.log('Attempting to render topics for selectedLanguage:', selectedLanguage); // DEBUG: Log selectedLanguage
+            const topics = quizData.topics[selectedLanguage] || [];
+            console.log('Retrieved topics:', topics); // DEBUG: Log retrieved topics array
+
+            const languageName = quizData.languages.find(lang => lang.id === selectedLanguage)?.name || selectedLanguage.toUpperCase();
+
+            let topicsContent;
+            if (topics.length === 0) {
+                topicsContent = `<p class="text-gray-600 text-lg">No topics available for this language yet. Please check data or select another language.</p>`;
+            } else {
+                topicsContent = `
+                    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 mb-8">
+                        ${topics.map(topic => `
+                            <button class="topic-button w-full font-bold py-3 px-5 rounded-lg shadow-md transition duration-300 ease-in-out transform hover:scale-105 focus:outline-none focus:ring-4 focus:ring-emerald-300 text-sm sm:text-base"
+                                    style="background-color: #10B981; color: white;" data-topic-id="${topic.id}">
+                                ${topic.name}
+                            </button>
+                        `).join('')}
+                    </div>
+                `;
+                console.log(`Successfully found ${topics.length} topics for ${languageName}.`); // DEBUG: Confirmation
+            }
+
+
+            appDiv.innerHTML = `
+                <div class="flex flex-col items-center justify-center min-h-screen bg-gradient-to-br from-green-500 to-teal-600 p-4">
+                    <div class="bg-white p-8 rounded-xl shadow-2xl text-center max-w-2xl w-full">
+                        <h1 class="text-4xl font-extrabold text-gray-800 mb-6 font-inter">
+                            Select a Topic for ${languageName}
+                        </h1>
+                        ${topicsContent}
+                        <button id="backToLanguagesBtn" class="mt-6 bg-gray-500 hover:bg-gray-600 text-white font-bold py-3 px-6 rounded-lg shadow-md transition duration-300 ease-in-out transform hover:scale-105 focus:outline-none focus:ring-4 focus:ring-gray-300">
+                            Back to Languages
+                        </button>
+                    </div>
+                </div>
+            `;
+
+            // Event listeners must be re-attached after innerHTML update
+            document.querySelectorAll('.topic-button').forEach(button => {
+                button.addEventListener('click', (event) => {
+                    selectedTopic = event.target.dataset.topicId;
+                    generateUniqueQuestions(); // Generate questions when topic is selected
+                    currentView = 'quiz';
+                    render();
+                });
+            });
+
+            document.getElementById('backToLanguagesBtn').addEventListener('click', () => {
+                selectedLanguage = null;
+                selectedTopic = null;
+                quizQuestions = [];
+                userAnswers = [];
+                score = 0;
+                currentView = 'languageSelection';
+                render();
+            });
+            console.log("Current appDiv.innerHTML after topic render:", appDiv.innerHTML); // DEBUG: Log final HTML
+        }
+
+        function generateUniqueQuestions() {
+            const allQuestionsForTopic = quizData.questions.filter(
+                (q) => q.language === selectedLanguage && q.topic === selectedTopic
+            );
+
+            // Get previously asked questions for this topic
+            const previouslyAskedIds = previousQuizQuestionIds[selectedTopic] || [];
+
+            let availableQuestions = allQuestionsForTopic.filter(
+                (q) => !previouslyAskedIds.includes(q.id)
+            );
+
+            // If not enough new questions, reuse all questions and reset history for this topic
+            if (availableQuestions.length < 11) {
+                console.warn("Not enough new questions. Reusing some questions or resetting history.");
+                availableQuestions = allQuestionsForTopic;
+                previousQuizQuestionIds[selectedTopic] = [];
+            }
+
+            const shuffledQuestions = shuffleArray([...availableQuestions]);
+            // Select 11 questions
+            const selectedEleven = shuffledQuestions.slice(0, 11);
+
+            // Store the IDs of the questions selected for this quiz
+            previousQuizQuestionIds[selectedTopic] = selectedEleven.map(q => q.id);
+
+            quizQuestions = selectedEleven;
+            currentQuestionIndex = 0;
+            selectedOption = null;
+            userAnswers = [];
+            score = 0;
+        }
+
+
+        function renderQuiz() {
+            if (quizQuestions.length === 0) {
+                appDiv.innerHTML = `
+                    <div class="flex flex-col items-center justify-center min-h-screen bg-gradient-to-br from-indigo-500 to-purple-600 text-white text-2xl">
+                        <p>Loading questions...</p>
+                        <p class="mt-4 text-sm">If this persists, there might be no questions for the selected topic/language.</p>
+                    </div>
+                `;
+                return;
+            }
+
+            const currentQuestion = quizQuestions[currentQuestionIndex];
+            const languageName = quizData.languages.find(lang => lang.id === selectedLanguage)?.name || selectedLanguage.toUpperCase();
+            const topicName = quizData.topics[selectedLanguage]?.find(t => t.id === selectedTopic)?.name || selectedTopic;
+
+            appDiv.innerHTML = `
+                <div class="flex flex-col items-center justify-center min-h-screen bg-gradient-to-br from-indigo-500 to-purple-600 p-4">
+                    <div class="bg-white p-8 rounded-xl shadow-2xl max-w-3xl w-full">
+                        <h2 class="text-3xl font-extrabold text-gray-800 mb-6 text-center font-inter">
+                            ${languageName} Quiz: ${topicName}
+                        </h2>
+                        <div class="text-lg text-gray-700 mb-4">
+                            Question ${currentQuestionIndex + 1} of 11
+                        </div>
+                        <div class="bg-gray-100 p-6 rounded-lg mb-6 shadow-inner">
+                            <p class="text-xl font-semibold text-gray-900 mb-4 break-words" id="questionText">
+                                ${currentQuestion.questionText}
+                            </p>
+                            <div id="optionsContainer" class="space-y-3">
+                                ${currentQuestion.options.map((option, index) => `
+                                    <button class="option-button w-full text-left p-3 rounded-md border-2 transition duration-200 ease-in-out
+                                        bg-white border-gray-300 text-gray-800 hover:bg-blue-50 hover:border-blue-200
+                                        focus:outline-none focus:ring-2 focus:ring-blue-400
+                                        break-words text-wrap"
+                                        data-option="${option}" data-index="${index}">
+                                        ${option}
+                                    </button>
+                                `).join('')}
+                            </div>
+                            <div id="feedbackMessage" class="mt-4 p-3 rounded-md text-center font-semibold hidden"></div>
+                        </div>
+                        <div class="flex justify-between items-center">
+                            <button id="backToTopicsBtn" class="bg-gray-500 hover:bg-gray-600 text-white font-bold py-3 px-6 rounded-lg shadow-md transition duration-300 ease-in-out transform hover:scale-105 focus:outline-none focus:ring-4 focus:ring-gray-300">
+                                Back to Topics
+                            </button>
+                            <button id="nextQuestionBtn" class="bg-green-600 hover:bg-green-700 text-white font-bold py-3 px-6 rounded-lg shadow-md transition duration-300 ease-in-out transform hover:scale-105 focus:outline-none focus:ring-4 focus:ring-green-300
+                                opacity-50 cursor-not-allowed" disabled>
+                                ${currentQuestionIndex === 10 ? 'Finish Quiz' : 'Next Question'}
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            const optionButtons = document.querySelectorAll('.option-button');
+            const nextQuestionBtn = document.getElementById('nextQuestionBtn');
+            const feedbackMessageDiv = document.getElementById('feedbackMessage');
+            const backToTopicsBtn = document.getElementById('backToTopicsBtn');
+
+            optionButtons.forEach(button => {
+                button.addEventListener('click', (event) => {
+                    if (selectedOption !== null) return; // Prevent re-selecting
+
+                    selectedOption = event.target.dataset.option;
+                    const isCorrect = selectedOption === currentQuestion.correctAnswer;
+
+                    // Apply styling to all options based on selection and correctness
+                    optionButtons.forEach(optBtn => {
+                        optBtn.disabled = true; // Disable all options once one is selected
+                        optBtn.classList.remove('bg-white', 'border-gray-300', 'text-gray-800', 'hover:bg-blue-50', 'hover:border-blue-200');
+
+                        if (optBtn.dataset.option === currentQuestion.correctAnswer) {
+                            // Correct answer (always green)
+                            optBtn.classList.add('bg-green-100', 'border-green-500', 'text-green-800');
+                        } else if (optBtn.dataset.option === selectedOption) {
+                            // Incorrect selected answer (red)
+                            optBtn.classList.add('bg-red-100', 'border-red-500', 'text-red-800');
+                        } else {
+                            // Unselected incorrect answer (grayed out)
+                            optBtn.classList.add('bg-gray-200', 'border-gray-300', 'text-gray-600');
+                        }
+                    });
+
+                    // Display feedback message
+                    feedbackMessageDiv.classList.remove('hidden');
+                    if (isCorrect) {
+                        feedbackMessageDiv.classList.remove('bg-red-200', 'text-red-800');
+                        feedbackMessageDiv.classList.add('bg-green-200', 'text-green-800');
+                        feedbackMessageDiv.textContent = 'Correct!';
+                    } else {
+                        feedbackMessageDiv.classList.remove('bg-green-200', 'text-green-800');
+                        feedbackMessageDiv.classList.add('bg-red-200', 'text-red-800');
+                        feedbackMessageDiv.textContent = `Incorrect. Correct answer: ${currentQuestion.correctAnswer}`;
+                    }
+
+                    // Enable next question button
+                    nextQuestionBtn.disabled = false;
+                    nextQuestionBtn.classList.remove('opacity-50', 'cursor-not-allowed');
+                });
+            });
+
+            nextQuestionBtn.addEventListener('click', () => {
+                const currentQuestion = quizQuestions[currentQuestionIndex];
+                const isCorrect = selectedOption === currentQuestion.correctAnswer;
+
+                userAnswers.push({
+                    question: currentQuestion.questionText,
+                    userAnswer: selectedOption,
+                    correctAnswer: currentQuestion.correctAnswer,
+                    isCorrect: isCorrect,
+                });
+
+                if (isCorrect) {
+                    score++;
+                }
+
+                if (currentQuestionIndex < 10) { // 11 questions, so indices 0-10
+                    currentQuestionIndex++;
+                    selectedOption = null; // Reset selected option for next question
+                    render(); // Render next question
+                } else {
+                    // Quiz finished
+                    currentView = 'results';
+                    render(); // Render results page
+                }
+            });
+
+            backToTopicsBtn.addEventListener('click', () => {
+                selectedTopic = null;
+                quizQuestions = [];
+                userAnswers = [];
+                score = 0;
+                currentQuestionIndex = 0;
+                selectedOption = null;
+                currentView = 'topicSelection';
+                render();
+            });
+        }
+
+        function renderResults() {
+            const languageName = quizData.languages.find(lang => lang.id === selectedLanguage)?.name || selectedLanguage.toUpperCase();
+            const topicName = quizData.topics[selectedLanguage]?.find(t => t.id === selectedTopic)?.name || selectedTopic;
+
+            appDiv.innerHTML = `
+                <div class="flex flex-col items-center justify-center min-h-screen bg-gradient-to-br from-purple-500 to-pink-600 p-4">
+                    <div class="bg-white p-8 rounded-xl shadow-2xl max-w-4xl w-full">
+                        <h2 class="text-4xl font-extrabold text-gray-800 mb-6 text-center font-inter">
+                            Quiz Results
+                        </h2>
+                        <p class="text-2xl font-bold text-center mb-8 text-gray-700">
+                            You scored <span class="text-green-600">${score}</span> out of <span class="text-blue-600">11</span>!
+                        </p>
+
+                        <div class="space-y-6 mb-8">
+                            ${userAnswers.map((answer, index) => `
+                                <div class="p-5 rounded-lg shadow-md ${answer.isCorrect ? 'bg-green-50 border-l-4 border-green-500' : 'bg-red-50 border-l-4 border-red-500'}">
+                                    <p class="text-lg font-semibold text-gray-900 mb-2 break-words">
+                                        Question ${index + 1}: ${answer.question}
+                                    </p>
+                                    <p class="text-gray-700 break-words">
+                                        Your Answer: <span class="${answer.isCorrect ? 'text-green-700 font-medium' : 'text-red-700 font-medium'}">
+                                            ${answer.userAnswer || "No answer selected"}
+                                        </span>
+                                        ${!answer.isCorrect ? '<span class="ml-2 text-gray-500"> (Incorrect)</span>' : ''}
+                                    </p>
+                                    ${!answer.isCorrect ? `
+                                        <p class="text-gray-700 break-words">
+                                            Correct Answer: <span class="text-blue-700 font-medium">${answer.correctAnswer}</span>
+                                        </p>
+                                    ` : ''}
+                                </div>
+                            `).join('')}
+                        </div>
+
+                        <div class="flex flex-col sm:flex-row justify-center gap-4">
+                            <button id="playAgainBtn" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-lg shadow-md transition duration-300 ease-in-out transform hover:scale-105 focus:outline-none focus:ring-4 focus:ring-blue-300 w-full sm:w-auto">
+                                Play Again (Same Topic)
+                            </button>
+                            <button id="backToTopicsFromResultsBtn" class="bg-yellow-600 hover:bg-yellow-700 text-white font-bold py-3 px-6 rounded-lg shadow-md transition duration-300 ease-in-out transform hover:scale-105 focus:outline-none focus:ring-4 focus:ring-yellow-300 w-full sm:w-auto">
+                                Choose Another Topic
+                            </button>
+                            <button id="backToLanguagesFromResultsBtn" class="bg-red-600 hover:bg-red-700 text-white font-bold py-3 px-6 rounded-lg shadow-md transition duration-300 ease-in-out transform hover:scale-105 focus:outline-none focus:ring-4 focus:ring-red-300 w-full sm:w-auto">
+                                Change Language
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            document.getElementById('playAgainBtn').addEventListener('click', () => {
+                generateUniqueQuestions(); // Re-generate questions for same topic
+                currentView = 'quiz';
+                render();
+            });
+
+            document.getElementById('backToTopicsFromResultsBtn').addEventListener('click', () => {
+                selectedTopic = null;
+                quizQuestions = [];
+                userAnswers = [];
+                score = 0;
+                currentQuestionIndex = 0;
+                selectedOption = null;
+                currentView = 'topicSelection';
+                render();
+            });
+
+            document.getElementById('backToLanguagesFromResultsBtn').addEventListener('click', () => {
+                selectedLanguage = null;
+                selectedTopic = null;
+                quizQuestions = [];
+                userAnswers = [];
+                score = 0;
+                currentQuestionIndex = 0;
+                selectedOption = null;
+                currentView = 'languageSelection';
+                render();
+            });
+        }
+
+
+        // --- Main Render Function ---
+        function render() {
+            switch (currentView) {
+                case 'languageSelection':
+                    renderLanguageSelection();
+                    break;
+                case 'topicSelection':
+                    renderTopicSelection();
+                    break;
+                case 'quiz':
+                    renderQuiz();
+                    break;
+                case 'results':
+                    renderResults();
+                    break;
+                default:
+                    renderLanguageSelection(); // Fallback
+            }
+        }
+
+        // Initial render when the script loads
+        document.addEventListener('DOMContentLoaded', render);
+    </script>
+</body>
+</html>
