@@ -1716,21 +1716,19 @@
                 (q) => !previouslyAskedIds.includes(q.id)
             );
 
-            // If not enough new questions, reuse all questions and reset history for this topic
-            if (availableQuestions.length < 11) {
+            if (availableQuestions.length < 5) {
                 console.warn("Not enough new questions. Reusing some questions or resetting history.");
-                availableQuestions = allQuestionsForTopic;
-                previousQuizQuestionIds[selectedTopic] = [];
+                availableQuestions = allQuestionsForTopic; // Use all questions if not enough unique ones
+                previousQuizQuestionIds[selectedTopic] = []; // Clear history for this topic
             }
 
             const shuffledQuestions = shuffleArray([...availableQuestions]);
-            // Select 11 questions
-            const selectedEleven = shuffledQuestions.slice(0, 11);
+            const selectedFive = shuffledQuestions.slice(0, 5);
 
             // Store the IDs of the questions selected for this quiz
-            previousQuizQuestionIds[selectedTopic] = selectedEleven.map(q => q.id);
+            previousQuizQuestionIds[selectedTopic] = selectedFive.map(q => q.id);
 
-            quizQuestions = selectedEleven;
+            quizQuestions = selectedFive;
             currentQuestionIndex = 0;
             selectedOption = null;
             userAnswers = [];
@@ -1760,7 +1758,7 @@
                             ${languageName} Quiz: ${topicName}
                         </h2>
                         <div class="text-lg text-gray-700 mb-4">
-                            Question ${currentQuestionIndex + 1} of 11
+                            Question ${currentQuestionIndex + 1} of 5
                         </div>
                         <div class="bg-gray-100 p-6 rounded-lg mb-6 shadow-inner">
                             <p class="text-xl font-semibold text-gray-900 mb-4 break-words" id="questionText">
@@ -1785,7 +1783,7 @@
                             </button>
                             <button id="nextQuestionBtn" class="bg-green-600 hover:bg-green-700 text-white font-bold py-3 px-6 rounded-lg shadow-md transition duration-300 ease-in-out transform hover:scale-105 focus:outline-none focus:ring-4 focus:ring-green-300
                                 opacity-50 cursor-not-allowed" disabled>
-                                ${currentQuestionIndex === 10 ? 'Finish Quiz' : 'Next Question'}
+                                ${currentQuestionIndex === 4 ? 'Finish Quiz' : 'Next Question'}
                             </button>
                         </div>
                     </div>
@@ -1854,7 +1852,7 @@
                     score++;
                 }
 
-                if (currentQuestionIndex < 10) { // 11 questions, so indices 0-10
+                if (currentQuestionIndex < 4) { // 5 questions, so indices 0-4
                     currentQuestionIndex++;
                     selectedOption = null; // Reset selected option for next question
                     render(); // Render next question
@@ -1888,7 +1886,7 @@
                             Quiz Results
                         </h2>
                         <p class="text-2xl font-bold text-center mb-8 text-gray-700">
-                            You scored <span class="text-green-600">${score}</span> out of <span class="text-blue-600">11</span>!
+                            You scored <span class="text-green-600">${score}</span> out of <span class="text-blue-600">5</span>!
                         </p>
 
                         <div class="space-y-6 mb-8">
