@@ -873,7 +873,7 @@
         };
 
         // --- Global State Variables ---
-        let currentView = 'languageSelection'; // 'languageSelection', 'topicSelection', 'quiz', 'results', 'allQuestions'
+        let currentView = 'languageSelection'; // 'languageSelection', 'topicSelection', 'quiz', 'results', 'allQuestions', 'previousScores'
         let selectedLanguage = null; // Now represents the selected main subject
         let selectedTopic = null;
         let quizQuestions = [];
@@ -891,6 +891,9 @@
         let quizStartTime = null; // To store the start time of the quiz
         let timeTaken = 0; // To store the time taken to complete the quiz
 
+        // Array to store previous quiz scores (last 5)
+        let previousScores = [];
+
         // --- DOM Element Reference ---
         const appDiv = document.getElementById('app');
 
@@ -903,7 +906,10 @@
                 timerInterval = null;
             }
             appDiv.innerHTML = `
-                <div class="flex flex-col items-center justify-center min-h-screen bg-gradient-to-br from-blue-500 to-purple-600 p-4">
+                <div class="relative flex flex-col items-center justify-center min-h-screen bg-gradient-to-br from-blue-500 to-purple-600 p-4">
+                    <button id="viewPreviousScoresBtn" class="absolute top-4 right-4 bg-gray-700 hover:bg-gray-800 text-white font-bold py-2 px-4 rounded-lg shadow-md transition duration-300 ease-in-out transform hover:scale-105 focus:outline-none focus:ring-4 focus:ring-gray-500 text-sm">
+                        Previous Scores
+                    </button>
                     <div class="bg-white p-8 rounded-xl shadow-2xl text-center max-w-md w-full">
                         <h1 class="text-4xl font-extrabold text-gray-800 mb-8 font-inter">
                             Choose a Subject
@@ -932,6 +938,11 @@
 
             document.getElementById('viewAllQuestionsBtn').addEventListener('click', () => {
                 currentView = 'allQuestions';
+                render();
+            });
+
+            document.getElementById('viewPreviousScoresBtn').addEventListener('click', () => {
+                currentView = 'previousScores';
                 render();
             });
         }
@@ -1127,11 +1138,9 @@
                     timerInterval = null;
                     // Calculate time taken when time runs out
                     // If time runs out, it means the full 120 seconds were used, or very close to it.
-                    // We can set timeTaken to 120 (or total elapsed if we want more precision).
                     // For simplicity, if timer reaches 0, assume max time or 120s used.
-                    timeTaken = 120; // Assuming 120 seconds if time runs out
+                    timeTaken = 120;
                     // Automatically move to results when time runs out
-                    // Instead of alert, display a message and proceed
                     feedbackMessageDiv.classList.remove('hidden');
                     feedbackMessageDiv.classList.remove('bg-green-200', 'text-green-800');
                     feedbackMessageDiv.classList.add('bg-red-200', 'text-red-800');
@@ -1230,6 +1239,22 @@
                     timerInterval = null;
                     // Calculate time taken based on remaining time
                     timeTaken = 120 - timeLeft; // Total time - remaining time
+
+                    // Store the score
+                    const subjectName = quizData.languages.find(lang => lang.id === selectedLanguage)?.name || selectedLanguage.toUpperCase();
+                    const topicName = quizData.topics[selectedLanguage]?.find(t => t.id === selectedTopic)?.name || selectedTopic;
+                    previousScores.unshift({ // Add to the beginning
+                        score: score,
+                        totalQuestions: quizQuestions.length,
+                        timeTaken: timeTaken,
+                        subject: subjectName,
+                        topic: topicName
+                    });
+                    // Keep only the last 5 scores
+                    if (previousScores.length > 5) {
+                        previousScores = previousScores.slice(0, 5);
+                    }
+
                     currentView = 'results';
                     render(); // Render results page
                 }
@@ -1475,6 +1500,52 @@
             });
         }
 
+        function renderPreviousScoresView() {
+            // Clear any active timer when navigating to previous scores view
+            if (timerInterval) {
+                clearInterval(timerInterval);
+                timerInterval = null;
+            }
+
+            let scoresContent;
+            if (previousScores.length === 0) {
+                scoresContent = `<p class="text-gray-600 text-lg text-center">No previous scores recorded yet. Play some quizzes!</p>`;
+            } else {
+                scoresContent = `
+                    <div class="space-y-4">
+                        ${previousScores.map((scoreEntry, index) => `
+                            <div class="bg-gray-100 p-4 rounded-lg shadow-inner">
+                                <p class="text-lg font-semibold text-gray-900 mb-1">Quiz ${previousScores.length - index}</p>
+                                <p class="text-md text-gray-700">Subject: <span class="font-medium">${scoreEntry.subject}</span></p>
+                                <p class="text-md text-gray-700">Topic: <span class="font-medium">${scoreEntry.topic}</span></p>
+                                <p class="text-md text-gray-700">Score: <span class="text-green-600 font-bold">${scoreEntry.score}</span> / ${scoreEntry.totalQuestions}</p>
+                                <p class="text-md text-gray-700">Time Taken: <span class="text-indigo-600 font-bold">${Math.floor(scoreEntry.timeTaken / 60).toString().padStart(2, '0')}:${Math.floor(scoreEntry.timeTaken % 60).toString().padStart(2, '0')}</span></p>
+                            </div>
+                        `).join('')}
+                    </div>
+                `;
+            }
+
+            appDiv.innerHTML = `
+                <div class="flex flex-col items-center justify-center min-h-screen bg-gradient-to-br from-blue-500 to-purple-600 p-4">
+                    <div class="bg-white p-8 rounded-xl shadow-2xl text-center max-w-md w-full">
+                        <h1 class="text-4xl font-extrabold text-gray-800 mb-8 font-inter">
+                            Previous Quiz Scores
+                        </h1>
+                        ${scoresContent}
+                        <button id="backToSubjectsFromScoresBtn" class="mt-8 bg-gray-500 hover:bg-gray-600 text-white font-bold py-3 px-6 rounded-lg shadow-md transition duration-300 ease-in-out transform hover:scale-105 focus:outline-none focus:ring-4 focus:ring-gray-300">
+                            Back to Subjects
+                        </button>
+                    </div>
+                </div>
+            `;
+
+            document.getElementById('backToSubjectsFromScoresBtn').addEventListener('click', () => {
+                currentView = 'languageSelection';
+                render();
+            });
+        }
+
 
         // --- Main Render Function ---
         function render() {
@@ -1493,6 +1564,9 @@
                     break;
                 case 'allQuestions':
                     renderAllQuestionsView();
+                    break;
+                case 'previousScores':
+                    renderPreviousScoresView();
                     break;
                 default:
                     renderLanguageSelection(); // Fallback
