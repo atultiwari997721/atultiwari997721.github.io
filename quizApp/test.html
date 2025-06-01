@@ -1,0 +1,1594 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Biology Quiz</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        /* Custom CSS for basic body styling */
+        body {
+            margin: 0;
+            font-family: 'Inter', sans-serif;
+        }
+        /* Ensure content within buttons and divs wraps properly */
+        .break-words-all * {
+            word-break: break-word;
+            overflow-wrap: break-word;
+        }
+    </style>
+</head>
+<body class="font-inter antialiased">
+    <div id="app">
+        </div>
+
+    <script>
+        // --- Quiz Data ---
+        // Mock data for languages (now main subjects), topics, and questions
+        const quizData = {
+            languages: [ // These are now the main subjects
+                { id: 'biochemical_components_main', name: 'Biochemical Components of Cell' },
+                { id: 'cell_division_main', name: 'Cell Division' },
+                { id: 'dna_evidence_main', name: 'DNA as a Genetic Material Experimental Evidence' },
+            ],
+            topics: {
+                // Topics for 'Biochemical Components of Cell' subject
+                biochemical_components_main: [
+                    { id: 'nucleic_acids', name: 'Nucleic Acids' },
+                    { id: 'carbohydrates', name: 'Carbohydrates' },
+                    { id: 'proteins', name: 'Proteins' },
+                    { id: 'lipids', name: 'Lipids' },
+                ],
+                // Topics for 'Cell Division' subject
+                cell_division_main: [
+                    { id: 'meiosis', name: 'Meiosis' },
+                    { id: 'mitosis', name: 'Mitosis' },
+                ],
+                // Topics for 'DNA as a Genetic Material Experimental Evidence' subject
+                dna_evidence_main: [
+                    { id: 'griffiths_experiment', name: 'Griffith\'s Experiment' },
+                    { id: 'mcleod_mccarty_avery_experiment', name: 'McLeod, McCarty, and Avery\'s Experiment' },
+                    { id: 'hershey_chase_experiment', name: 'Hershey\'s and Chase Experiment' },
+                ],
+            },
+            questions: [
+                // --- Questions for 'Biochemical Components of Cell' Subject ---
+                // Nucleic Acids Questions
+                {
+                    id: 'bio_na_q1', language: 'biochemical_components_main', topic: 'nucleic_acids',
+                    questionText: 'Which biochemical component is responsible for carrying genetic information?',
+                    options: ['Lipids', 'Proteins', 'Nucleic acids', 'Carbohydrates'],
+                    correctAnswer: 'Nucleic acids',
+                },
+                {
+                    id: 'bio_na_q2', language: 'biochemical_components_main', topic: 'nucleic_acids',
+                    questionText: 'Which type of nucleic acid is typically double-stranded?',
+                    options: ['RNA', 'DNA', 'ATP', 'Amino acid'],
+                    correctAnswer: 'DNA',
+                },
+                {
+                    id: 'bio_na_q3', language: 'biochemical_components_main', topic: 'nucleic_acids',
+                    questionText: 'Which of the following is a monomer of nucleic acids?',
+                    options: ['Glucose', 'Amino acid', 'Fatty acid', 'Nucleotide'],
+                    correctAnswer: 'Nucleotide',
+                },
+                {
+                    id: 'bio_na_q4', language: 'biochemical_components_main', topic: 'nucleic_acids',
+                    questionText: 'What are the three main components of a nucleotide?',
+                    options: ['Sugar, phosphate, amino acid', 'Sugar, fatty acid, nitrogenous base', 'Sugar, phosphate, nitrogenous base', 'Glycerol, fatty acid, phosphate'],
+                    correctAnswer: 'Sugar, phosphate, nitrogenous base',
+                },
+                {
+                    id: 'bio_na_q5', language: 'biochemical_components_main', topic: 'nucleic_acids',
+                    questionText: 'What is the primary role of messenger RNA (mRNA) in a cell?',
+                    options: ['Storing genetic information', 'Catalyzing reactions', 'Carrying genetic code from DNA to ribosomes', 'Providing structural support'],
+                    correctAnswer: 'Carrying genetic code from DNA to ribosomes',
+                },
+                 // Additional Nucleic Acids Questions
+                {
+                    id: 'bio_na_q11', language: 'biochemical_components_main', topic: 'nucleic_acids',
+                    questionText: 'What type of bond connects the sugar and phosphate groups in the backbone of a nucleic acid?',
+                    options: ['Hydrogen bond', 'Glycosidic bond', 'Phosphodiester bond', 'Peptide bond'],
+                    correctAnswer: 'Phosphodiester bond',
+                },
+                {
+                    id: 'bio_na_q12', language: 'biochemical_components_main', topic: 'nucleic_acids',
+                    questionText: 'Which nitrogenous base pairs with Guanine in DNA?',
+                    options: ['Adenine', 'Thymine', 'Cytosine', 'Uracil'],
+                    correctAnswer: 'Cytosine',
+                },
+                {
+                    id: 'bio_na_q13', language: 'biochemical_components_main', topic: 'nucleic_acids',
+                    questionText: 'The process of DNA replication is described as:',
+                    options: ['Conservative', 'Dispersive', 'Semi-conservative', 'Non-conservative'],
+                    correctAnswer: 'Semi-conservative',
+                },
+                {
+                    id: 'bio_na_q14', language: 'biochemical_components_main', topic: 'nucleic_acids',
+                    questionText: 'Which enzyme unwinds the DNA double helix during replication?',
+                    options: ['DNA ligase', 'Primase', 'Helicase', 'Topoisomerase'],
+                    correctAnswer: 'Helicase',
+                },
+                {
+                    id: 'bio_na_q15', language: 'biochemical_components_main', topic: 'nucleic_acids',
+                    questionText: 'What is the function of transfer RNA (tRNA)?',
+                    options: ['Carries genetic instructions from DNA', 'Forms part of ribosomes', 'Transports amino acids to ribosomes', 'Catalyzes peptide bond formation'],
+                    correctAnswer: 'Transports amino acids to ribosomes',
+                },
+                {
+                    id: 'bio_na_q6', language: 'biochemical_components_main', topic: 'nucleic_acids',
+                    questionText: 'Which nitrogenous base is found in RNA but not in DNA?',
+                    options: ['Adenine', 'Guanine', 'Cytosine', 'Uracil'],
+                    correctAnswer: 'Uracil',
+                },
+                {
+                    id: 'bio_na_q7', language: 'biochemical_components_main', topic: 'nucleic_acids',
+                    questionText: 'The backbone of a nucleic acid strand is formed by alternating:',
+                    options: ['Sugars and proteins', 'Phosphates and lipids', 'Sugars and phosphates', 'Nitrogenous bases and sugars'],
+                    correctAnswer: 'Sugars and phosphates',
+                },
+                {
+                    id: 'bio_na_q8', language: 'biochemical_components_main', topic: 'nucleic_acids',
+                    questionText: 'Which enzyme is responsible for synthesizing new DNA strands?',
+                    options: ['RNA polymerase', 'DNA ligase', 'DNA helicase', 'DNA polymerase'],
+                    correctAnswer: 'DNA polymerase',
+                },
+                {
+                    id: 'bio_na_q9', language: 'biochemical_components_main', topic: 'nucleic_acids',
+                    questionText: 'The process of converting genetic information from mRNA into protein is called:',
+                    options: ['Replication', 'Transcription', 'Translation', 'Mutation'],
+                    correctAnswer: 'Translation',
+                },
+                {
+                    id: 'bio_na_q10', language: 'biochemical_components_main', topic: 'nucleic_acids',
+                    questionText: 'Which type of RNA carries amino acids to the ribosome during protein synthesis?',
+                    options: ['mRNA', 'rRNA', 'tRNA', 'snRNA'],
+                    correctAnswer: 'tRNA',
+                },
+
+                // Carbohydrates Questions
+                {
+                    id: 'bio_carb_q1', language: 'biochemical_components_main', topic: 'carbohydrates',
+                    questionText: 'What is the primary function of carbohydrates in a cell?',
+                    options: ['Genetic information storage', 'Enzyme catalysis', 'Energy storage and structural support', 'Hormone production'],
+                    correctAnswer: 'Energy storage and structural support',
+                },
+                {
+                    id: 'bio_carb_q2', language: 'biochemical_components_main', topic: 'carbohydrates',
+                    questionText: 'Glycogen is a polysaccharide that functions as energy storage in animals. It is a type of:',
+                    options: ['Lipid', 'Protein', 'Carbohydrate', 'Nucleic acid'],
+                    correctAnswer: 'Carbohydrate',
+                },
+                {
+                    id: 'bio_carb_q3', language: 'biochemical_components_main', topic: 'carbohydrates',
+                    questionText: 'What is the simplest form of carbohydrate?',
+                    options: ['Disaccharide', 'Polysaccharide', 'Monosaccharide', 'Oligosaccharide'],
+                    correctAnswer: 'Monosaccharide',
+                },
+                {
+                    id: 'bio_carb_q4', language: 'biochemical_components_main', topic: 'carbohydrates',
+                    questionText: 'Cellulose is a structural polysaccharide found in which type of cells?',
+                    options: ['Animal cells', 'Bacterial cells', 'Fungal cells', 'Plant cells'],
+                    correctAnswer: 'Plant cells',
+                },
+                {
+                    id: 'bio_carb_q5', language: 'biochemical_components_main', topic: 'carbohydrates',
+                    questionText: 'What is the process by which plants convert light energy into carbohydrates?',
+                    options: ['Respiration', 'Fermentation', 'Photosynthesis', 'Transpiration'],
+                    correctAnswer: 'Photosynthesis',
+                },
+                // Additional Carbohydrates Questions
+                {
+                    id: 'bio_carb_q11', language: 'biochemical_components_main', topic: 'carbohydrates',
+                    questionText: 'Which of the following is a monosaccharide also known as "blood sugar"?',
+                    options: ['Fructose', 'Galactose', 'Glucose', 'Sucrose'],
+                    correctAnswer: 'Glucose',
+                },
+                {
+                    id: 'bio_carb_q12', language: 'biochemical_components_main', topic: 'carbohydrates',
+                    questionText: 'The bond formed between two monosaccharides is called a:',
+                    options: ['Peptide bond', 'Ester bond', 'Glycosidic bond', 'Hydrogen bond'],
+                    correctAnswer: 'Glycosidic bond',
+                },
+                {
+                    id: 'bio_carb_q13', language: 'biochemical_components_main', topic: 'carbohydrates',
+                    questionText: 'Which polysaccharide is the primary structural component of fungal cell walls?',
+                    options: ['Cellulose', 'Starch', 'Glycogen', 'Chitin'],
+                    correctAnswer: 'Chitin',
+                },
+                {
+                    id: 'bio_carb_q14', language: 'biochemical_components_main', topic: 'carbohydrates',
+                    questionText: 'What is the general formula for carbohydrates?',
+                    options: ['(CH₂)n', '(CH₂O)n', '(CHO₂)n', '(C₆H₁₂O₆)n'],
+                    correctAnswer: '(CH₂O)n',
+                },
+                {
+                    id: 'bio_carb_q15', language: 'biochemical_components_main', topic: 'carbohydrates',
+                    questionText: 'Which of these is a complex carbohydrate that cannot be digested by humans?',
+                    options: ['Starch', 'Glycogen', 'Cellulose', 'Sucrose'],
+                    correctAnswer: 'Cellulose',
+                },
+                {
+                    id: 'bio_carb_q6', language: 'biochemical_components_main', topic: 'carbohydrates',
+                    questionText: 'Which of the following is a common disaccharide?',
+                    options: ['Glucose', 'Fructose', 'Sucrose', 'Starch'],
+                    correctAnswer: 'Sucrose',
+                },
+                {
+                    id: 'bio_carb_q7', language: 'biochemical_components_main', topic: 'carbohydrates',
+                    questionText: 'Chitin, found in the exoskeletons of insects, is a type of:',
+                    options: ['Protein', 'Lipid', 'Carbohydrate', 'Nucleic Acid'],
+                    correctAnswer: 'Carbohydrate',
+                },
+                {
+                    id: 'bio_carb_q8', language: 'biochemical_components_main', topic: 'carbohydrates',
+                    questionText: 'Which monosaccharide is the main source of energy for cellular respiration?',
+                    options: ['Fructose', 'Galactose', 'Glucose', 'Ribose'],
+                    correctAnswer: 'Glucose',
+                },
+                {
+                    id: 'bio_carb_q9', language: 'biochemical_components_main', topic: 'carbohydrates',
+                    questionText: 'Lactose is a disaccharide found in milk. It is composed of which two monosaccharides?',
+                    options: ['Glucose and glucose', 'Glucose and fructose', 'Glucose and galactose', 'Fructose and galactose'],
+                    correctAnswer: 'Glucose and galactose',
+                },
+                {
+                    id: 'bio_carb_q10', language: 'biochemical_components_main', topic: 'carbohydrates',
+                    questionText: 'Which of these is a storage polysaccharide in plants?',
+                    options: ['Glycogen', 'Cellulose', 'Starch', 'Chitin'],
+                    correctAnswer: 'Starch',
+                },
+
+                // Proteins Questions
+                {
+                    id: 'bio_prot_q1', language: 'biochemical_components_main', topic: 'proteins',
+                    questionText: 'Enzymes are a type of which biochemical component?',
+                    options: ['Lipids', 'Carbohydrates', 'Proteins', 'Nucleic acids'],
+                    correctAnswer: 'Proteins',
+                },
+                {
+                    id: 'bio_prot_q2', language: 'biochemical_components_main', topic: 'proteins',
+                    questionText: 'What are the building blocks of proteins?',
+                    options: ['Monosaccharides', 'Fatty acids', 'Nucleotides', 'Amino acids'],
+                    correctAnswer: 'Amino acids',
+                },
+                {
+                    id: 'bio_prot_q3', language: 'biochemical_components_main', topic: 'proteins',
+                    questionText: 'What is the primary structure of a protein?',
+                    options: ['Alpha-helices and beta-sheets', 'The sequence of amino acids', 'Overall 3D shape', 'Multiple polypeptide chains'],
+                    correctAnswer: 'The sequence of amino acids',
+                },
+                {
+                    id: 'bio_prot_q4', language: 'biochemical_components_main', topic: 'proteins',
+                    questionText: 'What determines the specific function of a protein?',
+                    options: ['Its size', 'Its charge', 'Its 3D shape (conformation)', 'Its solubility'],
+                    correctAnswer: 'Its 3D shape (conformation)',
+                },
+                {
+                    id: 'bio_prot_q5', language: 'biochemical_components_main', topic: 'proteins',
+                    questionText: 'What is denaturation in proteins?',
+                    options: ['The formation of peptide bonds', 'The breaking down of amino acids', 'The loss of protein\'s 3D structure and function', 'The synthesis of new proteins'],
+                    correctAnswer: 'The loss of protein\'s 3D structure and function',
+                },
+                // Additional Proteins Questions
+                {
+                    id: 'bio_prot_q11', language: 'biochemical_components_main', topic: 'proteins',
+                    questionText: 'Which level of protein structure involves the arrangement of multiple polypeptide chains?',
+                    options: ['Primary', 'Secondary', 'Tertiary', 'Quaternary'],
+                    correctAnswer: 'Quaternary',
+                },
+                {
+                    id: 'bio_prot_q12', language: 'biochemical_components_main', topic: 'proteins',
+                    questionText: 'What type of bond is responsible for the secondary structure (alpha-helix and beta-sheet) of proteins?',
+                    options: ['Peptide bond', 'Disulfide bond', 'Hydrogen bond', 'Ionic bond'],
+                    correctAnswer: 'Hydrogen bond',
+                },
+                {
+                    id: 'bio_prot_q13', language: 'biochemical_components_main', topic: 'proteins',
+                    questionText: 'Which protein is responsible for muscle contraction?',
+                    options: ['Keratin', 'Collagen', 'Actin', 'Hemoglobin'],
+                    correctAnswer: 'Actin',
+                },
+                {
+                    id: 'bio_prot_q14', language: 'biochemical_components_main', topic: 'proteins',
+                    questionText: 'What is the term for a protein that acts as a biological catalyst?',
+                    options: ['Hormone', 'Antibody', 'Enzyme', 'Receptor'],
+                    correctAnswer: 'Enzyme',
+                },
+                {
+                    id: 'bio_prot_q15', language: 'biochemical_components_main', topic: 'proteins',
+                    questionText: 'Which of the following is a globular protein?',
+                    options: ['Collagen', 'Keratin', 'Myosin', 'Hemoglobin'],
+                    correctAnswer: 'Hemoglobin',
+                },
+                {
+                    id: 'bio_prot_q6', language: 'biochemical_components_main', topic: 'proteins',
+                    questionText: 'Which type of bond links amino acids together to form a polypeptide chain?',
+                    options: ['Ionic bond', 'Hydrogen bond', 'Peptide bond', 'Disulfide bond'],
+                    correctAnswer: 'Peptide bond',
+                },
+                {
+                    id: 'bio_prot_q7', language: 'biochemical_components_main', topic: 'proteins',
+                    questionText: 'Hemoglobin, responsible for oxygen transport in blood, is an example of a:',
+                    options: ['Carbohydrate', 'Lipid', 'Protein', 'Nucleic Acid'],
+                    correctAnswer: 'Protein',
+                },
+                {
+                    id: 'bio_prot_q8', language: 'biochemical_components_main', topic: 'proteins',
+                    questionText: 'Which level of protein structure involves the folding of the polypeptide chain into alpha-helices or beta-sheets?',
+                    options: ['Primary', 'Secondary', 'Tertiary', 'Quaternary'],
+                    correctAnswer: 'Secondary',
+                },
+                {
+                    id: 'bio_prot_q9', language: 'biochemical_components_main', topic: 'proteins',
+                    questionText: 'What is the role of chaperones in protein folding?',
+                    options: ['To break down misfolded proteins', 'To synthesize new proteins', 'To assist in the proper folding of other proteins', 'To transport proteins across membranes'],
+                    correctAnswer: 'To assist in the proper folding of other proteins',
+                },
+                {
+                    id: 'bio_prot_q10', language: 'biochemical_components_main', topic: 'proteins',
+                    questionText: 'Which of the following is a fibrous protein that provides structural support in hair and nails?',
+                    options: ['Insulin', 'Hemoglobin', 'Keratin', 'Myosin'],
+                    correctAnswer: 'Keratin',
+                },
+
+                // Lipids Questions
+                {
+                    id: 'bio_lip_q1', language: 'biochemical_components_main', topic: 'lipids',
+                    questionText: 'Which of these is a characteristic of lipids?',
+                    options: ['Water-soluble', 'Long chains of amino acids', 'Hydrophobic', 'Primary source of quick energy'],
+                    correctAnswer: 'Hydrophobic',
+                },
+                {
+                    id: 'bio_lip_q2', language: 'biochemical_components_main', topic: 'lipids',
+                    questionText: 'What is the main component of cell membranes?',
+                    options: ['Proteins', 'Carbohydrates', 'Phospholipids', 'Nucleic acids'],
+                    correctAnswer: 'Phospholipids',
+                },
+                {
+                    id: 'bio_lip_q3', language: 'biochemical_components_main', topic: 'lipids',
+                    questionText: 'Which type of lipid is a major component of adipose tissue for energy storage?',
+                    options: ['Steroids', 'Phospholipids', 'Triglycerides', 'Waxes'],
+                    correctAnswer: 'Triglycerides',
+                },
+                {
+                    id: 'bio_lip_q4', language: 'biochemical_components_main', topic: 'lipids',
+                    questionText: 'Are lipids generally soluble in water?',
+                    options: ['Yes', 'No', 'Only at high temperatures', 'Only if they are very small'],
+                    correctAnswer: 'No',
+                },
+                {
+                    id: 'bio_lip_q5', language: 'biochemical_components_main', topic: 'lipids',
+                    questionText: 'Cholesterol is an example of which type of lipid?',
+                    options: ['Fatty acid', 'Triglyceride', 'Steroid', 'Phospholipid'],
+                    correctAnswer: 'Steroid',
+                },
+                // Additional Lipids Questions
+                {
+                    id: 'bio_lip_q11', language: 'biochemical_components_main', topic: 'lipids',
+                    questionText: 'Which of the following is a saturated fatty acid?',
+                    options: ['Oleic acid', 'Linoleic acid', 'Palmitic acid', 'Linolenic acid'],
+                    correctAnswer: 'Palmitic acid',
+                },
+                {
+                    id: 'bio_lip_q12', language: 'biochemical_components_main', topic: 'lipids',
+                    questionText: 'What is the primary function of lipids in cell membranes?',
+                    options: ['Energy storage', 'Structural support', 'Genetic information storage', 'Enzyme activity'],
+                    correctAnswer: 'Structural support',
+                },
+                {
+                    id: 'bio_lip_q13', language: 'biochemical_components_main', topic: 'lipids',
+                    questionText: 'Which type of lipid forms a protective coating on leaves and fruits?',
+                    options: ['Triglycerides', 'Phospholipids', 'Steroids', 'Waxes'],
+                    correctAnswer: 'Waxes',
+                },
+                {
+                    id: 'bio_lip_q14', language: 'biochemical_components_main', topic: 'lipids',
+                    questionText: 'Which of these is an essential fatty acid (must be obtained from diet)?',
+                    options: ['Stearic acid', 'Palmitic acid', 'Linoleic acid', 'Butyric acid'],
+                    correctAnswer: 'Linoleic acid',
+                },
+                {
+                    id: 'bio_lip_q15', language: 'biochemical_components_main', topic: 'lipids',
+                    questionText: 'What is the process of breaking down lipids into fatty acids and glycerol?',
+                    options: ['Glycolysis', 'Lipogenesis', 'Lipolysis', 'Gluconeogenesis'],
+                    correctAnswer: 'Lipolysis',
+                },
+                {
+                    id: 'bio_lip_q6', language: 'biochemical_components_main', topic: 'lipids',
+                    questionText: 'Which part of a phospholipid is hydrophilic?',
+                    options: ['Fatty acid tails', 'Glycerol backbone', 'Phosphate head', 'Both fatty acid tails and glycerol backbone'],
+                    correctAnswer: 'Phosphate head',
+                },
+                {
+                    id: 'bio_lip_q7', language: 'biochemical_components_main', topic: 'lipids',
+                    questionText: 'Lipids are primarily composed of which elements?',
+                    options: ['Carbon, Hydrogen, Oxygen, Nitrogen', 'Carbon, Hydrogen, Oxygen', 'Carbon, Hydrogen, Oxygen, Phosphorus', 'Carbon, Hydrogen, Oxygen, Sulfur'],
+                    correctAnswer: 'Carbon, Hydrogen, Oxygen',
+                },
+                {
+                    id: 'bio_lip_q8', language: 'biochemical_components_main', topic: 'lipids',
+                    questionText: 'Saturated fatty acids contain:',
+                    options: ['One double bond', 'Two double bonds', 'No double bonds', 'Multiple double bonds'],
+                    correctAnswer: 'No double bonds',
+                },
+                {
+                    id: 'bio_lip_q9', language: 'biochemical_components_main', topic: 'lipids',
+                    questionText: 'Which of the following is a function of lipids in the body?',
+                    options: ['Enzyme catalysis', 'Genetic information storage', 'Long-term energy storage and insulation', 'Structural component of ribosomes'],
+                    correctAnswer: 'Long-term energy storage and insulation',
+                },
+                {
+                    id: 'bio_lip_q10', language: 'biochemical_components_main', topic: 'lipids',
+                    questionText: 'Waxes are a type of lipid known for their:',
+                    options: ['High solubility in water', 'Role in genetic expression', 'Water-repellent properties', 'Ability to form enzymes'],
+                    correctAnswer: 'Water-repellent properties',
+                },
+
+                // --- Questions for 'Cell Division' Subject ---
+                // Meiosis Questions
+                {
+                    id: 'bio_cd_meiosis_q1', language: 'cell_division_main', topic: 'meiosis',
+                    questionText: 'Meiosis is primarily involved in the production of:',
+                    options: ['Somatic cells', 'Gametes (sex cells)', 'Muscle cells', 'Nerve cells'],
+                    correctAnswer: 'Gametes (sex cells)',
+                },
+                {
+                    id: 'bio_cd_meiosis_q2', language: 'cell_division_main', topic: 'meiosis',
+                    questionText: 'How many rounds of nuclear division occur in meiosis?',
+                    options: ['One', 'Two', 'Three', 'Four'],
+                    correctAnswer: 'Two',
+                },
+                {
+                    id: 'bio_cd_meiosis_q3', language: 'cell_division_main', topic: 'meiosis',
+                    questionText: 'Crossing over occurs during which stage of meiosis?',
+                    options: ['Prophase I', 'Metaphase I', 'Anaphase II', 'Telophase II'],
+                    correctAnswer: 'Prophase I',
+                },
+                {
+                    id: 'bio_cd_meiosis_q4', language: 'cell_division_main', topic: 'meiosis',
+                    questionText: 'Homologous chromosomes separate during which meiotic division?',
+                    options: ['Meiosis I', 'Meiosis II', 'Both Meiosis I and II', 'Neither'],
+                    correctAnswer: 'Meiosis I',
+                },
+                {
+                    id: 'bio_cd_meiosis_q5', language: 'cell_division_main', topic: 'meiosis',
+                    questionText: 'Which of the following describes the ploidy level of cells at the end of meiosis I?',
+                    options: ['Diploid', 'Haploid', 'Tetraploid', 'Polyploid'],
+                    correctAnswer: 'Haploid',
+                },
+                // Additional Meiosis Questions
+                {
+                    id: 'bio_cd_meiosis_q11', language: 'cell_division_main', topic: 'meiosis',
+                    questionText: 'The pairing of homologous chromosomes during prophase I of meiosis is called:',
+                    options: ['Chiasmata', 'Synapsis', 'Crossing over', 'Segregation'],
+                    correctAnswer: 'Synapsis',
+                },
+                {
+                    id: 'bio_cd_meiosis_q12', language: 'cell_division_main', topic: 'meiosis',
+                    questionText: 'How many cells are produced at the end of meiosis II from a single diploid cell?',
+                    options: ['Two', 'Four', 'One', 'Eight'],
+                    correctAnswer: 'Four',
+                },
+                {
+                    id: 'bio_cd_meiosis_q13', language: 'cell_division_main', topic: 'meiosis',
+                    questionText: 'Which event unique to meiosis ensures genetic recombination?',
+                    options: ['Independent assortment', 'Sister chromatid separation', 'Cytokinesis', 'Crossing over'],
+                    correctAnswer: 'Crossing over',
+                },
+                {
+                    id: 'bio_cd_meiosis_q14', language: 'cell_division_main', topic: 'meiosis',
+                    questionText: 'In meiosis, sister chromatids separate during:',
+                    options: ['Anaphase I', 'Prophase II', 'Metaphase I', 'Anaphase II'],
+                    correctAnswer: 'Anaphase II',
+                },
+                {
+                    id: 'bio_cd_meiosis_q15', language: 'cell_division_main', topic: 'meiosis',
+                    questionText: 'The reduction in chromosome number from diploid to haploid occurs during:',
+                    options: ['Mitosis', 'Meiosis I', 'Meiosis II', 'Fertilization'],
+                    correctAnswer: 'Meiosis I',
+                },
+                {
+                    id: 'bio_cd_meiosis_q6', language: 'cell_division_main', topic: 'meiosis',
+                    questionText: 'The result of meiosis in humans is:',
+                    options: ['Two diploid cells', 'Four haploid cells', 'Two haploid cells', 'Four diploid cells'],
+                    correctAnswer: 'Four haploid cells',
+                },
+                {
+                    id: 'bio_cd_meiosis_q7', language: 'cell_division_main', topic: 'meiosis',
+                    questionText: 'Synapsis and crossing over occur during:',
+                    options: ['Prophase of Mitosis', 'Prophase I of Meiosis', 'Prophase II of Meiosis', 'Anaphase I of Meiosis'],
+                    correctAnswer: 'Prophase I of Meiosis',
+                },
+                {
+                    id: 'bio_cd_meiosis_q8', language: 'cell_division_main', topic: 'meiosis',
+                    questionText: 'Genetic variation is primarily introduced during meiosis through which processes?',
+                    options: ['Replication and segregation', 'Crossing over and independent assortment', 'Cytokinesis and anaphase', 'Telophase and prophase'],
+                    correctAnswer: 'Crossing over and independent assortment',
+                },
+                {
+                    id: 'bio_cd_meiosis_q9', language: 'cell_division_main', topic: 'meiosis',
+                    questionText: 'Which of the following is a key difference between Meiosis I and Meiosis II?',
+                    options: ['DNA replication occurs in Meiosis II but not Meiosis I', 'Homologous chromosomes separate in Meiosis I, while sister chromatids separate in Meiosis II', 'Meiosis I produces haploid cells, Meiosis II produces diploid cells', 'Crossing over occurs in Meiosis II but not Meiosis I'],
+                    correctAnswer: 'Homologous chromosomes separate in Meiosis I, while sister chromatids separate in Meiosis II',
+                },
+                {
+                    id: 'bio_cd_meiosis_q10', language: 'cell_division_main', topic: 'meiosis',
+                    questionText: 'In which phase of meiosis do homologous chromosomes pair up to form bivalents?',
+                    options: ['Metaphase I', 'Anaphase I', 'Prophase I', 'Telophase I'],
+                    correctAnswer: 'Prophase I',
+                },
+
+                // Mitosis Questions
+                {
+                    id: 'bio_cd_mitosis_q1', language: 'cell_division_main', topic: 'mitosis',
+                    questionText: 'Which type of cell division results in two genetically identical daughter cells?',
+                    options: ['Meiosis', 'Mitosis', 'Binary fission', 'Budding'],
+                    correctAnswer: 'Mitosis',
+                },
+                {
+                    id: 'bio_cd_mitosis_q2', language: 'cell_division_main', topic: 'mitosis',
+                    questionText: 'During which phase of mitosis do sister chromatids separate and move to opposite poles?',
+                    options: ['Prophase', 'Metaphase', 'Anaphase', 'Telophase'],
+                    correctAnswer: 'Anaphase',
+                },
+                {
+                    id: 'bio_cd_mitosis_q3', language: 'cell_division_main', topic: 'mitosis',
+                    questionText: 'The process of cytokinesis typically follows which phase of cell division?',
+                    options: ['Prophase', 'Metaphase', 'Anaphase', 'Telophase'],
+                    correctAnswer: 'Telophase',
+                },
+                {
+                    id: 'bio_cd_mitosis_q4', language: 'cell_division_main', topic: 'mitosis',
+                    questionText: 'If a parent cell has 46 chromosomes, how many chromosomes will each daughter cell have after mitosis?',
+                    options: ['23', '46', '92', 'Varies'],
+                    correctAnswer: '46',
+                },
+                {
+                    id: 'bio_cd_mitosis_q5', language: 'cell_division_main', topic: 'mitosis',
+                    questionText: 'What is the main purpose of mitosis in multicellular organisms?',
+                    options: ['Sexual reproduction', 'Growth and repair', 'Genetic variation', 'Gamete formation'],
+                    correctAnswer: 'Growth and repair',
+                },
+                // Additional Mitosis Questions
+                {
+                    id: 'bio_cd_mitosis_q11', language: 'cell_division_main', topic: 'mitosis',
+                    questionText: 'During which phase of the cell cycle does DNA replication occur?',
+                    options: ['M phase', 'G1 phase', 'S phase', 'G2 phase'],
+                    correctAnswer: 'S phase',
+                },
+                {
+                    id: 'bio_cd_mitosis_q12', language: 'cell_division_main', topic: 'mitosis',
+                    questionText: 'The mitotic spindle is made up of:',
+                    options: ['Actin filaments', 'Intermediate filaments', 'Microtubules', 'Myosin filaments'],
+                    correctAnswer: 'Microtubules',
+                },
+                {
+                    id: 'bio_cd_mitosis_q13', language: 'cell_division_main', topic: 'mitosis',
+                    questionText: 'What is the term for the constricted region of a chromosome where sister chromatids are joined?',
+                    options: ['Telomere', 'Centromere', 'Kinetochore', 'Chromatid arm'],
+                    correctAnswer: 'Centromere',
+                },
+                {
+                    id: 'bio_cd_mitosis_q14', language: 'cell_division_main', topic: 'mitosis',
+                    questionText: 'In plant cells, what forms during cytokinesis to divide the cell?',
+                    options: ['Cleavage furrow', 'Cell plate', 'Contractile ring', 'Plasma membrane invagination'],
+                    correctAnswer: 'Cell plate',
+                },
+                {
+                    id: 'bio_cd_mitosis_q15', language: 'cell_division_main', topic: 'mitosis',
+                    questionText: 'Which of the following is a characteristic of cancer cells related to cell division?',
+                    options: ['Controlled cell growth', 'Apoptosis', 'Uncontrolled cell division', 'Differentiation'],
+                    correctAnswer: 'Uncontrolled cell division',
+                },
+                {
+                    id: 'bio_cd_mitosis_q6', language: 'cell_division_main', topic: 'mitosis',
+                    questionText: 'During which phase of mitosis do chromosomes align at the metaphase plate?',
+                    options: ['Prophase', 'Metaphase', 'Anaphase', 'Telophase'],
+                    correctAnswer: 'Metaphase',
+                },
+                {
+                    id: 'bio_cd_mitosis_q7', language: 'cell_division_main', topic: 'mitosis',
+                    questionText: 'The spindle fibers attach to what structure on the centromere of chromosomes?',
+                    options: ['Chromatin', 'Telomeres', 'Kinetochores', 'Centrosomes'],
+                    correctAnswer: 'Kinetochores',
+                },
+                {
+                    id: 'bio_cd_mitosis_q8', language: 'cell_division_main', topic: 'mitosis',
+                    questionText: 'Which of the following is NOT a stage of mitosis?',
+                    options: ['Prophase', 'Interphase', 'Metaphase', 'Anaphase'],
+                    correctAnswer: 'Interphase',
+                },
+                {
+                    id: 'bio_cd_mitosis_q9', language: 'cell_division_main', topic: 'mitosis',
+                    questionText: 'What happens to the nuclear envelope during prophase of mitosis?',
+                    options: ['It reforms', 'It remains intact', 'It breaks down', 'It duplicates'],
+                    correctAnswer: 'It breaks down',
+                },
+                {
+                    id: 'bio_cd_mitosis_q10', language: 'cell_division_main', topic: 'mitosis',
+                    questionText: 'In animal cells, cytokinesis occurs by the formation of a:',
+                    options: ['Cell plate', 'Cleavage furrow', 'Cell wall', 'Spindle fiber'],
+                    correctAnswer: 'Cleavage furrow',
+                },
+
+
+                // --- Questions for 'DNA as a Genetic Material Experimental Evidence' Subject ---
+                // Griffith's Experiment Questions
+                {
+                    id: 'bio_dna_griffith_q1', language: 'dna_evidence_main', topic: 'griffiths_experiment',
+                    questionText: 'Which experiment demonstrated the "transforming principle" in bacteria?',
+                    options: ['Hershey-Chase experiment', 'Meselson-Stahl experiment', 'Griffith\'s experiment', 'Avery-MacLeod-McCarty experiment'],
+                    correctAnswer: 'Griffith\'s experiment',
+                },
+                {
+                    id: 'bio_dna_griffith_q2', language: 'dna_evidence_main', topic: 'griffiths_experiment',
+                    questionText: 'Griffith\'s experiment involved injecting mice with different strains of which bacterium?',
+                    options: ['E. coli', 'Staphylococcus aureus', 'Streptococcus pneumoniae', 'Salmonella typhi'],
+                    correctAnswer: 'Streptococcus pneumoniae',
+                },
+                {
+                    id: 'bio_dna_griffith_q3', language: 'dna_evidence_main', topic: 'griffiths_experiment',
+                    questionText: 'In Griffith\'s experiment, what happened when live R strain bacteria were mixed with heat-killed S strain bacteria and injected into mice?',
+                    options: ['The mice lived', 'The mice died', 'The R strain mutated into S strain', 'Nothing happened'],
+                    correctAnswer: 'The mice died',
+                },
+                {
+                    id: 'bio_dna_griffith_q4', language: 'dna_evidence_main', topic: 'griffiths_experiment',
+                    questionText: 'What was the "transforming principle" in Griffith\'s experiment?',
+                    options: ['A protein', 'A carbohydrate', 'An unknown substance from the heat-killed S strain', 'A lipid'],
+                    correctAnswer: 'An unknown substance from the heat-killed S strain',
+                },
+                {
+                    id: 'bio_dna_griffith_q5', language: 'dna_evidence_main', topic: 'griffiths_experiment',
+                    questionText: 'Griffith\'s experiment suggested that genetic information could be transferred from one bacterial strain to another. True or False?',
+                    options: ['True', 'False'],
+                    correctAnswer: 'True',
+                },
+                // Additional Griffith's Experiment Questions
+                {
+                    id: 'bio_dna_griffith_q8', language: 'dna_evidence_main', topic: 'griffiths_experiment',
+                    questionText: 'What was the key observation made by Griffith when injecting heat-killed S strain and live R strain together?',
+                    options: ['Mice survived and R strain was recovered', 'Mice died and S strain was recovered', 'Mice died and R strain was recovered', 'Mice survived and S strain was recovered'],
+                    correctAnswer: 'Mice died and S strain was recovered',
+                },
+                {
+                    id: 'bio_dna_griffith_q9', language: 'dna_evidence_main', topic: 'griffiths_experiment',
+                    questionText: 'The S strain of *Streptococcus pneumoniae* is characterized by:',
+                    options: ['A rough cell wall', 'The absence of a capsule', 'A smooth polysaccharide capsule', 'Resistance to antibiotics'],
+                    correctAnswer: 'A smooth polysaccharide capsule',
+                },
+                {
+                    id: 'bio_dna_griffith_q10', language: 'dna_evidence_main', topic: 'griffiths_experiment',
+                    questionText: 'Griffith\'s experiment provided evidence for:',
+                    options: ['Protein synthesis', 'Genetic recombination', 'Bacterial conjugation', 'Bacterial transformation'],
+                    correctAnswer: 'Bacterial transformation',
+                },
+                {
+                    id: 'bio_dna_griffith_q11', language: 'dna_evidence_main', topic: 'griffiths_experiment',
+                    questionText: 'What happened when mice were injected with only heat-killed S strain bacteria?',
+                    options: ['They died', 'They survived', 'They developed a mild infection', 'The bacteria multiplied rapidly'],
+                    correctAnswer: 'They survived',
+                },
+                {
+                    id: 'bio_dna_griffith_q12', language: 'dna_evidence_main', topic: 'griffiths_experiment',
+                    questionText: 'The R strain bacteria were considered non-virulent because:',
+                    options: ['They had a capsule', 'They lacked a capsule', 'They were heat-killed', 'They were resistant to the immune system'],
+                    correctAnswer: 'They lacked a capsule',
+                },
+                {
+                    id: 'bio_dna_griffith_q6', language: 'dna_evidence_main', topic: 'griffiths_experiment',
+                    questionText: 'The R strain bacteria in Griffith\'s experiment were:',
+                    options: ['Virulent and smooth', 'Non-virulent and smooth', 'Virulent and rough', 'Non-virulent and rough'],
+                    correctAnswer: 'Non-virulent and rough',
+                },
+                {
+                    id: 'bio_dna_griffith_q7', language: 'dna_evidence_main', topic: 'griffiths_experiment',
+                    questionText: 'The S strain bacteria in Griffith\'s experiment were:',
+                    options: ['Virulent and smooth', 'Non-virulent and smooth', 'Virulent and rough', 'Non-virulent and rough'],
+                    correctAnswer: 'Virulent and smooth',
+                },
+
+                // McLeod, McCarty, and Avery's Experiment Questions
+                {
+                    id: 'bio_dna_avery_q1', language: 'dna_evidence_main', topic: 'mcleod_mccarty_avery_experiment',
+                    questionText: 'The experiment by Avery, MacLeod, and McCarty identified what as the transforming substance?',
+                    options: ['Protein', 'RNA', 'DNA', 'Lipid'],
+                    correctAnswer: 'DNA',
+                },
+                {
+                    id: 'bio_dna_avery_q2', language: 'dna_evidence_main', topic: 'mcleod_mccarty_avery_experiment',
+                    questionText: 'What was the key finding of the Avery, MacLeod, and McCarty experiment regarding the transforming principle?',
+                    options: ['It was destroyed by proteases', 'It was destroyed by RNases', 'It was destroyed by DNases', 'It was a heat-stable protein'],
+                    correctAnswer: 'DNase',
+                },
+                {
+                    id: 'bio_dna_avery_q3', language: 'dna_evidence_main', topic: 'mcleod_mccarty_avery_experiment',
+                    questionText: 'The transforming principle from Griffith\'s experiment was later identified as DNA by:',
+                    options: ['Watson and Crick', 'Franklin and Wilkins', 'Avery, MacLeod, and McCarty', 'Chargaff'],
+                    correctAnswer: 'Avery, MacLeod, and McCarty',
+                },
+                {
+                    id: 'bio_dna_avery_q4', language: 'dna_evidence_main', topic: 'mcleod_mccarty_avery_experiment',
+                    questionText: 'Avery, MacLeod, and McCarty treated bacterial extracts with enzymes to degrade specific macromolecules. Which enzyme prevented transformation?',
+                    options: ['Protease', 'RNase', 'DNase', 'Lipase'],
+                    correctAnswer: 'DNase',
+                },
+                {
+                    id: 'bio_dna_avery_q5', language: 'dna_evidence_main', topic: 'mcleod_mccarty_avery_experiment',
+                    questionText: 'This experiment provided strong evidence that DNA, not protein, was the genetic material. True or False?',
+                    options: ['True', 'False'],
+                    correctAnswer: 'True',
+                },
+                // Additional McLeod, McCarty, and Avery's Experiment Questions
+                {
+                    id: 'bio_dna_avery_q8', language: 'dna_evidence_main', topic: 'mcleod_mccarty_avery_experiment',
+                    questionText: 'What was the purpose of treating the S strain extract with RNase?',
+                    options: ['To destroy proteins', 'To destroy DNA', 'To destroy RNA', 'To destroy lipids'],
+                    correctAnswer: 'To destroy RNA',
+                },
+                {
+                    id: 'bio_dna_avery_q9', language: 'dna_evidence_main', topic: 'mcleod_mccarty_avery_experiment',
+                    questionText: 'When the S strain extract was treated with DNase, what was the outcome?',
+                    options: ['Transformation occurred', 'Transformation was prevented', 'More S strain bacteria were produced', 'No change was observed'],
+                    correctAnswer: 'Transformation was prevented',
+                },
+                {
+                    id: 'bio_dna_avery_q10', language: 'dna_evidence_main', topic: 'mcleod_mccarty_avery_experiment',
+                    questionText: 'The experiment by Avery, MacLeod, and McCarty built upon the findings of which earlier experiment?',
+                    options: ['Hershey-Chase', 'Meselson-Stahl', 'Griffith\'s', 'Franklin and Wilkins'],
+                    correctAnswer: 'Griffith\'s',
+                },
+                {
+                    id: 'bio_dna_avery_q11', language: 'dna_evidence_main', topic: 'mcleod_mccarty_avery_experiment',
+                    questionText: 'What was the conclusion drawn from the Avery-MacLeod-McCarty experiment?',
+                    options: ['Proteins carry genetic information', 'RNA carries genetic information', 'DNA is the genetic material', 'Lipids are essential for transformation'],
+                    correctAnswer: 'DNA is the genetic material',
+                },
+                {
+                    id: 'bio_dna_avery_q12', language: 'dna_evidence_main', topic: 'mcleod_mccarty_avery_experiment',
+                    questionText: 'Which macromolecule was considered the primary candidate for genetic material before this experiment?',
+                    options: ['Carbohydrates', 'Lipids', 'Proteins', 'Nucleic acids'],
+                    correctAnswer: 'Proteins',
+                },
+                {
+                    id: 'bio_dna_avery_q6', language: 'dna_evidence_main', topic: 'mcleod_mccarty_avery_experiment',
+                    questionText: 'What was the significance of treating the S strain extract with protease in Avery-MacLeod-McCarty experiment?',
+                    options: ['It confirmed DNA was the transforming principle', 'It showed that proteins were not the transforming principle', 'It destroyed RNA', 'It enhanced transformation'],
+                    correctAnswer: 'It showed that proteins were not the transforming principle',
+                },
+                {
+                    id: 'bio_dna_avery_q7', language: 'dna_evidence_main', topic: 'mcleod_mccarty_avery_experiment',
+                    questionText: 'The key method used by Avery, MacLeod, and McCarty to identify the transforming substance was:',
+                    options: ['Centrifugation', 'Electrophoresis', 'Enzymatic degradation', 'Chromatography'],
+                    correctAnswer: 'Enzymatic degradation',
+                },
+
+                // Hershey's and Chase Experiment Questions
+                {
+                    id: 'bio_dna_hershey_q1', language: 'dna_evidence_main', topic: 'hershey_chase_experiment',
+                    questionText: 'In the Hershey-Chase experiment, what radioactive isotope was used to label DNA?',
+                    options: ['Sulfur-35 (³⁵S)', 'Phosphorus-32 (³²P)', 'Carbon-14 (¹⁴C)', 'Nitrogen-15 (¹⁵N)'],
+                    correctAnswer: 'Phosphorus-32 (³²P)',
+                },
+                {
+                    id: 'bio_dna_hershey_q2', language: 'dna_evidence_main', topic: 'hershey_chase_experiment',
+                    questionText: 'The Hershey-Chase experiment concluded that genetic material is:',
+                    options: ['Protein', 'RNA', 'DNA', 'Carbohydrate'],
+                    correctAnswer: 'DNA',
+                },
+                {
+                    id: 'bio_dna_hershey_q3', language: 'dna_evidence_main', topic: 'hershey_chase_experiment',
+                    questionText: 'In the Hershey-Chase experiment, which component of the bacteriophage entered the bacterial cell?',
+                    options: ['Protein coat', 'DNA', 'Both protein and DNA', 'Neither'],
+                    correctAnswer: 'DNA',
+                },
+                {
+                    id: 'bio_dna_hershey_q4', language: 'dna_evidence_main', topic: 'hershey_chase_experiment',
+                    questionText: 'What did the Hershey-Chase experiment use to infect bacteria?',
+                    options: ['Viruses', 'Fungi', 'Bacteria', 'Protozoa'],
+                    correctAnswer: 'Viruses',
+                },
+                {
+                    id: 'bio_dna_hershey_q5', language: 'dna_evidence_main', topic: 'hershey_chase_experiment',
+                    questionText: 'Which of the following isotopes was used to label proteins in the Hershey-Chase experiment?',
+                    options: ['³²P', '³⁵S', '¹⁴C', '¹⁵N'],
+                    correctAnswer: '³⁵S',
+                },
+                // Additional Hershey's and Chase Experiment Questions
+                {
+                    id: 'bio_dna_hershey_q11', language: 'dna_evidence_main', topic: 'hershey_chase_experiment',
+                    questionText: 'The bacteriophage used in the Hershey-Chase experiment was a virus that infects:',
+                    options: ['Animal cells', 'Plant cells', 'Bacterial cells', 'Fungal cells'],
+                    correctAnswer: 'Bacterial cells',
+                },
+                {
+                    id: 'bio_dna_hershey_q12', language: 'dna_evidence_main', topic: 'hershey_chase_experiment',
+                    questionText: 'After infection and blending, where was the majority of the ³⁵S found?',
+                    options: ['Inside the bacterial cells', 'In the supernatant (outside the cells)', 'Equally distributed', 'In the viral DNA'],
+                    correctAnswer: 'In the supernatant (outside the cells)',
+                },
+                {
+                    id: 'bio_dna_hershey_q13', language: 'dna_evidence_main', topic: 'hershey_chase_experiment',
+                    questionText: 'The results of the Hershey-Chase experiment provided strong evidence against which molecule being the genetic material?',
+                    options: ['DNA', 'RNA', 'Protein', 'Lipid'],
+                    correctAnswer: 'Protein',
+                },
+                {
+                    id: 'bio_dna_hershey_q14', language: 'dna_evidence_main', topic: 'hershey_chase_experiment',
+                    questionText: 'What technique was used to separate the viral coats from the bacterial cells after infection?',
+                    options: ['Chromatography', 'Electrophoresis', 'Centrifugation', 'Filtration'],
+                    correctAnswer: 'Centrifugation',
+                },
+                {
+                    id: 'bio_dna_hershey_q15', language: 'dna_evidence_main', topic: 'hershey_chase_experiment',
+                    questionText: 'The Hershey-Chase experiment helped to solidify the understanding that:',
+                    options: ['Proteins are the primary enzymes', 'RNA is the blueprint for proteins', 'DNA is the hereditary material', 'Lipids form cell membranes'],
+                    correctAnswer: 'DNA is the hereditary material',
+                },
+                {
+                    id: 'bio_dna_hershey_q6', language: 'dna_evidence_main', topic: 'hershey_chase_experiment',
+                    questionText: 'The Hershey-Chase experiment used a blender to separate what from the bacterial cells?',
+                    options: ['Nucleic acids', 'Proteins', 'Lipids', 'Carbohydrates'],
+                    correctAnswer: 'Proteins',
+                },
+                {
+                    id: 'bio_dna_hershey_q7', language: 'dna_evidence_main', topic: 'hershey_chase_experiment',
+                    questionText: 'The results of the Hershey-Chase experiment showed that the majority of the radioactive phosphorus (³²P) was found inside the bacterial cells, indicating:',
+                    options: ['Proteins are the genetic material', 'RNA is the genetic material', 'DNA is the genetic material', 'Lipids are the genetic material'],
+                    correctAnswer: 'DNA is the genetic material',
+                },
+                {
+                    id: 'bio_dna_hershey_q8', language: 'dna_evidence_main', topic: 'hershey_chase_experiment',
+                    questionText: 'Why was phosphorus-32 (³²P) used to label DNA?',
+                    options: ['Because phosphorus is found in proteins but not DNA', 'Because phosphorus is found in DNA but not proteins', 'Because phosphorus is a common element in all macromolecules', 'Because it is a stable isotope'],
+                    correctAnswer: 'Because phosphorus is found in DNA but not proteins',
+                },
+                {
+                    id: 'bio_dna_hershey_q9', language: 'dna_evidence_main', topic: 'hershey_chase_experiment',
+                    questionText: 'Why was sulfur-35 (³⁵S) used to label proteins?',
+                    options: ['Because sulfur is found in DNA but not proteins', 'Because sulfur is found in proteins but not DNA', 'Because sulfur is a common element in all macromolecules', 'Because it is a stable isotope'],
+                    correctAnswer: 'Because sulfur is found in proteins but not DNA',
+                },
+                {
+                    id: 'bio_dna_hershey_q10', language: 'dna_evidence_main', topic: 'hershey_chase_experiment',
+                    questionText: 'The experiment supported the idea that:',
+                    options: ['Proteins carry genetic information', 'RNA carries genetic information', 'DNA carries genetic information', 'Carbohydrates carry genetic information'],
+                    correctAnswer: 'DNA carries genetic information',
+                },
+            ],
+        };
+
+        // Helper function to shuffle an array
+        const shuffleArray = (array) => {
+            let currentIndex = array.length, randomIndex;
+            while (currentIndex !== 0) {
+                randomIndex = Math.floor(Math.random() * currentIndex);
+                currentIndex--;
+                [array[currentIndex], array[randomIndex]] = [
+                    array[randomIndex], array[currentIndex]];
+            }
+            return array;
+        };
+
+        // --- Global State Variables ---
+        let currentView = 'languageSelection'; // 'languageSelection', 'topicSelection', 'quiz', 'results', 'allQuestions', 'previousScores'
+        let selectedLanguage = null; // Now represents the selected main subject
+        let selectedTopic = null;
+        let quizQuestions = [];
+        let userAnswers = [];
+        let score = 0;
+        // Using a simple object to store previously asked question IDs for each topic
+        const previousQuizQuestionIds = {};
+
+        let currentQuestionIndex = 0;
+        let selectedOption = null; // Stores the option selected by the user for the current question
+
+        // Timer variables
+        let timerInterval;
+        let timeLeft = 120; // 2 minutes in seconds
+        let quizStartTime = null; // To store the start time of the quiz
+        let timeTaken = 0; // To store the time taken to complete the quiz
+
+        // Array to store previous quiz scores (last 5)
+        // Load previous scores from local storage on initialization
+        let previousScores = JSON.parse(localStorage.getItem('quizPreviousScores')) || [];
+
+        // --- DOM Element Reference ---
+        const appDiv = document.getElementById('app');
+
+        // --- Rendering Functions for Each View ---
+
+        function renderLanguageSelection() {
+            // Clear any active timer when navigating back to subject selection
+            if (timerInterval) {
+                clearInterval(timerInterval);
+                timerInterval = null;
+            }
+            appDiv.innerHTML = `
+                <div class="relative flex flex-col items-center justify-center min-h-screen bg-gradient-to-br from-blue-500 to-purple-600 p-4">
+                    <div class="absolute top-4 right-4 flex space-x-2">
+                        <button id="viewPreviousScoresBtn" class="bg-gray-700 hover:bg-gray-800 text-white font-bold py-2 px-4 rounded-lg shadow-md transition duration-300 ease-in-out transform hover:scale-105 focus:outline-none focus:ring-4 focus:ring-gray-500 text-sm">
+                            Previous Scores
+                        </button>
+                    </div>
+                    <div class="bg-white p-8 rounded-xl shadow-2xl text-center max-w-md w-full">
+                        <h1 class="text-4xl font-extrabold text-gray-800 mb-8 font-inter">
+                            Choose a Subject
+                        </h1>
+                        <div class="grid grid-cols-1 gap-6">
+                            ${quizData.languages.map(lang => `
+                                <button class="language-button w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-4 px-6 rounded-lg shadow-md transition duration-300 ease-in-out transform hover:scale-105 focus:outline-none focus:ring-4 focus:ring-indigo-300" data-lang-id="${lang.id}">
+                                    ${lang.name}
+                                </button>
+                            `).join('')}
+                            <button id="viewAllQuestionsBtn" class="w-full bg-gray-700 hover:bg-gray-800 text-white font-bold py-4 px-6 rounded-lg shadow-md transition duration-300 ease-in-out transform hover:scale-105 focus:outline-none focus:ring-4 focus:ring-gray-500">
+                                View All Questions
+                            </button>
+                        </div>
+                    </div>
+                    <div class="absolute bottom-4 left-1/2 transform -translate-x-1/2">
+                        <button id="suggestChangeBtn" class="bg-blue-700 hover:bg-blue-800 text-white font-bold py-2 px-4 rounded-lg shadow-md transition duration-300 ease-in-out transform hover:scale-105 focus:outline-none focus:ring-4 focus:ring-blue-500 text-sm">
+                            Suggest Us Change
+                        </button>
+                    </div>
+                </div>
+            `;
+            document.querySelectorAll('.language-button').forEach(button => {
+                button.addEventListener('click', (event) => {
+                    selectedLanguage = event.target.dataset.langId;
+                    console.log('Subject selected:', selectedLanguage); // DEBUG: Log selected language
+                    currentView = 'topicSelection';
+                    render();
+                });
+            });
+
+            document.getElementById('viewAllQuestionsBtn').addEventListener('click', () => {
+                currentView = 'allQuestions';
+                render();
+            });
+
+            document.getElementById('viewPreviousScoresBtn').addEventListener('click', () => {
+                currentView = 'previousScores';
+                render();
+            });
+
+            document.getElementById('suggestChangeBtn').addEventListener('click', () => {
+                window.location.href = 'mailto:atultiwari997721@gmail.com';
+            });
+        }
+
+        function renderTopicSelection() {
+            // Clear any active timer when navigating back to topic selection
+            if (timerInterval) {
+                clearInterval(timerInterval);
+                timerInterval = null;
+            }
+            console.log('Attempting to render topics for selectedLanguage:', selectedLanguage); // DEBUG: Log selectedLanguage
+            const topics = quizData.topics[selectedLanguage] || [];
+            console.log('Retrieved topics:', topics); // DEBUG: Log retrieved topics array
+
+            const languageName = quizData.languages.find(lang => lang.id === selectedLanguage)?.name || selectedLanguage.toUpperCase();
+
+            let topicsContent;
+            if (topics.length === 0) {
+                topicsContent = `<p class="text-gray-600 text-lg">No topics available for this subject yet. Please check data or select another subject.</p>`;
+            } else {
+                topicsContent = `
+                    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 mb-8">
+                        ${topics.map(topic => `
+                            <button class="topic-button w-full font-bold py-3 px-5 rounded-lg shadow-md transition duration-300 ease-in-out transform hover:scale-105 focus:outline-none focus:ring-4 focus:ring-emerald-300 text-sm sm:text-base"
+                                    style="background-color: #10B981; color: white;" data-topic-id="${topic.id}">
+                                ${topic.name}
+                            </button>
+                        `).join('')}
+                    </div>
+                `;
+                console.log(`Successfully found ${topics.length} topics for ${languageName}.`); // DEBUG: Confirmation
+            }
+
+
+            appDiv.innerHTML = `
+                <div class="flex flex-col items-center justify-center min-h-screen bg-gradient-to-br from-green-500 to-teal-600 p-4">
+                    <div class="bg-white p-8 rounded-xl shadow-2xl text-center max-w-2xl w-full">
+                        <h1 class="text-4xl font-extrabold text-gray-800 mb-6 font-inter">
+                            Select a Topic for ${languageName}
+                        </h1>
+                        ${topicsContent}
+                        <button id="backToLanguagesBtn" class="mt-6 bg-gray-500 hover:bg-gray-600 text-white font-bold py-3 px-6 rounded-lg shadow-md transition duration-300 ease-in-out transform hover:scale-105 focus:outline-none focus:ring-4 focus:ring-gray-300">
+                            Back to Subjects
+                        </button>
+                    </div>
+                </div>
+            `;
+
+            // Event listeners must be re-attached after innerHTML update
+            document.querySelectorAll('.topic-button').forEach(button => {
+                button.addEventListener('click', (event) => {
+                    selectedTopic = event.target.dataset.topicId;
+                    generateUniqueQuestions(); // Generate questions when topic is selected
+                    currentView = 'quiz';
+                    render();
+                });
+            });
+
+            document.getElementById('backToLanguagesBtn').addEventListener('click', () => {
+                selectedLanguage = null;
+                selectedTopic = null;
+                quizQuestions = [];
+                userAnswers = [];
+                score = 0;
+                currentQuestionIndex = 0;
+                selectedOption = null;
+                currentView = 'languageSelection';
+                render();
+            });
+            console.log("Current appDiv.innerHTML after topic render:", appDiv.innerHTML); // DEBUG: Log final HTML
+        }
+
+        function generateUniqueQuestions() {
+            const allQuestionsForTopic = quizData.questions.filter(
+                (q) => q.language === selectedLanguage && q.topic === selectedTopic
+            );
+
+            // Get previously asked questions for this topic
+            const previouslyAskedIds = previousQuizQuestionIds[selectedTopic] || [];
+
+            let availableQuestions = allQuestionsForTopic.filter(
+                (q) => !previouslyAskedIds.includes(q.id)
+            );
+
+            // If not enough new questions, reuse all questions and reset history for this topic
+            if (availableQuestions.length < 5) {
+                console.warn("Not enough new questions. Reusing some questions or resetting history.");
+                availableQuestions = allQuestionsForTopic;
+                previousQuizQuestionIds[selectedTopic] = [];
+            }
+
+            const shuffledQuestions = shuffleArray([...availableQuestions]);
+            // Select 5 questions
+            const selectedFive = shuffledQuestions.slice(0, 5);
+
+            // Store the IDs of the questions selected for this quiz
+            previousQuizQuestionIds[selectedTopic] = selectedFive.map(q => q.id);
+
+            quizQuestions = selectedFive;
+            currentQuestionIndex = 0;
+            userAnswers = [];
+            score = 0;
+            selectedOption = null; // Ensure this is reset when generating new questions
+            timeLeft = 120; // Reset timer for a new quiz
+        }
+
+
+        function renderQuiz() {
+            if (quizQuestions.length === 0) {
+                appDiv.innerHTML = `
+                    <div class="flex flex-col items-center justify-center min-h-screen bg-gradient-to-br from-indigo-500 to-purple-600 text-white text-2xl">
+                        <p>Loading questions...</p>
+                        <p class="mt-4 text-sm">If this persists, there might be no questions for the selected topic/subject.</p>
+                    </div>
+                `;
+                return;
+            }
+
+            // Record the start time when the quiz view is rendered
+            quizStartTime = new Date().getTime();
+
+            const currentQuestion = quizQuestions[currentQuestionIndex];
+            // Find the name of the current main subject
+            const subjectName = quizData.languages.find(lang => lang.id === selectedLanguage)?.name || selectedLanguage.toUpperCase();
+            // Find the name of the current topic within the selected subject
+            const topicName = quizData.topics[selectedLanguage]?.find(t => t.id === selectedTopic)?.name || selectedTopic;
+
+            appDiv.innerHTML = `
+                <div class="flex flex-col items-center justify-center min-h-screen bg-gradient-to-br from-indigo-500 to-purple-600 p-4">
+                    <div class="bg-white p-8 rounded-xl shadow-2xl max-w-3xl w-full">
+                        <h2 class="text-3xl font-extrabold text-gray-800 mb-6 text-center font-inter">
+                            ${subjectName} Quiz: ${topicName}
+                        </h2>
+                        <div class="flex justify-between items-center mb-4">
+                            <div class="text-lg text-gray-700">
+                                Question ${currentQuestionIndex + 1} of 5
+                            </div>
+                            <div id="timerDisplay" class="text-xl font-bold text-red-600">
+                                02:00
+                            </div>
+                        </div>
+                        <div class="bg-gray-100 p-6 rounded-lg mb-6 shadow-inner">
+                            <p class="text-xl font-semibold text-gray-900 mb-4 break-words" id="questionText">
+                                ${currentQuestion.questionText}
+                            </p>
+                            <div id="optionsContainer" class="space-y-3">
+                                ${currentQuestion.options.map((option, index) => `
+                                    <button class="option-button w-full text-left p-3 rounded-md border-2 transition duration-200 ease-in-out
+                                        bg-white border-gray-300 text-gray-800 hover:bg-blue-50 hover:border-blue-200
+                                        focus:outline-none focus:ring-2 focus:ring-blue-400
+                                        break-words text-wrap"
+                                        data-option="${option}" data-index="${index}">
+                                        ${option}
+                                    </button>
+                                `).join('')}
+                            </div>
+                            <div id="feedbackMessage" class="mt-4 p-3 rounded-md text-center font-semibold hidden"></div>
+                        </div>
+                        <div class="flex justify-between items-center">
+                            <button id="backToTopicsBtn" class="bg-gray-500 hover:bg-gray-600 text-white font-bold py-3 px-6 rounded-lg shadow-md transition duration-300 ease-in-out transform hover:scale-105 focus:outline-none focus:ring-4 focus:ring-gray-300">
+                                Back to Topics
+                            </button>
+                            <button id="nextQuestionBtn" class="bg-green-600 hover:bg-green-700 text-white font-bold py-3 px-6 rounded-lg shadow-md transition duration-300 ease-in-out transform hover:scale-105 focus:outline-none focus:ring-4 focus:ring-green-300
+                                ${selectedOption === null ? 'opacity-50 cursor-not-allowed' : ''}"
+                                ${selectedOption === null ? 'disabled' : ''}>
+                                ${currentQuestionIndex === 4 ? 'Finish Quiz' : 'Next Question'}
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            const optionButtons = document.querySelectorAll('.option-button');
+            const nextQuestionBtn = document.getElementById('nextQuestionBtn');
+            const feedbackMessageDiv = document.getElementById('feedbackMessage');
+            const backToTopicsBtn = document.getElementById('backToTopicsBtn');
+            const timerDisplay = document.getElementById('timerDisplay');
+
+            // Function to update timer display
+            function updateTimerDisplay() {
+                const minutes = Math.floor(timeLeft / 60);
+                const seconds = timeLeft % 60;
+                timerDisplay.textContent = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+
+                if (timeLeft <= 10) { // Change color to red when time is low
+                    timerDisplay.classList.add('text-red-600');
+                } else {
+                    timerDisplay.classList.remove('text-red-600');
+                }
+
+                if (timeLeft <= 0) {
+                    clearInterval(timerInterval);
+                    timerInterval = null;
+                    // Calculate time taken when time runs out
+                    // If time runs out, it means the full 120 seconds were used, or very close to it.
+                    // For simplicity, if timer reaches 0, assume max time or 120s used.
+                    timeTaken = 120;
+                    // Automatically move to results when time runs out
+                    feedbackMessageDiv.classList.remove('hidden');
+                    feedbackMessageDiv.classList.remove('bg-green-200', 'text-green-800');
+                    feedbackMessageDiv.classList.add('bg-red-200', 'text-red-800');
+                    feedbackMessageDiv.textContent = "Time's up! Moving to results.";
+                    // Disable options and next button to prevent further interaction
+                    optionButtons.forEach(btn => btn.disabled = true);
+                    nextQuestionBtn.disabled = true;
+                    nextQuestionBtn.classList.add('opacity-50', 'cursor-not-allowed');
+
+                    setTimeout(() => {
+                        currentView = 'results';
+                        render();
+                    }, 1500); // Wait a bit before moving to results
+                } else {
+                    timeLeft--;
+                }
+            }
+
+            // Clear any existing timer before starting a new one
+            if (timerInterval) {
+                clearInterval(timerInterval);
+            }
+            // Start the timer only when rendering the quiz view
+            timerInterval = setInterval(updateTimerDisplay, 1000);
+            updateTimerDisplay(); // Initial call to display time immediately
+
+
+            optionButtons.forEach(button => {
+                button.addEventListener('click', (event) => {
+                    if (selectedOption !== null) return; // Prevent re-selecting if an option is already chosen
+
+                    selectedOption = event.target.dataset.option;
+                    const isCorrect = selectedOption === currentQuestion.correctAnswer;
+
+                    // Apply styling to all options based on selection and correctness
+                    optionButtons.forEach(optBtn => {
+                        optBtn.disabled = true; // Disable all options once one is selected
+                        optBtn.classList.remove('bg-white', 'border-gray-300', 'text-gray-800', 'hover:bg-blue-50', 'hover:border-blue-200');
+
+                        if (optBtn.dataset.option === currentQuestion.correctAnswer) {
+                            // Correct answer (always green)
+                            optBtn.classList.add('bg-green-100', 'border-green-500', 'text-green-800');
+                        } else if (optBtn.dataset.option === selectedOption) {
+                            // Incorrect selected answer (red)
+                            optBtn.classList.add('bg-red-100', 'border-red-500', 'text-red-800');
+                        } else {
+                            // Unselected incorrect answer (grayed out)
+                            optBtn.classList.add('bg-gray-200', 'border-gray-300', 'text-gray-600');
+                        }
+                    });
+
+                    // Display feedback message
+                    feedbackMessageDiv.classList.remove('hidden');
+                    if (isCorrect) {
+                        feedbackMessageDiv.classList.remove('bg-red-200', 'text-red-800');
+                        feedbackMessageDiv.classList.add('bg-green-200', 'text-green-800');
+                        feedbackMessageDiv.textContent = 'Correct!';
+                    } else {
+                        feedbackMessageDiv.classList.remove('bg-green-200', 'text-green-800');
+                        feedbackMessageDiv.classList.add('bg-red-200', 'text-red-800');
+                        feedbackMessageDiv.textContent = `Incorrect. Correct answer: ${currentQuestion.correctAnswer}`;
+                    }
+
+                    // Enable next question button immediately after an option is selected
+                    nextQuestionBtn.disabled = false;
+                    nextQuestionBtn.classList.remove('opacity-50', 'cursor-not-allowed');
+                });
+            });
+
+            nextQuestionBtn.addEventListener('click', () => {
+                // Immediately disable the button to prevent multiple rapid clicks
+                nextQuestionBtn.disabled = true;
+                nextQuestionBtn.classList.add('opacity-50', 'cursor-not-allowed');
+
+                const currentQuestion = quizQuestions[currentQuestionIndex];
+                const isCorrect = selectedOption === currentQuestion.correctAnswer;
+
+                userAnswers.push({
+                    question: currentQuestion.questionText,
+                    userAnswer: selectedOption,
+                    correctAnswer: currentQuestion.correctAnswer,
+                    isCorrect: isCorrect,
+                });
+
+                if (isCorrect) {
+                    score++;
+                }
+
+                if (currentQuestionIndex < 4) { // 5 questions, so indices 0-4
+                    currentQuestionIndex++;
+                    selectedOption = null; // Reset selected option for next question
+                    render(); // Render next question
+                } else {
+                    // Quiz finished - calculate time taken
+                    clearInterval(timerInterval); // Stop the timer when quiz finishes
+                    timerInterval = null;
+                    // Calculate time taken based on remaining time
+                    timeTaken = 120 - timeLeft; // Total time - remaining time
+
+                    // Store the score
+                    const subjectName = quizData.languages.find(lang => lang.id === selectedLanguage)?.name || selectedLanguage.toUpperCase();
+                    const topicName = quizData.topics[selectedLanguage]?.find(t => t.id === selectedTopic)?.name || selectedTopic;
+                    previousScores.unshift({ // Add to the beginning
+                        score: score,
+                        totalQuestions: quizQuestions.length,
+                        timeTaken: timeTaken,
+                        subject: subjectName,
+                        topic: topicName
+                    });
+                    // Keep only the last 5 scores
+                    if (previousScores.length > 5) {
+                        previousScores = previousScores.slice(0, 5);
+                    }
+                    // Save scores to local storage
+                    localStorage.setItem('quizPreviousScores', JSON.stringify(previousScores));
+
+                    currentView = 'results';
+                    render(); // Render results page
+                }
+            });
+
+            backToTopicsBtn.addEventListener('click', () => {
+                clearInterval(timerInterval); // Stop the timer when navigating away
+                timerInterval = null;
+                selectedTopic = null;
+                quizQuestions = [];
+                userAnswers = [];
+                score = 0;
+                currentQuestionIndex = 0;
+                selectedOption = null;
+                currentView = 'topicSelection';
+                render();
+            });
+        }
+
+        function renderResults() {
+            // Clear any active timer when navigating to results
+            if (timerInterval) {
+                clearInterval(timerInterval);
+                timerInterval = null;
+            }
+
+            const subjectName = quizData.languages.find(lang => lang.id === selectedLanguage)?.name || selectedLanguage.toUpperCase();
+            const topicName = quizData.topics[selectedLanguage]?.find(t => t.id === selectedTopic)?.name || selectedTopic;
+
+            // Format time taken
+            const minutesTaken = Math.floor(timeTaken / 60);
+            const secondsTaken = Math.floor(timeTaken % 60);
+            const formattedTimeTaken = `${minutesTaken.toString().padStart(2, '0')}:${secondsTaken.toString().padStart(2, '0')}`;
+
+
+            appDiv.innerHTML = `
+                <div class="flex flex-col items-center justify-center min-h-screen bg-gradient-to-br from-purple-500 to-pink-600 p-4">
+                    <div class="bg-white p-8 rounded-xl shadow-2xl max-w-4xl w-full">
+                        <h2 class="text-4xl font-extrabold text-gray-800 mb-6 text-center font-inter">
+                            Quiz Results
+                        </h2>
+                        <p class="text-2xl font-bold text-center mb-4 text-gray-700">
+                            You scored <span class="text-green-600">${score}</span> out of <span class="text-blue-600">5</span>!
+                        </p>
+                        <p class="text-xl font-semibold text-center mb-8 text-gray-600">
+                            Time Taken: <span class="text-indigo-600">${formattedTimeTaken}</span>
+                        </p>
+
+                        <div class="space-y-6 mb-8">
+                            ${userAnswers.map((answer, index) => `
+                                <div class="p-5 rounded-lg shadow-md ${answer.isCorrect ? 'bg-green-50 border-l-4 border-green-500' : 'bg-red-50 border-l-4 border-red-500'}">
+                                    <p class="text-lg font-semibold text-gray-900 mb-2 break-words">
+                                        Question ${index + 1}: ${answer.question}
+                                    </p>
+                                    <p class="text-gray-700 break-words">
+                                        Your Answer: <span class="${answer.isCorrect ? 'text-green-700 font-medium' : 'text-red-700 font-medium'}">
+                                            ${answer.userAnswer || "No answer selected"}
+                                        </span>
+                                        ${!answer.isCorrect ? '<span class="ml-2 text-gray-500"> (Incorrect)</span>' : ''}
+                                    </p>
+                                    ${!answer.isCorrect ? `
+                                        <p class="text-gray-700 break-words">
+                                            Correct Answer: <span class="text-blue-700 font-medium">${answer.correctAnswer}</span>
+                                        </p>
+                                    ` : ''}
+                                </div>
+                            `).join('')}
+                        </div>
+
+                        <div class="flex flex-col sm:flex-row justify-center gap-4">
+                            <button id="playAgainBtn" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-lg shadow-md transition duration-300 ease-in-out transform hover:scale-105 focus:outline-none focus:ring-4 focus:ring-blue-300 w-full sm:w-auto">
+                                Play Again (Same Topic)
+                            </button>
+                            <button id="backToTopicsFromResultsBtn" class="bg-yellow-600 hover:bg-yellow-700 text-white font-bold py-3 px-6 rounded-lg shadow-md transition duration-300 ease-in-out transform hover:scale-105 focus:outline-none focus:ring-4 focus:ring-yellow-300 w-full sm:w-auto">
+                                Choose Another Topic
+                            </button>
+                            <button id="backToLanguagesFromResultsBtn" class="bg-red-600 hover:bg-red-700 text-white font-bold py-3 px-6 rounded-lg shadow-md transition duration-300 ease-in-out transform hover:scale-105 focus:outline-none focus:ring-4 focus:ring-red-300 w-full sm:w-auto">
+                                Change Subject
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            document.getElementById('playAgainBtn').addEventListener('click', () => {
+                generateUniqueQuestions(); // Re-generate questions for same topic
+                currentView = 'quiz';
+                render();
+            });
+
+            document.getElementById('backToTopicsFromResultsBtn').addEventListener('click', () => {
+                selectedTopic = null;
+                quizQuestions = [];
+                userAnswers = [];
+                score = 0;
+                currentQuestionIndex = 0;
+                selectedOption = null;
+                currentView = 'topicSelection';
+                render();
+            });
+
+            document.getElementById('backToLanguagesFromResultsBtn').addEventListener('click', () => {
+                selectedLanguage = null;
+                selectedTopic = null;
+                quizQuestions = [];
+                userAnswers = [];
+                score = 0;
+                currentQuestionIndex = 0;
+                selectedOption = null;
+                currentView = 'languageSelection';
+                render();
+            });
+        }
+
+        function renderAllQuestionsView() {
+            // Clear any active timer when navigating to all questions view
+            if (timerInterval) {
+                clearInterval(timerInterval);
+                timerInterval = null;
+            }
+
+            let allQuestionsHtml = '';
+
+            // Iterate through each main subject
+            quizData.languages.forEach(subject => {
+                allQuestionsHtml += `
+                    <div class="subject-container bg-blue-100 p-4 sm:p-6 rounded-lg shadow-md mb-6 break-words-all">
+                        <button class="subject-toggle-btn w-full text-left bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-4 sm:px-6 rounded-md mb-4 flex justify-between items-center text-base sm:text-xl" data-subject-id="${subject.id}">
+                            <span>${subject.name}</span>
+                            <span class="toggle-icon text-xl sm:text-2xl">+</span>
+                        </button>
+                        <div class="topics-content hidden space-y-3 ml-2 sm:ml-4" id="topics-${subject.id}">
+                `;
+
+                // Get topics for the current subject
+                const topicsForSubject = quizData.topics[subject.id] || [];
+
+                if (topicsForSubject.length === 0) {
+                    allQuestionsHtml += `<p class="text-gray-600 text-sm sm:text-base">No topics available for this subject.</p>`;
+                } else {
+                    // Iterate through each topic within the current subject
+                    topicsForSubject.forEach(topic => {
+                        allQuestionsHtml += `
+                            <div class="topic-container bg-white p-3 sm:p-4 rounded-lg shadow-inner">
+                                <button class="topic-toggle-btn w-full text-left bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-3 sm:px-4 rounded-md mb-3 flex justify-between items-center text-sm sm:text-lg" data-topic-id="${topic.id}" data-subject-id="${subject.id}">
+                                    <span>${topic.name}</span>
+                                    <span class="toggle-icon text-lg sm:text-xl">+</span>
+                                </button>
+                                <div class="questions-content hidden space-y-2 ml-2 sm:ml-4" id="questions-${subject.id}-${topic.id}">
+                        `;
+
+                        // Filter questions for the current subject and topic
+                        const questionsForTopic = quizData.questions.filter(
+                            q => q.language === subject.id && q.topic === topic.id
+                        );
+
+                        if (questionsForTopic.length === 0) {
+                            allQuestionsHtml += `<p class="text-gray-600 text-xs sm:text-sm">No questions available for this topic.</p>`;
+                        } else {
+                            // Iterate through each question in the topic
+                            questionsForTopic.forEach((question, qIndex) => {
+                                allQuestionsHtml += `
+                                    <div class="p-3 border rounded-md bg-gray-50">
+                                        <p class="text-sm font-semibold text-gray-900 mb-1 leading-tight">Q${qIndex + 1}: ${question.questionText}</p>
+                                        <ul class="list-disc list-inside text-gray-700 text-xs sm:text-sm mb-1">
+                                            ${question.options.map(option => `<li class="break-words">${option}</li>`).join('')}
+                                        </ul>
+                                        <p class="text-xs sm:text-sm font-bold text-green-700">Correct Answer: <span class="break-words">${question.correctAnswer}</span></p>
+                                    </div>
+                                `;
+                            });
+                        }
+                        allQuestionsHtml += `
+                                </div>
+                            </div>
+                        `; // Close questions-content and topic-container div
+                    });
+                }
+                allQuestionsHtml += `
+                        </div>
+                    </div>
+                `; // Close topics-content and subject-container div
+            });
+
+
+            appDiv.innerHTML = `
+                <div class="flex flex-col items-center min-h-screen bg-gradient-to-br from-purple-500 to-pink-600 p-2 sm:p-4">
+                    <div class="bg-white p-4 sm:p-8 rounded-xl shadow-2xl max-w-full sm:max-w-5xl w-full my-4 sm:my-8">
+                        <h2 class="text-2xl sm:text-4xl font-extrabold text-gray-800 mb-6 sm:mb-8 text-center font-inter">
+                            All Questions and Answers
+                        </h2>
+                        ${allQuestionsHtml}
+                        <div class="flex justify-center mt-6 sm:mt-8">
+                            <button id="backToSubjectsFromAllQuestionsBtn" class="bg-gray-500 hover:bg-gray-600 text-white font-bold py-2 px-4 sm:py-3 sm:px-6 rounded-lg shadow-md transition duration-300 ease-in-out transform hover:scale-105 focus:outline-none focus:ring-4 focus:ring-gray-300 text-sm sm:text-base">
+                                Back to Subjects
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            document.getElementById('backToSubjectsFromAllQuestionsBtn').addEventListener('click', () => {
+                currentView = 'languageSelection';
+                render();
+            });
+
+            // Add event listeners for subject toggles
+            document.querySelectorAll('.subject-toggle-btn').forEach(button => {
+                button.addEventListener('click', (event) => {
+                    const subjectId = event.currentTarget.dataset.subjectId;
+                    const topicsContent = document.getElementById(`topics-${subjectId}`);
+                    const toggleIcon = event.currentTarget.querySelector('.toggle-icon');
+
+                    if (topicsContent.classList.contains('hidden')) {
+                        topicsContent.classList.remove('hidden');
+                        toggleIcon.textContent = '-';
+                    } else {
+                        topicsContent.classList.add('hidden');
+                        toggleIcon.textContent = '+';
+                        // Optionally hide all nested questions when subject is collapsed
+                        topicsContent.querySelectorAll('.questions-content').forEach(qc => qc.classList.add('hidden'));
+                        topicsContent.querySelectorAll('.topic-toggle-btn .toggle-icon').forEach(icon => icon.textContent = '+');
+                    }
+                });
+            });
+
+            // Add event listeners for topic toggles
+            document.querySelectorAll('.topic-toggle-btn').forEach(button => {
+                button.addEventListener('click', (event) => {
+                    const subjectId = event.currentTarget.dataset.subjectId;
+                    const topicId = event.currentTarget.dataset.topicId;
+                    const questionsContent = document.getElementById(`questions-${subjectId}-${topicId}`);
+                    const toggleIcon = event.currentTarget.querySelector('.toggle-icon');
+
+                    if (questionsContent.classList.contains('hidden')) {
+                        questionsContent.classList.remove('hidden');
+                        toggleIcon.textContent = '-';
+                    } else {
+                        questionsContent.classList.add('hidden');
+                        toggleIcon.textContent = '+';
+                    }
+                });
+            });
+        }
+
+        function renderPreviousScoresView() {
+            // Clear any active timer when navigating to previous scores view
+            if (timerInterval) {
+                clearInterval(timerInterval);
+                timerInterval = null;
+            }
+
+            let scoresContent;
+            if (previousScores.length === 0) {
+                scoresContent = `<p class="text-gray-600 text-lg text-center">No previous scores recorded yet. Play some quizzes!</p>`;
+            } else {
+                scoresContent = `
+                    <div class="space-y-4">
+                        ${previousScores.map((scoreEntry, index) => `
+                            <div class="bg-gray-100 p-4 rounded-lg shadow-inner">
+                                <p class="text-lg font-semibold text-gray-900 mb-1">Quiz ${previousScores.length - index}</p>
+                                <p class="text-md text-gray-700">Subject: <span class="font-medium">${scoreEntry.subject}</span></p>
+                                <p class="text-md text-gray-700">Topic: <span class="font-medium">${scoreEntry.topic}</span></p>
+                                <p class="text-md text-gray-700">Score: <span class="text-green-600 font-bold">${scoreEntry.score}</span> / ${scoreEntry.totalQuestions}</p>
+                                <p class="text-md text-gray-700">Time Taken: <span class="text-indigo-600 font-bold">${Math.floor(scoreEntry.timeTaken / 60).toString().padStart(2, '0')}:${Math.floor(scoreEntry.timeTaken % 60).toString().padStart(2, '0')}</span></p>
+                            </div>
+                        `).join('')}
+                    </div>
+                `;
+            }
+
+            appDiv.innerHTML = `
+                <div class="flex flex-col items-center justify-center min-h-screen bg-gradient-to-br from-blue-500 to-purple-600 p-4">
+                    <div class="bg-white p-8 rounded-xl shadow-2xl text-center max-w-md w-full">
+                        <h1 class="text-4xl font-extrabold text-gray-800 mb-8 font-inter">
+                            Previous Quiz Scores
+                        </h1>
+                        ${scoresContent}
+                        <button id="backToSubjectsFromScoresBtn" class="mt-8 bg-gray-500 hover:bg-gray-600 text-white font-bold py-3 px-6 rounded-lg shadow-md transition duration-300 ease-in-out transform hover:scale-105 focus:outline-none focus:ring-4 focus:ring-gray-300">
+                            Back to Subjects
+                        </button>
+                    </div>
+                </div>
+            `;
+
+            document.getElementById('backToSubjectsFromScoresBtn').addEventListener('click', () => {
+                currentView = 'languageSelection';
+                render();
+            });
+        }
+
+
+        // --- Main Render Function ---
+        function render() {
+            switch (currentView) {
+                case 'languageSelection':
+                    renderLanguageSelection();
+                    break;
+                case 'topicSelection':
+                    renderTopicSelection();
+                    break;
+                case 'quiz':
+                    renderQuiz();
+                    break;
+                case 'results':
+                    renderResults();
+                    break;
+                case 'allQuestions':
+                    renderAllQuestionsView();
+                    break;
+                case 'previousScores':
+                    renderPreviousScoresView();
+                    break;
+                default:
+                    renderLanguageSelection(); // Fallback
+            }
+        }
+
+        // Initial render when the script loads
+        document.addEventListener('DOMContentLoaded', render);
+    </script>
+</body>
+</html>
