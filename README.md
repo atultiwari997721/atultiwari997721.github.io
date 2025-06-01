@@ -239,6 +239,10 @@
             <div class="link-card">
                 <a href="https://atultiwari997721.github.io/quizApp/index.html" target="_blank" rel="noopener noreferrer">Practice Quiz Of C,C++,Python</a>
             </div>
+
+           <div class="link-card">
+                <a href="https://atultiwari997721.github.io/quizApp/biotech.html" target="_blank" rel="noopener noreferrer">Practice Quiz Of Biotechnology </a>
+            </div>
            
 
         </div>
