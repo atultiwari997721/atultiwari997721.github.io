@@ -1,0 +1,378 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gomti AI Chatbot</title>
+    <!-- Tailwind CSS CDN for styling -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* Custom styles to ensure font and basic layout */
+        body {
+            font-family: 'Inter', sans-serif;
+            margin: 0;
+            padding: 0;
+            overflow: hidden; /* Prevent body scroll, allow chat area to scroll */
+        }
+        #chat-container {
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+            background-color: #f3f4f6; /* bg-gray-100 */
+        }
+        #chat-header {
+            background: linear-gradient(to right, #3b82f6, #9333ea); /* from-blue-500 to-purple-600 */
+            color: white;
+            padding: 1rem; /* p-4 */
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* shadow-lg */
+            border-bottom-left-radius: 0.75rem; /* rounded-b-xl */
+            border-bottom-right-radius: 0.75rem; /* rounded-b-xl */
+            text-align: center;
+        }
+        #chat-messages {
+            flex: 1;
+            overflow-y: auto;
+            padding: 1rem; /* p-4 */
+            display: flex;
+            flex-direction: column;
+            gap: 1rem; /* space-y-4 */
+        }
+        .message-row {
+            display: flex;
+        }
+        .message-bubble {
+            max-width: 80%; /* max-w-xs sm:max-w-md lg:max-w-lg */
+            padding: 0.75rem; /* p-3 */
+            border-radius: 0.75rem; /* rounded-xl */
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1); /* shadow-md */
+            font-size: 0.875rem; /* text-sm */
+        }
+        .user-message {
+            background-color: #3b82f6; /* bg-blue-500 */
+            color: white;
+            border-bottom-right-radius: 0; /* rounded-br-none */
+            margin-left: auto; /* justify-end */
+        }
+        .bot-message {
+            background-color: #ffffff; /* bg-white */
+            color: #1f2937; /* text-gray-800 */
+            border-bottom-left-radius: 0; /* rounded-bl-none */
+            margin-right: auto; /* justify-start */
+        }
+        #message-input-area {
+            padding: 1rem; /* p-4 */
+            background-color: white;
+            border-top: 1px solid #e5e7eb; /* border-t border-gray-200 */
+            box-shadow: 0 -4px 6px rgba(0, 0, 0, 0.1); /* shadow-lg */
+            border-top-left-radius: 0.75rem; /* rounded-t-xl */
+            border-top-right-radius: 0.75rem; /* rounded-t-xl */
+            display: flex;
+            align-items: center;
+        }
+        #message-input {
+            flex: 1;
+            padding: 0.75rem; /* p-3 */
+            border: 1px solid #d1d5db; /* border border-gray-300 */
+            border-radius: 0.5rem; /* rounded-lg */
+            outline: none;
+            resize: none; /* resize-none */
+            max-height: 6rem; /* max-h-24 */
+            overflow-y: auto;
+        }
+        #message-input:focus {
+            ring: 2px; /* focus:ring-2 */
+            ring-color: #3b82f6; /* focus:ring-blue-500 */
+        }
+        #send-button {
+            margin-left: 1rem; /* ml-4 */
+            padding: 0.75rem 1.5rem; /* px-6 py-3 */
+            background-color: #2563eb; /* bg-blue-600 */
+            color: white;
+            border-radius: 0.5rem; /* rounded-lg */
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1); /* shadow-md */
+            transition: background-color 0.3s ease-in-out; /* transition duration-300 ease-in-out */
+        }
+        #send-button:hover {
+            background-color: #1d4ed8; /* hover:bg-blue-700 */
+        }
+        #send-button:focus {
+            outline: none;
+            ring: 2px;
+            ring-color: #3b82f6;
+            ring-offset: 2px;
+        }
+        #send-button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+        .loading-dots {
+            display: flex;
+            align-items: center;
+        }
+        .loading-dot {
+            width: 0.75rem; /* w-3 */
+            height: 0.75rem; /* h-3 */
+            background-color: #3b82f6; /* bg-blue-500 */
+            border-radius: 50%; /* rounded-full */
+            animation: bounce 1.4s infinite ease-in-out;
+            margin-right: 0.25rem; /* mr-1 */
+        }
+        .loading-dot:nth-child(2) {
+            animation-delay: 0.15s; /* delay-150 */
+        }
+        .loading-dot:nth-child(3) {
+            animation-delay: 0.3s; /* delay-300 */
+            margin-right: 0; /* No margin on the last dot */
+        }
+        @keyframes bounce {
+            0%, 80%, 100% { transform: scale(0); }
+            40% { transform: scale(1); }
+        }
+        .initial-message {
+            text-align: center;
+            color: #6b7280; /* text-gray-500 */
+            margin-top: 5rem; /* mt-20 */
+            font-size: 1.125rem; /* text-lg */
+        }
+
+        /* Responsive adjustments for message bubbles */
+        @media (min-width: 640px) { /* sm breakpoint */
+            .message-bubble {
+                max-width: 66.666667%; /* sm:max-w-md (approx 2/3) */
+            }
+            .message-bubble p {
+                font-size: 1rem; /* sm:text-base */
+            }
+        }
+        @media (min-width: 1024px) { /* lg breakpoint */
+            .message-bubble {
+                max-width: 50%; /* lg:max-w-lg (approx 1/2) */
+            }
+        }
+    </style>
+</head>
+<body>
+    <div id="chat-container">
+        <!-- Chat header -->
+        <header id="chat-header">
+            <h1 class="text-3xl font-bold">Gomti AI</h1>
+        </header>
+
+        <!-- Chat messages display area -->
+        <div id="chat-messages">
+            <div id="initial-message" class="initial-message">
+                <p>Start a conversation! Type a message below.</p>
+            </div>
+        </div>
+
+        <!-- Message input and send button -->
+        <div id="message-input-area">
+            <textarea
+                id="message-input"
+                placeholder="Type your message..."
+                rows="1"
+            ></textarea>
+            <button id="send-button">Send</button>
+        </div>
+    </div>
+
+    <script>
+        // Get references to DOM elements
+        const chatMessages = document.getElementById('chat-messages');
+        const messageInput = document.getElementById('message-input');
+        const sendButton = document.getElementById('send-button');
+        // Changed from const to let to allow reassignment
+        let initialMessageDiv = document.getElementById('initial-message');
+
+        // Array to store chat messages for context
+        const messages = [];
+        let isLoading = false; // Flag to indicate if a response is being processed
+
+        // Function to create and append a message bubble to the chat
+        function appendMessage(text, sender) {
+            // Remove the initial message if it exists
+            if (initialMessageDiv) {
+                initialMessageDiv.remove();
+                // Set initialMessageDiv to null so it doesn't try to remove again
+                initialMessageDiv = null;
+            }
+
+            const messageRow = document.createElement('div');
+            messageRow.classList.add('message-row', 'flex');
+            if (sender === 'user') {
+                messageRow.classList.add('justify-end'); // Tailwind: justify-end
+            } else {
+                messageRow.classList.add('justify-start'); // Tailwind: justify-start
+            }
+
+            const messageBubble = document.createElement('div');
+            messageBubble.classList.add(
+                'message-bubble',
+                'p-3',
+                'rounded-xl',
+                'shadow-md',
+                'max-w-xs',
+                'sm:max-w-md',
+                'lg:max-w-lg'
+            ); // Common styles
+            if (sender === 'user') {
+                messageBubble.classList.add('user-message'); // User specific styles
+            } else {
+                messageBubble.classList.add('bot-message'); // Bot specific styles
+            }
+
+            const messageText = document.createElement('p');
+            messageText.classList.add('text-sm', 'sm:text-base'); // Tailwind: text-sm sm:text-base
+            messageText.textContent = text;
+
+            messageBubble.appendChild(messageText);
+            messageRow.appendChild(messageBubble);
+            chatMessages.appendChild(messageRow);
+
+            // Scroll to the latest message
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+        }
+
+        // Function to display a loading indicator
+        function showLoadingIndicator() {
+            // Remove the initial message if it exists
+            if (initialMessageDiv) {
+                initialMessageDiv.remove();
+                initialMessageDiv = null;
+            }
+
+            const loadingRow = document.createElement('div');
+            loadingRow.id = 'loading-indicator';
+            loadingRow.classList.add('flex', 'justify-start');
+
+            const loadingBubble = document.createElement('div');
+            loadingBubble.classList.add(
+                'message-bubble',
+                'p-3',
+                'rounded-xl',
+                'shadow-md',
+                'bg-white',
+                'text-gray-800',
+                'rounded-bl-none'
+            );
+
+            const loadingDots = document.createElement('div');
+            loadingDots.classList.add('loading-dots', 'flex', 'items-center');
+
+            for (let i = 0; i < 3; i++) {
+                const dot = document.createElement('div');
+                dot.classList.add('loading-dot');
+                if (i === 1) dot.classList.add('delay-150');
+                if (i === 2) dot.classList.add('delay-300');
+                loadingDots.appendChild(dot);
+            }
+
+            loadingBubble.appendChild(loadingDots);
+            loadingRow.appendChild(loadingBubble);
+            chatMessages.appendChild(loadingRow);
+
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+        }
+
+        // Function to remove the loading indicator
+        function hideLoadingIndicator() {
+            const loadingIndicator = document.getElementById('loading-indicator');
+            if (loadingIndicator) {
+                loadingIndicator.remove();
+            }
+        }
+
+        // Function to handle sending a message
+        async function handleSendMessage() {
+            const input = messageInput.value.trim();
+            if (input === '' || isLoading) return; // Don't send empty messages or if loading
+
+            appendMessage(input, 'user'); // Add user message to chat display
+            messages.push({ role: 'user', parts: [{ text: input }] }); // Add to chat history
+            messageInput.value = ''; // Clear the input field
+            messageInput.style.height = 'auto'; // Reset textarea height
+
+            isLoading = true; // Set loading state
+            sendButton.disabled = true; // Disable send button
+            showLoadingIndicator(); // Show loading animation
+
+            try {
+                const payload = {
+                    contents: messages, // Send the full chat history for context
+                };
+
+                // API key is left empty; Canvas will provide it at runtime.
+                const apiKey = "";
+                const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`;
+
+                const response = await fetch(apiUrl, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(payload),
+                });
+
+                if (!response.ok) {
+                    const errorData = await response.json();
+                    console.error('API Error:', errorData);
+                    throw new Error(`API request failed with status ${response.status}: ${errorData.error.message || 'Unknown error'}`);
+                }
+
+                const result = await response.json();
+
+                let botResponseText = 'Sorry, I could not get a response.';
+                if (result.candidates && result.candidates.length > 0 &&
+                    result.candidates[0].content && result.candidates[0].content.parts &&
+                    result.candidates[0].content.parts.length > 0) {
+                    botResponseText = result.candidates[0].content.parts[0].text;
+                }
+
+                appendMessage(botResponseText, 'bot'); // Add bot's response to chat display
+                messages.push({ role: 'model', parts: [{ text: botResponseText }] }); // Add to chat history
+
+            } catch (error) {
+                console.error('Error communicating with Gemini API:', error);
+                appendMessage(`Error: ${error.message}. Please try again.`, 'bot');
+                messages.push({ role: 'model', parts: [{ text: `Error: ${error.message}. Please try again.` }] });
+            } finally {
+                isLoading = false; // Reset loading state
+                sendButton.disabled = false; // Enable send button
+                hideLoadingIndicator(); // Hide loading animation
+            }
+        }
+
+        // Event listener for send button click
+        sendButton.addEventListener('click', handleSendMessage);
+
+        // Event listener for Enter key press in the input field
+        messageInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter' && !e.shiftKey) { // Allow Shift+Enter for new line
+                e.preventDefault(); // Prevent default new line behavior
+                handleSendMessage();
+            }
+        });
+
+        // Adjust textarea height dynamically based on content
+        messageInput.addEventListener('input', () => {
+            messageInput.style.height = 'auto'; // Reset height to recalculate
+            messageInput.style.height = messageInput.scrollHeight + 'px'; // Set height to scrollHeight
+        });
+
+        // Initial setup on window load
+        window.onload = function() {
+            // Ensure the initial message is displayed correctly
+            // Re-get the reference in case it was removed and then the page reloaded/re-initialized without a full refresh
+            initialMessageDiv = document.getElementById('initial-message');
+            if (messages.length === 0 && !initialMessageDiv) {
+                 const initialMsg = document.createElement('div');
+                 initialMsg.id = 'initial-message';
+                 initialMsg.classList.add('initial-message');
+                 initialMsg.innerHTML = '<p>Start a conversation! Type a message below.</p>';
+                 chatMessages.appendChild(initialMsg);
+                 initialMessageDiv = initialMsg; // Re-assign the reference
+            }
+        };
+    </script>
+</body>
+</html>
