@@ -245,6 +245,10 @@
            <div class="link-card">
                 <a href="https://atultiwari997721.github.io/quizApp/biotech.html" target="_blank" rel="noopener noreferrer">Practice Quiz Of Biotechnology </a>
             </div>
+            
+            <div class="link-card">
+                <a href="https://atultiwari997721.github.io/AiHolder/index.html" target="_blank" rel="noopener noreferrer"> Ai </a>
+            </div>
            
 
         </div>
