@@ -17,8 +17,14 @@
         #chat-container {
             display: flex;
             flex-direction: column;
-            height: 100vh;
+            height: 100vh; /* Default height for larger screens (laptops) */
             background-color: #f3f4f6; /* bg-gray-100 */
+        }
+        /* Adjust height for smaller screens (phones) to move input bar up */
+        @media (max-width: 639px) { /* Targets screens smaller than Tailwind's 'sm' breakpoint */
+            #chat-container {
+                height: calc(100vh - 30px); /* Reduce height by 30px to lift the content */
+            }
         }
         #chat-header {
             background: linear-gradient(to right, #3b82f6, #9333ea); /* from-blue-500 to-purple-600 */
@@ -39,6 +45,8 @@
         }
         .message-row {
             display: flex;
+            /* Ensure message rows take full width for better mobile layout */
+            width: 100%;
         }
         .message-bubble {
             max-width: 80%; /* max-w-xs sm:max-w-md lg:max-w-lg */
@@ -60,7 +68,8 @@
             margin-right: auto; /* justify-start */
         }
         #message-input-area {
-            padding: 1rem; /* p-4 */
+            /* Default padding for smaller screens (phones) */
+            padding: 0.5rem; /* Reduced padding for phones */
             background-color: white;
             border-top: 1px solid #e5e7eb; /* border-t border-gray-200 */
             box-shadow: 0 -4px 6px rgba(0, 0, 0, 0.1); /* shadow-lg */
@@ -68,6 +77,12 @@
             border-top-right-radius: 0.75rem; /* rounded-t-xl */
             display: flex;
             align-items: center;
+        }
+        /* For larger screens (laptops), revert to original padding */
+        @media (min-width: 640px) { /* sm breakpoint */
+            #message-input-area {
+                padding: 1rem; /* Original padding for laptops */
+            }
         }
         #message-input {
             flex: 1;
