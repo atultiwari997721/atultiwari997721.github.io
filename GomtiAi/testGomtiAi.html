@@ -42,7 +42,16 @@
             border-bottom-left-radius: 0.75rem; /* rounded-b-xl */
             border-bottom-right-radius: 0.75rem; /* rounded-b-xl */
             text-align: center;
-            text-shadow: 0 0 8px rgba(255, 255, 255, 0.7); /* Text glow */
+        }
+        /* Unique styling for Gomti AI title */
+        #chat-header h1 {
+            text-shadow: 0 0 5px #fff, 0 0 10px #00ffff, 0 0 15px #007bff, 0 0 20px #6a5acd; /* Multi-layer glow */
+            letter-spacing: 3px; /* Spread out letters for a digital look */
+            transition: all 0.3s ease-in-out; /* Smooth transition for hover effects */
+        }
+        #chat-header h1:hover {
+            text-shadow: 0 0 8px #fff, 0 0 15px #00ffff, 0 0 25px #007bff, 0 0 35px #6a5acd; /* More intense glow on hover */
+            letter-spacing: 4px; /* Slightly wider spacing on hover */
         }
         #chat-messages {
             flex: 1;
@@ -79,6 +88,58 @@
             margin-right: auto; /* justify-start */
             border: 1px solid #6a5acd; /* Purple border */
         }
+        /* Styling for code blocks */
+        .code-container {
+            background-color: #222; /* Darker background for code */
+            border: 1px solid #00ffcc; /* Neon border */
+            border-radius: 0.5rem;
+            padding: 0.75rem;
+            margin-top: 0.5rem;
+            margin-bottom: 0.5rem;
+            position: relative; /* For copy button positioning */
+            box-shadow: 0 0 10px rgba(0, 255, 204, 0.3);
+            max-width: 80%; /* Match message bubble width */
+            overflow-x: auto; /* Enable horizontal scrolling for long lines */
+        }
+        .code-container pre {
+            margin: 0;
+            padding: 0;
+            white-space: pre-wrap; /* Wrap long lines */
+            word-wrap: break-word; /* Break words if necessary */
+        }
+        .code-container code {
+            font-family: 'Roboto Mono', monospace;
+            font-size: 0.8rem; /* Slightly smaller font for code */
+            color: #00ffcc; /* Neon green text for code */
+            display: block; /* Ensure code block takes full width */
+        }
+        .copy-button {
+            position: absolute;
+            top: 0.5rem;
+            right: 0.5rem;
+            background-color: #007bff;
+            color: white;
+            padding: 0.25rem 0.5rem;
+            border-radius: 0.25rem;
+            font-size: 0.75rem;
+            cursor: pointer;
+            transition: background-color 0.2s ease-in-out, transform 0.1s ease-in-out;
+            border: none;
+            box-shadow: 0 0 5px rgba(0, 123, 255, 0.4);
+            font-weight: bold;
+        }
+        .copy-button:hover {
+            background-color: #0056b3;
+            transform: translateY(-1px);
+        }
+        .copy-button:active {
+            transform: translateY(1px);
+        }
+        .copy-button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
         #message-input-area {
             /* Default padding for smaller screens (phones) */
             padding: 0.5rem; /* Reduced padding for phones */
@@ -255,28 +316,81 @@
                 messageRow.classList.add('justify-start'); // Tailwind: justify-start
             }
 
-            const messageBubble = document.createElement('div');
-            messageBubble.classList.add(
-                'message-bubble',
-                'p-3',
-                'rounded-xl',
-                'shadow-md',
-                'max-w-xs',
-                'sm:max-w-md',
-                'lg:max-w-lg'
-            ); // Common styles
-            if (sender === 'user') {
-                messageBubble.classList.add('user-message'); // User specific styles
+            // Regex to detect a Markdown fenced code block
+            const codeBlockRegex = /^\s*```(\w+)?\n([\s\S]*?)\n\s*```\s*$/;
+            const match = text.match(codeBlockRegex);
+
+            if (sender === 'bot' && match) {
+                // If it's a bot message and contains a code block
+                const codeContent = match[2].trim(); // Extract the code content
+                const language = match[1] || 'plaintext'; // Extract language or default to plaintext
+
+                const codeContainer = document.createElement('div');
+                codeContainer.classList.add('code-container');
+                if (sender === 'user') {
+                    codeContainer.classList.add('user-message'); // Apply user message styling for consistency
+                } else {
+                    codeContainer.classList.add('bot-message'); // Apply bot message styling for consistency
+                }
+
+                const preElement = document.createElement('pre');
+                const codeElement = document.createElement('code');
+                codeElement.textContent = codeContent;
+                codeElement.classList.add(`language-${language}`); // Add language class for potential syntax highlighting
+
+                preElement.appendChild(codeElement);
+                codeContainer.appendChild(preElement);
+
+                const copyButton = document.createElement('button');
+                copyButton.textContent = 'Copy Code';
+                copyButton.classList.add('copy-button');
+                copyButton.onclick = () => {
+                    // Use document.execCommand('copy') for better compatibility in iframes
+                    const textarea = document.createElement('textarea');
+                    textarea.value = codeContent;
+                    document.body.appendChild(textarea);
+                    textarea.select();
+                    try {
+                        document.execCommand('copy');
+                        copyButton.textContent = 'Copied!';
+                        setTimeout(() => {
+                            copyButton.textContent = 'Copy Code';
+                        }, 2000);
+                    } catch (err) {
+                        console.error('Failed to copy text: ', err);
+                        copyButton.textContent = 'Failed!';
+                    }
+                    document.body.removeChild(textarea);
+                };
+                codeContainer.appendChild(copyButton);
+
+                messageRow.appendChild(codeContainer);
+
             } else {
-                messageBubble.classList.add('bot-message'); // Bot specific styles
+                // For regular text messages
+                const messageBubble = document.createElement('div');
+                messageBubble.classList.add(
+                    'message-bubble',
+                    'p-3',
+                    'rounded-xl',
+                    'shadow-md',
+                    'max-w-xs',
+                    'sm:max-w-md',
+                    'lg:max-w-lg'
+                ); // Common styles
+                if (sender === 'user') {
+                    messageBubble.classList.add('user-message'); // User specific styles
+                } else {
+                    messageBubble.classList.add('bot-message'); // Bot specific styles
+                }
+
+                const messageText = document.createElement('p');
+                messageText.classList.add('text-sm', 'sm:text-base'); // Tailwind: text-sm sm:text-base
+                messageText.textContent = text;
+
+                messageBubble.appendChild(messageText);
+                messageRow.appendChild(messageBubble);
             }
-
-            const messageText = document.createElement('p');
-            messageText.classList.add('text-sm', 'sm:text-base'); // Tailwind: text-sm sm:text-base
-            messageText.textContent = text;
-
-            messageBubble.appendChild(messageText);
-            messageRow.appendChild(messageBubble);
             chatMessages.appendChild(messageRow);
 
             // Scroll to the latest message
@@ -339,7 +453,6 @@
             if (input === '' || isLoading) return; // Don't send empty messages or if loading
 
             appendMessage(input, 'user'); // Add user message to chat display
-            messages.push({ role: 'user', parts: [{ text: input }] }); // Add to chat history
             messageInput.value = ''; // Clear the input field
             messageInput.style.height = 'auto'; // Reset textarea height
 
@@ -359,10 +472,26 @@
                     lowerCaseInput.includes('your owner') ||
                     lowerCaseInput.includes('who is your developer')) {
                     botResponseText = "Atul Tiwari Made me or Atul Tiwari is my owner";
+                    messages.push({ role: 'model', parts: [{ text: botResponseText }] }); // Add to chat history
                 } else {
-                    // If not a predefined question, call the Gemini API
+                    // Determine if it's a code request
+                    const programmingKeywords = ['code', 'function', 'syntax', 'example', 'how to write', 'script', 'program', 'language', 'implement', 'class', 'method', 'loop', 'variable', 'algorithm', 'json', 'html', 'css', 'javascript', 'python', 'java', 'c++', 'php', 'ruby', 'swift', 'kotlin', 'sql'];
+                    const isCodeRequest = programmingKeywords.some(keyword => lowerCaseInput.includes(keyword));
+
+                    let promptForApi = input;
+                    if (isCodeRequest) {
+                        promptForApi += "\nPlease provide the response as a markdown fenced code block, specifying the language (e.g., ```javascript\\n...code...\\n```).";
+                    }
+
+                    // Prepare chat history for the API call, including the potentially modified last prompt
+                    const chatHistoryForApi = messages.map(msg => ({
+                        role: msg.role,
+                        parts: msg.parts
+                    }));
+                    chatHistoryForApi.push({ role: 'user', parts: [{ text: promptForApi }] });
+
                     const payload = {
-                        contents: messages, // Send the full chat history for context
+                        contents: chatHistoryForApi, // Send the full chat history for context
                     };
 
                     // API key is now explicitly provided by the user
@@ -392,15 +521,16 @@
                     } else {
                         botResponseText = 'Sorry, I could not get a response.';
                     }
+                    messages.push({ role: 'model', parts: [{ text: botResponseText }] }); // Add to chat history
                 }
 
                 appendMessage(botResponseText, 'bot'); // Add bot's response to chat display
-                messages.push({ role: 'model', parts: [{ text: botResponseText }] }); // Add to chat history
 
             } catch (error) {
                 console.error('Error communicating with Gemini API:', error);
-                appendMessage(`Error: ${error.message}. Please try again.`, 'bot');
-                messages.push({ role: 'model', parts: [{ text: `Error: ${error.message}. Please try again.` }] });
+                const errorMessage = `Error: ${error.message}. Please try again.`;
+                appendMessage(errorMessage, 'bot');
+                messages.push({ role: 'model', parts: [{ text: errorMessage }] });
             } finally {
                 isLoading = false; // Reset loading state
                 sendButton.disabled = false; // Enable send button
