@@ -4,12 +4,14 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Gomti AI Chatbot</title>
+    <!-- Google Fonts - Inter for a normal look -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap" rel="stylesheet">
     <!-- Tailwind CSS CDN for styling -->
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        /* Custom styles to ensure font and basic layout */
+        /* Custom styles for the normal theme */
         body {
-            font-family: 'Inter', sans-serif;
+            font-family: 'Inter', sans-serif; /* Normal font */
             margin: 0;
             padding: 0;
             overflow: hidden; /* Prevent body scroll, allow chat area to scroll */
@@ -18,22 +20,38 @@
             display: flex;
             flex-direction: column;
             height: 100vh; /* Default height for larger screens (laptops) */
-            background-color: #f3f4f6; /* bg-gray-100 */
+            background-color: #f3f4f6; /* Light gray background */
+            color: #1f2937; /* Dark text color for general elements */
+            border: none; /* Remove border */
+            box-shadow: none; /* Remove glowing effect */
+            border-radius: 0; /* Remove border-radius */
+            margin: 0; /* Remove margin */
         }
         /* Adjust height for smaller screens (phones) to move input bar up */
         @media (max-width: 639px) { /* Targets screens smaller than Tailwind's 'sm' breakpoint */
             #chat-container {
                 height: calc(100vh - 80px); /* Reduced height by 80px (30 + 50) to lift the content */
+                margin: 5px; /* Smaller margin on phones */
             }
         }
         #chat-header {
-            background: linear-gradient(to right, #3b82f6, #9333ea); /* from-blue-500 to-purple-600 */
+            background: linear-gradient(to right, #3b82f6, #9333ea); /* Blue to purple gradient */
             color: white;
             padding: 1rem; /* p-4 */
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* shadow-lg */
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Standard shadow */
             border-bottom-left-radius: 0.75rem; /* rounded-b-xl */
             border-bottom-right-radius: 0.75rem; /* rounded-b-xl */
             text-align: center;
+        }
+        /* Normal styling for Gomti AI title */
+        #chat-header h1 {
+            text-shadow: none; /* Remove text glow */
+            letter-spacing: normal; /* Normal letter spacing */
+            transition: none; /* Remove transitions */
+        }
+        #chat-header h1:hover {
+            text-shadow: none; /* Remove text glow on hover */
+            letter-spacing: normal; /* Normal letter spacing on hover */
         }
         #chat-messages {
             flex: 1;
@@ -42,37 +60,93 @@
             display: flex;
             flex-direction: column;
             gap: 1rem; /* space-y-4 */
+            background-color: #f3f4f6; /* Light background for chat area */
         }
         .message-row {
             display: flex;
-            /* Ensure message rows take full width for better mobile layout */
             width: 100%;
         }
         .message-bubble {
             max-width: 80%; /* max-w-xs sm:max-w-md lg:max-w-lg */
             padding: 0.75rem; /* p-3 */
             border-radius: 0.75rem; /* rounded-xl */
-            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1); /* shadow-md */
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1); /* Subtle shadow for bubbles */
             font-size: 0.875rem; /* text-sm */
+            line-height: 1.4; /* Better readability */
         }
         .user-message {
-            background-color: #3b82f6; /* bg-blue-500 */
-            color: white;
+            background-color: #3b82f6; /* Blue for user messages */
+            color: white; /* Light text for user messages */
             border-bottom-right-radius: 0; /* rounded-br-none */
             margin-left: auto; /* justify-end */
+            border: none; /* Remove border */
         }
         .bot-message {
-            background-color: #ffffff; /* bg-white */
-            color: #1f2937; /* text-gray-800 */
+            background-color: #ffffff; /* White for bot messages */
+            color: #1f2937; /* Dark text for bot messages */
             border-bottom-left-radius: 0; /* rounded-bl-none */
             margin-right: auto; /* justify-start */
+            border: none; /* Remove border */
         }
+        /* Styling for code blocks */
+        .code-container {
+            background-color: #e2e8f0; /* Light gray background for code */
+            border: 1px solid #cbd5e0; /* Light border */
+            border-radius: 0.5rem;
+            padding: 0.75rem;
+            margin-top: 0.5rem;
+            margin-bottom: 0.5rem;
+            position: relative; /* For copy button positioning */
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+            max-width: 80%; /* Match message bubble width */
+            overflow-x: auto; /* Enable horizontal scrolling for long lines */
+            color: #1f2937; /* Dark text for code */
+        }
+        .code-container pre {
+            margin: 0;
+            padding: 0;
+            white-space: pre-wrap; /* Wrap long lines */
+            word-wrap: break-word; /* Break words if necessary */
+        }
+        .code-container code {
+            font-family: 'Roboto Mono', monospace; /* Keep code font monospace */
+            font-size: 0.8rem; /* Slightly smaller font for code */
+            color: #1f2937; /* Dark text for code */
+            display: block; /* Ensure code block takes full width */
+        }
+        .copy-button {
+            position: absolute;
+            top: 0.5rem;
+            right: 0.5rem;
+            background-color: #4a90e2; /* Blue color for copy button */
+            color: white;
+            padding: 0.25rem 0.5rem;
+            border-radius: 0.25rem;
+            font-size: 0.75rem;
+            cursor: pointer;
+            transition: background-color 0.2s ease-in-out, transform 0.1s ease-in-out;
+            border: none;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+            font-weight: bold;
+        }
+        .copy-button:hover {
+            background-color: #357bd8;
+            transform: translateY(-1px);
+        }
+        .copy-button:active {
+            transform: translateY(1px);
+        }
+        .copy-button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
         #message-input-area {
             /* Default padding for smaller screens (phones) */
             padding: 0.5rem; /* Reduced padding for phones */
-            background-color: white;
-            border-top: 1px solid #e5e7eb; /* border-t border-gray-200 */
-            box-shadow: 0 -4px 6px rgba(0, 0, 0, 0.1); /* shadow-lg */
+            background-color: white; /* White background for input area */
+            border-top: 1px solid #e5e7eb; /* Light border */
+            box-shadow: 0 -4px 6px rgba(0, 0, 0, 0.1); /* Standard shadow */
             border-top-left-radius: 0.75rem; /* rounded-t-xl */
             border-top-right-radius: 0.75rem; /* rounded-t-xl */
             display: flex;
@@ -87,38 +161,59 @@
         #message-input {
             flex: 1;
             padding: 0.75rem; /* p-3 */
-            border: 1px solid #d1d5db; /* border border-gray-300 */
+            border: 1px solid #d1d5db; /* Light border for input */
             border-radius: 0.5rem; /* rounded-lg */
             outline: none;
             resize: none; /* resize-none */
             max-height: 6rem; /* max-h-24 */
             overflow-y: auto;
+            background-color: white; /* White background for textarea */
+            color: #1f2937; /* Dark text for input */
+            box-shadow: none; /* Remove inner glow */
+        }
+        #message-input::placeholder {
+            color: #9ca3af; /* Standard placeholder text */
         }
         #message-input:focus {
-            ring: 2px; /* focus:ring-2 */
-            ring-color: #3b82f6; /* focus:ring-blue-500 */
+            outline: none;
+            border-color: #3b82f6; /* Blue on focus */
+            box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.5); /* Standard focus ring */
         }
         #send-button {
             margin-left: 1rem; /* ml-4 */
             padding: 0.75rem 1.5rem; /* px-6 py-3 */
-            background-color: #2563eb; /* bg-blue-600 */
+            background-color: #2563eb; /* Blue for the button */
             color: white;
             border-radius: 0.5rem; /* rounded-lg */
-            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1); /* shadow-md */
-            transition: background-color 0.3s ease-in-out; /* transition duration-300 ease-in-out */
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1); /* Standard shadow */
+            transition: background-color 0.3s ease-in-out, transform 0.1s ease-in-out, box-shadow 0.3s ease-in-out; /* Smooth transition */
+            font-weight: bold;
+            border: none; /* Remove border */
+            text-shadow: none; /* Remove text glow */
         }
         #send-button:hover {
-            background-color: #1d4ed8; /* hover:bg-blue-700 */
+            background-color: #1d4ed8; /* Darker blue on hover */
+            transform: translateY(-1px); /* Slight lift on hover */
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2); /* Slightly stronger shadow on hover */
+        }
+        #send-button:active {
+            transform: translateY(1px); /* Slight press effect on click */
+            box-shadow: 0 0 3px rgba(0, 0, 0, 0.1); /* Reduced shadow on active */
         }
         #send-button:focus {
             outline: none;
             ring: 2px;
             ring-color: #3b82f6;
             ring-offset: 2px;
+            ring-offset-color: #f3f4f6; /* Ring offset matches background */
         }
         #send-button:disabled {
             opacity: 0.5;
             cursor: not-allowed;
+            background-color: #9ca3af; /* Gray disabled button */
+            box-shadow: none;
+            border-color: none;
+            text-shadow: none;
         }
         .loading-dots {
             display: flex;
@@ -127,10 +222,11 @@
         .loading-dot {
             width: 0.75rem; /* w-3 */
             height: 0.75rem; /* h-3 */
-            background-color: #3b82f6; /* bg-blue-500 */
+            background-color: #3b82f6; /* Blue dots for loading */
             border-radius: 50%; /* rounded-full */
             animation: bounce 1.4s infinite ease-in-out;
             margin-right: 0.25rem; /* mr-1 */
+            box-shadow: none; /* Remove dot glow */
         }
         .loading-dot:nth-child(2) {
             animation-delay: 0.15s; /* delay-150 */
@@ -145,9 +241,10 @@
         }
         .initial-message {
             text-align: center;
-            color: #6b7280; /* text-gray-500 */
+            color: #6b7280; /* Standard gray for initial message */
             margin-top: 5rem; /* mt-20 */
             font-size: 1.125rem; /* text-lg */
+            text-shadow: none; /* Remove subtle glow */
         }
 
         /* Responsive adjustments for message bubbles */
@@ -220,28 +317,81 @@
                 messageRow.classList.add('justify-start'); // Tailwind: justify-start
             }
 
-            const messageBubble = document.createElement('div');
-            messageBubble.classList.add(
-                'message-bubble',
-                'p-3',
-                'rounded-xl',
-                'shadow-md',
-                'max-w-xs',
-                'sm:max-w-md',
-                'lg:max-w-lg'
-            ); // Common styles
-            if (sender === 'user') {
-                messageBubble.classList.add('user-message'); // User specific styles
+            // Regex to detect a Markdown fenced code block
+            const codeBlockRegex = /^\s*```(\w+)?\n([\s\S]*?)\n\s*```\s*$/;
+            const match = text.match(codeBlockRegex);
+
+            if (sender === 'bot' && match) {
+                // If it's a bot message and contains a code block
+                const codeContent = match[2].trim(); // Extract the code content
+                const language = match[1] || 'plaintext'; // Extract language or default to plaintext
+
+                const codeContainer = document.createElement('div');
+                codeContainer.classList.add('code-container');
+                if (sender === 'user') {
+                    codeContainer.classList.add('user-message'); // Apply user message styling for consistency
+                } else {
+                    codeContainer.classList.add('bot-message'); // Apply bot message styling for consistency
+                }
+
+                const preElement = document.createElement('pre');
+                const codeElement = document.createElement('code');
+                codeElement.textContent = codeContent;
+                codeElement.classList.add(`language-${language}`); // Add language class for potential syntax highlighting
+
+                preElement.appendChild(codeElement);
+                codeContainer.appendChild(preElement);
+
+                const copyButton = document.createElement('button');
+                copyButton.textContent = 'Copy Code';
+                copyButton.classList.add('copy-button');
+                copyButton.onclick = () => {
+                    // Use document.execCommand('copy') for better compatibility in iframes
+                    const textarea = document.createElement('textarea');
+                    textarea.value = codeContent;
+                    document.body.appendChild(textarea);
+                    textarea.select();
+                    try {
+                        document.execCommand('copy');
+                        copyButton.textContent = 'Copied!';
+                        setTimeout(() => {
+                            copyButton.textContent = 'Copy Code';
+                        }, 2000);
+                    } catch (err) {
+                        console.error('Failed to copy text: ', err);
+                        copyButton.textContent = 'Failed!';
+                    }
+                    document.body.removeChild(textarea);
+                };
+                codeContainer.appendChild(copyButton);
+
+                messageRow.appendChild(codeContainer);
+
             } else {
-                messageBubble.classList.add('bot-message'); // Bot specific styles
+                // For regular text messages
+                const messageBubble = document.createElement('div');
+                messageBubble.classList.add(
+                    'message-bubble',
+                    'p-3',
+                    'rounded-xl',
+                    'shadow-md',
+                    'max-w-xs',
+                    'sm:max-w-md',
+                    'lg:max-w-lg'
+                ); // Common styles
+                if (sender === 'user') {
+                    messageBubble.classList.add('user-message'); // User specific styles
+                } else {
+                    messageBubble.classList.add('bot-message'); // Bot specific styles
+                }
+
+                const messageText = document.createElement('p');
+                messageText.classList.add('text-sm', 'sm:text-base'); // Tailwind: text-sm sm:text-base
+                messageText.textContent = text;
+
+                messageBubble.appendChild(messageText);
+                messageRow.appendChild(messageBubble);
             }
-
-            const messageText = document.createElement('p');
-            messageText.classList.add('text-sm', 'sm:text-base'); // Tailwind: text-sm sm:text-base
-            messageText.textContent = text;
-
-            messageBubble.appendChild(messageText);
-            messageRow.appendChild(messageBubble);
             chatMessages.appendChild(messageRow);
 
             // Scroll to the latest message
@@ -266,10 +416,11 @@
                 'p-3',
                 'rounded-xl',
                 'shadow-md',
-                'bg-white',
-                'text-gray-800',
                 'rounded-bl-none'
             );
+            // Ensure loading bubble also adheres to bot-message styling for dark theme
+            loadingBubble.classList.add('bot-message');
+
 
             const loadingDots = document.createElement('div');
             loadingDots.classList.add('loading-dots', 'flex', 'items-center');
@@ -303,7 +454,6 @@
             if (input === '' || isLoading) return; // Don't send empty messages or if loading
 
             appendMessage(input, 'user'); // Add user message to chat display
-            messages.push({ role: 'user', parts: [{ text: input }] }); // Add to chat history
             messageInput.value = ''; // Clear the input field
             messageInput.style.height = 'auto'; // Reset textarea height
 
@@ -312,44 +462,76 @@
             showLoadingIndicator(); // Show loading animation
 
             try {
-                const payload = {
-                    contents: messages, // Send the full chat history for context
-                };
+                let botResponseText = '';
+                const lowerCaseInput = input.toLowerCase();
 
-                // API key is now explicitly provided by the user
-                const apiKey = "AIzaSyAd5ONR1vb-n-fzCKqUk1nPn42rHB-XeRA";
-                const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`;
+                // Check for keywords related to who made the bot
+                if (lowerCaseInput.includes('who made you') ||
+                    lowerCaseInput.includes('who created you') ||
+                    lowerCaseInput.includes('who is your owner') ||
+                    lowerCaseInput.includes('your creator') ||
+                    lowerCaseInput.includes('your owner') ||
+                    lowerCaseInput.includes('who is your developer')) {
+                    botResponseText = "Atul Tiwari Made me or Atul Tiwari is my owner";
+                    messages.push({ role: 'model', parts: [{ text: botResponseText }] }); // Add to chat history
+                } else {
+                    // Determine if it's a code request
+                    const programmingKeywords = ['code', 'function', 'syntax', 'example', 'how to write', 'script', 'program', 'language', 'implement', 'class', 'method', 'loop', 'variable', 'algorithm', 'json', 'html', 'css', 'javascript', 'python', 'java', 'c++', 'php', 'ruby', 'swift', 'kotlin', 'sql'];
+                    const isCodeRequest = programmingKeywords.some(keyword => lowerCaseInput.includes(keyword));
 
-                const response = await fetch(apiUrl, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify(payload),
-                });
+                    let promptForApi = input;
+                    if (isCodeRequest) {
+                        promptForApi += "\nPlease provide the response as a markdown fenced code block, specifying the language (e.g., ```javascript\\n...code...\\n```).";
+                    }
 
-                if (!response.ok) {
-                    const errorData = await response.json();
-                    console.error('API Error:', errorData);
-                    throw new Error(`API request failed with status ${response.status}: ${errorData.error.message || 'Unknown error'}`);
-                }
+                    // Prepare chat history for the API call, including the potentially modified last prompt
+                    const chatHistoryForApi = messages.map(msg => ({
+                        role: msg.role,
+                        parts: msg.parts
+                    }));
+                    chatHistoryForApi.push({ role: 'user', parts: [{ text: promptForApi }] });
 
-                const result = await response.json();
+                    const payload = {
+                        contents: chatHistoryForApi, // Send the full chat history for context
+                    };
 
-                let botResponseText = 'Sorry, I could not get a response.';
-                if (result.candidates && result.candidates.length > 0 &&
-                    result.candidates[0].content && result.candidates[0].content.parts &&
-                    result.candidates[0].content.parts.length > 0) {
-                    botResponseText = result.candidates[0].content.parts[0].text;
+                    // API key is now explicitly provided by the user
+                    const apiKey = "AIzaSyAd5ONR1vb-n-fzCKqUk1nPn42rHB-XeRA";
+                    const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`;
+
+                    const response = await fetch(apiUrl, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify(payload),
+                    });
+
+                    if (!response.ok) {
+                        const errorData = await response.json();
+                        console.error('API Error:', errorData);
+                        throw new Error(`API request failed with status ${response.status}: ${errorData.error.message || 'Unknown error'}`);
+                    }
+
+                    const result = await response.json();
+
+                    if (result.candidates && result.candidates.length > 0 &&
+                        result.candidates[0].content && result.candidates[0].content.parts &&
+                        result.candidates[0].content.parts.length > 0) {
+                        botResponseText = result.candidates[0].content.parts[0].text;
+                    } else {
+                        botResponseText = 'Sorry, I could not get a response.';
+                    }
+                    messages.push({ role: 'model', parts: [{ text: botResponseText }] }); // Add to chat history
                 }
 
                 appendMessage(botResponseText, 'bot'); // Add bot's response to chat display
-                messages.push({ role: 'model', parts: [{ text: botResponseText }] }); // Add to chat history
 
             } catch (error) {
                 console.error('Error communicating with Gemini API:', error);
-                appendMessage(`Error: ${error.message}. Please try again.`, 'bot');
-                messages.push({ role: 'model', parts: [{ text: `Error: ${error.message}. Please try again.` }] });
+                const errorMessage = `Error: ${error.message}. Please try again.`;
+                appendMessage(errorMessage, 'bot');
+                messages.push({ role: 'model', parts: [{ text: errorMessage }] });
             } finally {
                 isLoading = false; // Reset loading state
                 sendButton.disabled = false; // Enable send button
