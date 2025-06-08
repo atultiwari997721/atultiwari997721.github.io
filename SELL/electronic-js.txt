@@ -6,7 +6,7 @@ document.addEventListener('DOMContentLoaded', () => {
             name: 'Gaming Laptop',
             description: 'High-performance gaming laptop with RTX 4080 and 32GB RAM.',
             price: '₹95,000',
-            image: 'https://th.bing.com/th/id/OIP.U9Jc3_3iE4Wj2YvU1l-S6gHaE7?w=280&h=186&c=7&r=0&o=5&dpr=2&pid=1.7' // Example image
+            image: 'https://th.bing.com/th/id/OIP.U9Jc3_3iE4Wj2YvU1l-S6gHaE7?w=280&h=186&c=7&r=0&o=5&dpr=2&pid=1.7' // Example images
         },
         {
             id: 102,
