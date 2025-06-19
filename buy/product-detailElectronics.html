@@ -1,0 +1,607 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sell Your Product - Details</title>
+    <link rel="icon" href="https://th.bing.com/th/id/OIP.gp5F7b3A5S3WFd0HfWxgAQAAAA?w=227&h=180&c=7&r=0&o=5&dpr=2&pid=1.7" type="image/x-icon">
+    <link rel="stylesheet" href="style.css">
+    <style>
+        /* Base styles - will be overridden by theme classes for electronics look */
+        body {
+            font-family: 'Segoe UI', 'Roboto', Arial, sans-serif; /* Modern, clean font */
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            transition: background-color 0.3s, color 0.3s; /* Smooth theme transition */
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh; /* Ensure body takes full viewport height for footer */
+        }
+
+        /* --- Light Theme Defaults (Modern Electronics Look) --- */
+        body.light-theme {
+            background-color: #f0f2f5; /* Light, clean background */
+            color: #333333; /* Dark grey for text */
+        }
+
+        body.light-theme .detail-header {
+            background-color: #007bff; /* Vibrant blue */
+            color: #ffffff;
+            box-shadow: 0 3px 8px rgba(0, 123, 255, 0.3); /* Blue glowing shadow */
+            border-bottom: 2px solid #0056b3;
+        }
+
+        body.light-theme .detail-header h1 {
+            color: #ffffff;
+        }
+
+        body.light-theme .product-detail-container {
+            background-color: #ffffff;
+            box-shadow: 0 6px 20px rgba(0,0,0,0.1); /* Pronounced, clean shadow */
+            border: 1px solid #e0e0e0;
+        }
+
+        body.light-theme .product-detail-info h2 {
+            color: #007bff; /* Vibrant blue for headings */
+        }
+
+        body.light-theme .product-detail-info p {
+            color: #555555;
+        }
+
+        body.light-theme .product-detail-info .price {
+            color: #28a745; /* Energetic green for price */
+        }
+
+        body.light-theme .user-details-form {
+            background-color: #f9f9f9;
+            border: 1px solid #e9e9e9;
+        }
+
+        body.light-theme .user-details-form label {
+            color: #333333;
+        }
+
+        body.light-theme .user-details-form input[type="text"],
+        body.light-theme .user-details-form input[type="email"],
+        body.light-theme .user-details-form input[type="tel"],
+        body.light-theme .user-details-form textarea {
+            background-color: #ffffff;
+            border-color: #cccccc;
+            color: #333333;
+        }
+
+        body.light-theme .btn-continue {
+            background-color: #007bff; /* Primary blue button */
+        }
+
+        body.light-theme .btn-continue:hover {
+            background-color: #0056b3;
+            box-shadow: 0 2px 8px rgba(0, 123, 255, 0.2); /* Blue hover shadow */
+        }
+
+        body.light-theme .btn-whatsapp-form {
+            background-color: #28a745; /* Green WhatsApp button */
+        }
+
+        body.light-theme .btn-whatsapp-form:hover {
+            background-color: #218838;
+            box-shadow: 0 2px 8px rgba(40, 167, 69, 0.2); /* Green hover shadow */
+        }
+
+        body.light-theme footer {
+            background-color: #343a40; /* Darker footer for contrast */
+            color: #f8f9fa;
+            border-top: 1px solid #495057;
+        }
+
+        /* --- Dark Theme Styles (Sleek & Techy) --- */
+        body.dark-theme {
+            background-color: #212529; /* Deep dark grey background */
+            color: #e0e0e0; /* Light text */
+        }
+
+        body.dark-theme .detail-header {
+            background-color: #1a1a1a; /* Even darker header */
+            color: #8ab4f8; /* Light blue accent */
+            box-shadow: 0 3px 8px rgba(138, 180, 248, 0.3); /* Light blue glowing shadow */
+            border-bottom: 2px solid #5a8fd9;
+        }
+
+        body.dark-theme .detail-header h1 {
+            color: #8ab4f8;
+        }
+
+        body.dark-theme .product-detail-container {
+            background-color: #2c2c2c;
+            box-shadow: 0 6px 20px rgba(0,0,0,0.5); /* Stronger dark shadow */
+            border: 1px solid #444444;
+        }
+
+        body.dark-theme .product-detail-info img {
+            border-color: #555555; /* Darker image border */
+        }
+
+        body.dark-theme .product-detail-info h2 {
+            color: #8ab4f8; /* Light blue for headings */
+        }
+
+        body.dark-theme .product-detail-info p {
+            color: #bbbbbb;
+        }
+
+        body.dark-theme .product-detail-info .price {
+            color: #6cff8a; /* Bright green for price */
+        }
+
+        body.dark-theme .user-details-form {
+            background-color: #3a3a3a;
+            border: 1px solid #555555;
+        }
+
+        body.dark-theme .user-details-form label {
+            color: #e0e0e0;
+        }
+
+        body.dark-theme .user-details-form input[type="text"],
+        body.dark-theme .user-details-form input[type="email"],
+        body.dark-theme .user-details-form input[type="tel"],
+        body.dark-theme .user-details-form textarea {
+            background-color: #4a4a4a;
+            border-color: #666666;
+            color: #f0f0f0;
+        }
+
+        body.dark-theme .user-details-form input::placeholder,
+        body.dark-theme .user-details-form textarea::placeholder {
+            color: #aaaaaa;
+        }
+
+        body.dark-theme .btn-continue {
+            background-color: #5a8fd9; /* Muted blue for dark mode */
+        }
+
+        body.dark-theme .btn-continue:hover {
+            background-color: #436ea0;
+            box-shadow: 0 2px 8px rgba(90, 143, 217, 0.2);
+        }
+
+        body.dark-theme .btn-whatsapp-form {
+            background-color: #218838; /* Muted green for dark mode */
+        }
+
+        body.dark-theme .btn-whatsapp-form:hover {
+            background-color: #1a6b2c;
+            box-shadow: 0 2px 8px rgba(33, 136, 56, 0.2);
+        }
+
+        body.dark-theme footer {
+            background-color: #1a1a1a;
+            color: #bbbbbb;
+            border-top: 1px solid #333333;
+        }
+
+        /* General / Common Styles (not theme-specific) */
+        .detail-header {
+            padding: 1.5rem 0;
+            text-align: center;
+            font-size: 2.2rem;
+            margin-bottom: 20px; /* Space below header */
+        }
+        .detail-header h1 {
+            margin: 0;
+            font-size: 2.2rem;
+        }
+        .product-detail-container {
+            max-width: 800px;
+            margin: 30px auto;
+            padding: 25px;
+            border-radius: 8px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            flex-grow: 1; /* Allow container to grow and push footer down */
+        }
+        .product-detail-info {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-bottom: 25px;
+            text-align: center;
+            width: 100%;
+        }
+        .product-detail-info img {
+            max-width: 100%;
+            height: 250px;
+            object-fit: contain;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            transition: border-color 0.3s;
+        }
+        .product-detail-info h2 {
+            font-size: 2rem;
+            margin-bottom: 10px;
+            transition: color 0.3s;
+        }
+        .product-detail-info p {
+            font-size: 1.1rem;
+            line-height: 1.6;
+            margin-bottom: 5px;
+            transition: color 0.3s;
+        }
+        .product-detail-info .price {
+            font-size: 1.5rem;
+            font-weight: bold;
+            margin-top: 15px;
+            transition: color 0.3s;
+        }
+        .user-details-form {
+            width: 100%;
+            max-width: 500px;
+            padding: 20px;
+            border-radius: 8px;
+            margin-top: 20px;
+            transition: background-color 0.3s, border-color 0.3s;
+        }
+        .user-details-form h3 {
+            margin-top: 0;
+            margin-bottom: 20px;
+            font-size: 1.6rem;
+            text-align: center;
+            transition: color 0.3s;
+        }
+        .user-details-form label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+            transition: color 0.3s;
+        }
+        .user-details-form input[type="text"],
+        .user-details-form input[type="email"],
+        .user-details-form input[type="tel"],
+        .user-details-form textarea {
+            width: calc(100% - 20px);
+            padding: 10px;
+            margin-bottom: 15px;
+            border-radius: 4px;
+            font-size: 1rem;
+            box-sizing: border-box;
+            transition: background-color 0.3s, border-color 0.3s, color 0.3s;
+        }
+        .user-details-form textarea {
+            resize: vertical;
+            min-height: 80px;
+        }
+        .form-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-top: 25px;
+            flex-wrap: wrap;
+        }
+        .form-btn {
+            padding: 12px 20px;
+            border-radius: 5px;
+            text-decoration: none;
+            color: white;
+            font-weight: bold;
+            font-size: 1.1rem;
+            cursor: pointer;
+            border: none;
+            transition: background-color 0.3s ease, box-shadow 0.3s;
+            text-align: center;
+            flex-shrink: 0;
+        }
+        footer {
+            padding: 1rem 0;
+            text-align: center;
+            margin-top: auto; /* Push footer to the bottom */
+            transition: background-color 0.3s, color 0.3s, border-top 0.3s;
+        }
+
+        /* Responsive adjustments for product-detail.html */
+        @media (max-width: 768px) {
+            .product-detail-container {
+                margin: 20px;
+                padding: 20px;
+            }
+            .product-detail-info img {
+                height: 200px;
+            }
+            .product-detail-info h2 {
+                font-size: 1.8rem;
+            }
+            .product-detail-info p {
+                font-size: 1rem;
+            }
+            .user-details-form {
+                padding: 15px;
+            }
+            .form-btn {
+                padding: 10px 18px;
+                font-size: 1rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .product-detail-container {
+                margin: 15px;
+                padding: 15px;
+            }
+            .product-detail-info img {
+                height: 180px;
+            }
+            .product-detail-info h2 {
+                font-size: 1.5rem;
+            }
+            .product-detail-info p {
+                font-size: 0.9rem;
+            }
+            .user-details-form input[type="text"],
+            .user-details-form input[type="email"],
+            .user-details-form input[type="tel"],
+            .user-details-form textarea {
+                width: 100%;
+            }
+            .form-buttons {
+                flex-direction: column;
+                gap: 10px;
+                align-items: center;
+            }
+            .form-btn {
+                width: 80%;
+                max-width: 250px;
+                margin-left: auto;
+                margin-right: auto;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="detail-header">
+        <h1>Sell Your Product</h1>
+        <p>Please confirm details and provide your contact information.</p>
+    </header>
+
+    <main class="product-detail-container">
+        <section class="product-detail-info">
+            <img id="product-image" src="" alt="Product Image">
+            <h2 id="product-name">Product Name Loading...</h2>
+            <p id="product-description">Description Loading...</p>
+            <p class="price" id="product-price">Price Loading...</p>
+        </section>
+
+        <section class="user-details-form">
+            <h3>Your Contact Details</h3>
+            <form id="contact-form">
+                <label for="name">Your Name:</label>
+                <input type="text" id="name" name="name" required placeholder="Enter your full name">
+
+                <label for="email">Your Email:</label>
+                <input type="email" id="email" name="email" required placeholder="Enter your email address">
+
+                <label for="phone">Your Phone Number:</label>
+                <input type="tel" id="phone" name="phone" required placeholder="e.g., +91 9876543210">
+
+                <label for="address">Your Address:</label>
+                <textarea id="address" name="address" rows="4" required placeholder="Street, City, State, Pin Code"></textarea>
+
+                <div class="form-buttons">
+                    <button type="submit" class="form-btn btn-continue">Continue</button>
+                    <a id="whatsapp-link" href="#" class="form-btn btn-whatsapp-form" target="_blank">WhatsApp Us</a>
+                </div>
+            </form>
+        </section>
+    </main>
+
+    <footer>
+        <p>&copy; 2025 Electronics Exchange. All rights reserved.</p>
+    </footer>
+
+    <script>
+        // This script runs specifically on product-detail.html
+        document.addEventListener('DOMContentLoaded', () => {
+            // Function to apply theme (re-using the logic from script.js)
+            function applyThemeOnDetail(theme) {
+                const body = document.body;
+                if (theme === 'dark-theme') {
+                    body.classList.remove('light-theme');
+                    body.classList.add('dark-theme');
+                } else {
+                    body.classList.remove('dark-theme');
+                    body.classList.add('light-theme');
+                }
+            }
+
+            // Load theme preference from local storage on this page
+            const savedTheme = localStorage.getItem('theme');
+            if (savedTheme) {
+                applyThemeOnDetail(savedTheme);
+            } else {
+                // Default to light theme if no preference saved
+                applyThemeOnDetail('light-theme');
+            }
+
+            // Retrieve product ID from URL
+            const urlParams = new URLSearchParams(window.location.search);
+            const productId = urlParams.get('id');
+
+            // Define your product data (ideally, this would come from a server/API)
+            // For now, we'll hardcode it just like in script.js to ensure consistency
+            const allProductsData = [
+                {
+                    id: 1,
+                    name: 'Latest Smartphone X',
+                    description: 'A powerful smartphone with a stunning OLED display, advanced camera system, and long-lasting battery. Experience lightning-fast performance and seamless multitasking.',
+                    price: '₹45,999',
+                    image: 'logo.png' // Placeholder image
+                },
+                {
+                    id: 2,
+                    name: 'Noise-Cancelling Headphones Pro',
+                    description: 'Immersive sound with industry-leading active noise cancellation. Enjoy crystal-clear audio and comfortable earcups for hours of listening pleasure. Perfect for travel and focus.',
+                    price: '₹12,499',
+                    image: 'logo.png'
+                },
+                {
+                    id: 3,
+                    name: 'Smartwatch Series 5',
+                    description: 'Track your steps, heart rate, sleep, and calories burned with precision. Syncs with your smartphone for detailed health insights and smart notifications. Water-resistant design.',
+                    price: '₹7,999',
+                    image: 'https://via.placeholder.com/200x200/007bff/ffffff?text=Smartwatch'
+                },
+                {
+                    id: 4,
+                    name: 'Portable Power Bank 20000mAh',
+                    description: 'Keep your devices charged on the go with this high-capacity power bank. Fast charging technology and multiple ports for convenience. Sleek and durable design.',
+                    price: '₹1,899',
+                    image: 'https://via.placeholder.com/200x200/007bff/ffffff?text=Power+Bank'
+                },
+                {
+                    id: 5,
+                    name: '4K Ultra HD Smart TV',
+                    description: 'Experience breathtaking visuals with vivid colors and incredible detail. Smart features allow you to stream your favorite content effortlessly. Immersive viewing experience.',
+                    price: '₹65,000',
+                    image: 'https://via.placeholder.com/200x200/007bff/ffffff?text=Smart+TV'
+                },
+                {
+                    id: 6,
+                    name: 'Gaming Laptop Xtreme',
+                    description: 'Unleash your gaming potential with this high-performance laptop. Featuring a powerful processor, dedicated graphics, and a fast refresh rate display. Designed for serious gamers.',
+                    price: '₹89,999',
+                    image: 'https://via.placeholder.com/200x200/007bff/ffffff?text=Gaming+Laptop'
+                }
+            ];
+
+            let product = null;
+            if (productId) {
+                product = allProductsData.find(p => p.id === parseInt(productId));
+            }
+
+            const productImage = document.getElementById('product-image');
+            const productName = document.getElementById('product-name');
+            const productDescription = document.getElementById('product-description');
+            const productPrice = document.getElementById('product-price');
+            const whatsappLink = document.getElementById('whatsapp-link');
+
+            if (product) {
+                productImage.src = product.image;
+                productImage.alt = product.name;
+                productName.textContent = product.name;
+                productDescription.textContent = product.description;
+                productPrice.textContent = product.price;
+
+                const whatsappPhoneNumber = '919876543210'; // Replace with your WhatsApp number (e.g., +91XXXXXXXXXX without '+')
+                whatsappLink.href = `https://wa.me/${whatsappPhoneNumber}?text=Hello, I'm interested in selling my ${encodeURIComponent(product.name)} (ID: ${product.id}). Could you please guide me on the process?`;
+
+            } else {
+                productName.textContent = 'Product Not Found';
+                productDescription.textContent = 'Please go back to the main page to select a product.';
+                productPrice.textContent = '';
+                productImage.style.display = 'none'; // Hide image if product not found
+                whatsappLink.style.display = 'none'; // Hide WhatsApp button
+            }
+
+            // Get form elements
+            const contactForm = document.getElementById('contact-form');
+            const nameInput = document.getElementById('name');
+            const emailInput = document.getElementById('email');
+            const phoneInput = document.getElementById('phone');
+            const addressTextarea = document.getElementById('address');
+
+            // Function to generate the mailto body
+            function generateMailtoBody() {
+                const name = nameInput.value;
+                const email = emailInput.value;
+                const phone = phoneInput.value;
+                const address = addressTextarea.value;
+
+                let mailBody = `Hello,\n\nI am interested in selling a product through your platform.\n\n`;
+                if (product) {
+                    mailBody += `Product Name: ${product.name}\n`;
+                    mailBody += `Product ID: ${product.id}\n`;
+                    mailBody += `Product Description: ${product.description}\n`;
+                    mailBody += `Product Price: ${product.price}\n\n`;
+                }
+                mailBody += `My Contact Details:\n`;
+                mailBody += `Name: ${name}\n`;
+                mailBody += `Email: ${email}\n`;
+                mailBody += `Phone: ${phone}\n`;
+                mailBody += `Address: ${address}\n\n`;
+                mailBody += `Please let me know the next steps.\n\nThank you.`;
+
+                return encodeURIComponent(mailBody);
+            }
+
+            // Function to generate the WhatsApp message
+            function generateWhatsappMessage() {
+                const name = nameInput.value;
+                const phone = phoneInput.value;
+                const email = emailInput.value;
+                const address = addressTextarea.value;
+
+                let whatsappMsg = `Hello, I'm interested in selling my product.\n\n`;
+                if (product) {
+                    whatsappMsg += `Product: ${product.name} (ID: ${product.id})\n`;
+                    whatsappMsg += `Price: ${product.price}\n\n`;
+                }
+                whatsappMsg += `My Details:\n`;
+                whatsappMsg += `Name: ${name}\n`;
+                whatsappMsg += `Phone: ${phone}\n`;
+                whatsappMsg += `Email: ${email}\n`;
+                whatsappMsg += `Address: ${address}\n\n`;
+                whatsappMsg += `Could you please guide me on the process?`;
+
+                return encodeURIComponent(whatsappMsg);
+            }
+
+            // Update WhatsApp link dynamically as user types
+            contactForm.addEventListener('input', () => {
+                const whatsappPhoneNumber = '7828706954'; // Replace with your WhatsApp number
+                whatsappLink.href = `https://wa.me/${whatsappPhoneNumber}?text=${generateWhatsappMessage()}`;
+            });
+
+
+            // Handle form submission for "Continue" button
+            contactForm.addEventListener('submit', (event) => {
+                event.preventDefault(); // Prevent default form submission
+
+                // Basic validation
+                const name = nameInput.value.trim();
+                const email = emailInput.value.trim();
+                const phone = phoneInput.value.trim();
+                const address = addressTextarea.value.trim();
+
+                if (!name || !email || !phone || !address) {
+                    alert('Please fill in all contact details fields.');
+                    return;
+                }
+
+                // Phone number validation (at least 10 digits, stripping non-digits for check)
+                const cleanedPhone = phone.replace(/\D/g, ''); // Remove all non-digit characters
+                if (cleanedPhone.length < 10) {
+                    alert('Please enter a valid phone number with at least 10 digits.');
+                    return;
+                }
+
+                // All details are valid, prepare email redirection
+                const recipientEmail = 'atultiwati997721@gmail.com'; // IMPORTANT: Replace with the email address where you want to receive inquiries
+                const emailSubject = encodeURIComponent(`Sell Inquiry: ${product ? product.name : 'Unknown Product'} from ${name}`);
+                const emailBody = generateMailtoBody();
+
+                // Redirect to mail client
+                window.location.href = `mailto:${recipientEmail}?subject=${emailSubject}&body=${emailBody}`;
+
+                console.log("Form data collected (also sent to email client):", {
+                    productId: product ? product.id : null,
+                    name,
+                    email,
+                    phone,
+                    address
+                });
+            });
+        });
+    </script>
+</body>
+</html>

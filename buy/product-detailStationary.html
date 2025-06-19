@@ -1,0 +1,611 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sell Your Product - Details</title>
+    <link rel="icon" href="https://th.bing.com/th/id/OIP.gp5F7b3A5S3WFd0HfWxgAQAAAA?w=227&h=180&c=7&r=0&o=5&dpr=2&pid=1.7" type="image/x-icon">
+    <link rel="stylesheet" href="style.css">
+    <style>
+        /* Base styles - will be overridden by theme classes for stationery look */
+        body {
+            font-family: 'Poppins', 'Segoe UI', Arial, sans-serif; /* Modern, clean, slightly rounded font */
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            transition: background-color 0.3s, color 0.3s; /* Smooth theme transition */
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh; /* Ensure body takes full viewport height for footer */
+        }
+
+        /* --- Light Theme Defaults (Bright & Inspiring Stationery Look) --- */
+        body.light-theme {
+            background-color: #fcfcfc; /* Crisp, clean white background */
+            color: #444444; /* Soft dark grey for text */
+        }
+
+        body.light-theme .detail-header {
+            background-color: #A7C7E7; /* Sky blue - calming and creative */
+            color: #2F4F4F; /* Dark slate grey for contrast */
+            box-shadow: 0 3px 8px rgba(167, 199, 231, 0.5); /* Soft, airy shadow */
+            border-bottom: 2px solid #8FAAD4;
+        }
+
+        body.light-theme .detail-header h1 {
+            color: #2F4F4F;
+        }
+
+        body.light-theme .product-detail-container {
+            background-color: #ffffff;
+            box-shadow: 0 6px 20px rgba(0,0,0,0.08); /* Gentle, clean shadow */
+            border: 1px solid #e5e5e5; /* Subtle light border */
+        }
+
+        body.light-theme .product-detail-info h2 {
+            color: #6A5ACD; /* Slate blue - sophisticated and artistic */
+        }
+
+        body.light-theme .product-detail-info p {
+            color: #555555;
+        }
+
+        body.light-theme .product-detail-info .price {
+            color: #20B2AA; /* Light sea green - fresh and inviting */
+        }
+
+        body.light-theme .user-details-form {
+            background-color: #fcfcfc;
+            border: 1px solid #f0f0f0;
+        }
+
+        body.light-theme .user-details-form label {
+            color: #444444;
+        }
+
+        body.light-theme .user-details-form input[type="text"],
+        body.light-theme .user-details-form input[type="email"],
+        body.light-theme .user-details-form input[type="tel"],
+        body.light-theme .user-details-form textarea {
+            background-color: #ffffff;
+            border-color: #dddddd;
+            color: #333333;
+        }
+
+        body.light-theme .btn-continue {
+            background-color: #A7C7E7; /* Primary sky blue button */
+            color: #2F4F4F; /* Dark text on light button */
+        }
+
+        body.light-theme .btn-continue:hover {
+            background-color: #8FAAD4;
+            box-shadow: 0 2px 8px rgba(167, 199, 231, 0.3); /* Soft hover shadow */
+        }
+
+        body.light-theme .btn-whatsapp-form {
+            background-color: #66BB6A; /* Fresh green WhatsApp button */
+        }
+
+        body.light-theme .btn-whatsapp-form:hover {
+            background-color: #4CAF50;
+            box-shadow: 0 2px 8px rgba(102, 187, 106, 0.3); /* Green hover shadow */
+        }
+
+        body.light-theme footer {
+            background-color: #C0C0C0; /* Light silver grey footer */
+            color: #555555;
+            border-top: 1px solid #B0B0B0;
+        }
+
+        /* --- Dark Theme Styles (Sophisticated & Creative) --- */
+        body.dark-theme {
+            background-color: #36454F; /* Charcoal grey for sophistication */
+            color: #E0E0E0; /* Light text */
+        }
+
+        body.dark-theme .detail-header {
+            background-color: #2F4F4F; /* Dark slate grey */
+            color: #FFD700; /* Gold accent */
+            box-shadow: 0 3px 8px rgba(255, 215, 0, 0.3); /* Golden glow shadow */
+            border-bottom: 2px solid #B8860B;
+        }
+
+        body.dark-theme .detail-header h1 {
+            color: #FFD700;
+        }
+
+        body.dark-theme .product-detail-container {
+            background-color: #4A4A4A; /* Slightly lighter charcoal for contrast */
+            box-shadow: 0 6px 20px rgba(0,0,0,0.4); /* Stronger dark shadow */
+            border: 1px solid #5C5C5C;
+        }
+
+        body.dark-theme .product-detail-info img {
+            border-color: #666666; /* Darker image border */
+        }
+
+        body.dark-theme .product-detail-info h2 {
+            color: #ADD8E6; /* Light blue - subtle contrast */
+        }
+
+        body.dark-theme .product-detail-info p {
+            color: #CCCCCC;
+        }
+
+        body.dark-theme .product-detail-info .price {
+            color: #98FB98; /* Pale green for price */
+        }
+
+        body.dark-theme .user-details-form {
+            background-color: #36454F;
+            border: 1px solid #555555;
+        }
+
+        body.dark-theme .user-details-form label {
+            color: #E0E0E0;
+        }
+
+        body.dark-theme .user-details-form input[type="text"],
+        body.dark-theme .user-details-form input[type="email"],
+        body.dark-theme .user-details-form input[type="tel"],
+        body.dark-theme .user-details-form textarea {
+            background-color: #555555;
+            border-color: #777777;
+            color: #f0f0f0;
+        }
+
+        body.dark-theme .user-details-form input::placeholder,
+        body.dark-theme .user-details-form textarea::placeholder {
+            color: #aaaaaa;
+        }
+
+        body.dark-theme .btn-continue {
+            background-color: #2F4F4F; /* Dark slate grey button */
+            color: #FFD700; /* Gold text on dark button */
+        }
+
+        body.dark-theme .btn-continue:hover {
+            background-color: #2C3E50;
+            box-shadow: 0 2px 8px rgba(255, 215, 0, 0.2);
+        }
+
+        body.dark-theme .btn-whatsapp-form {
+            background-color: #4CAF50; /* Green WhatsApp button */
+        }
+
+        body.dark-theme .btn-whatsapp-form:hover {
+            background-color: #388E3C;
+            box-shadow: 0 2px 8px rgba(76, 175, 80, 0.2);
+        }
+
+        body.dark-theme footer {
+            background-color: #2F4F4F;
+            color: #BBBBBB;
+            border-top: 1px solid #444444;
+        }
+
+        /* General / Common Styles (not theme-specific) */
+        .detail-header {
+            padding: 1.5rem 0;
+            text-align: center;
+            font-size: 2.2rem;
+            margin-bottom: 20px;
+            transition: background-color 0.3s, color 0.3s, box-shadow 0.3s, border-bottom 0.3s;
+        }
+        .detail-header h1 {
+            margin: 0;
+            font-size: 2.2rem;
+            transition: color 0.3s;
+        }
+        .product-detail-container {
+            max-width: 800px;
+            margin: 30px auto;
+            padding: 25px;
+            border-radius: 8px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            flex-grow: 1;
+            transition: background-color 0.3s, box-shadow 0.3s, border 0.3s;
+        }
+        .product-detail-info {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-bottom: 25px;
+            text-align: center;
+            width: 100%;
+        }
+        .product-detail-info img {
+            max-width: 100%;
+            height: 250px;
+            object-fit: contain;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            transition: border-color 0.3s;
+        }
+        .product-detail-info h2 {
+            font-size: 2rem;
+            margin-bottom: 10px;
+            transition: color 0.3s;
+        }
+        .product-detail-info p {
+            font-size: 1.1rem;
+            line-height: 1.6;
+            margin-bottom: 5px;
+            transition: color 0.3s;
+        }
+        .product-detail-info .price {
+            font-size: 1.5rem;
+            font-weight: bold;
+            margin-top: 15px;
+            transition: color 0.3s;
+        }
+        .user-details-form {
+            width: 100%;
+            max-width: 500px;
+            padding: 20px;
+            border-radius: 8px;
+            margin-top: 20px;
+            transition: background-color 0.3s, border-color 0.3s;
+        }
+        .user-details-form h3 {
+            margin-top: 0;
+            margin-bottom: 20px;
+            font-size: 1.6rem;
+            text-align: center;
+            transition: color 0.3s;
+        }
+        .user-details-form label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+            transition: color 0.3s;
+        }
+        .user-details-form input[type="text"],
+        .user-details-form input[type="email"],
+        .user-details-form input[type="tel"],
+        .user-details-form textarea {
+            width: calc(100% - 20px);
+            padding: 10px;
+            margin-bottom: 15px;
+            border-radius: 4px;
+            font-size: 1rem;
+            box-sizing: border-box;
+            transition: background-color 0.3s, border-color 0.3s, color 0.3s;
+        }
+        .user-details-form textarea {
+            resize: vertical;
+            min-height: 80px;
+        }
+        .form-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-top: 25px;
+            flex-wrap: wrap;
+        }
+        .form-btn {
+            padding: 12px 20px;
+            border-radius: 5px;
+            text-decoration: none;
+            color: white;
+            font-weight: bold;
+            font-size: 1.1rem;
+            cursor: pointer;
+            border: none;
+            transition: background-color 0.3s ease, box-shadow 0.3s;
+            text-align: center;
+            flex-shrink: 0;
+        }
+        footer {
+            padding: 1rem 0;
+            text-align: center;
+            margin-top: auto;
+            transition: background-color 0.3s, color 0.3s, border-top 0.3s;
+        }
+
+        /* Responsive adjustments for product-detail.html */
+        @media (max-width: 768px) {
+            .product-detail-container {
+                margin: 20px;
+                padding: 20px;
+            }
+            .product-detail-info img {
+                height: 200px;
+            }
+            .product-detail-info h2 {
+                font-size: 1.8rem;
+            }
+            .product-detail-info p {
+                font-size: 1rem;
+            }
+            .user-details-form {
+                padding: 15px;
+            }
+            .form-btn {
+                padding: 10px 18px;
+                font-size: 1rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .product-detail-container {
+                margin: 15px;
+                padding: 15px;
+            }
+            .product-detail-info img {
+                height: 180px;
+            }
+            .product-detail-info h2 {
+                font-size: 1.5rem;
+            }
+            .product-detail-info p {
+                font-size: 0.9rem;
+            }
+            .user-details-form input[type="text"],
+            .user-details-form input[type="email"],
+            .user-details-form input[type="tel"],
+            .user-details-form textarea {
+                width: 100%;
+            }
+            .form-buttons {
+                flex-direction: column;
+                gap: 10px;
+                align-items: center;
+            }
+            .form-btn {
+                width: 80%;
+                max-width: 250px;
+                margin-left: auto;
+                margin-right: auto;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="detail-header">
+        <h1>Sell Your Stationery</h1>
+        <p>Confirm details and provide your contact information.</p>
+    </header>
+
+    <main class="product-detail-container">
+        <section class="product-detail-info">
+            <img id="product-image" src="" alt="Stationery Item Image">
+            <h2 id="product-name">Product Name Loading...</h2>
+            <p id="product-description">Description Loading...</p>
+            <p class="price" id="product-price">Price Loading...</p>
+        </section>
+
+        <section class="user-details-form">
+            <h3>Your Contact Details</h3>
+            <form id="contact-form">
+                <label for="name">Your Name:</label>
+                <input type="text" id="name" name="name" required placeholder="Enter your full name">
+
+                <label for="email">Your Email:</label>
+                <input type="email" id="email" name="email" required placeholder="Enter your email address">
+
+                <label for="phone">Your Phone Number:</label>
+                <input type="tel" id="phone" name="phone" required placeholder="e.g., +91 9876543210">
+
+                <label for="address">Your Address:</label>
+                <textarea id="address" name="address" rows="4" required placeholder="Street, City, State, Pin Code"></textarea>
+
+                <div class="form-buttons">
+                    <button type="submit" class="form-btn btn-continue">Submit Inquiry</button>
+                    <a id="whatsapp-link" href="#" class="form-btn btn-whatsapp-form" target="_blank">WhatsApp Us</a>
+                </div>
+            </form>
+        </section>
+    </main>
+
+    <footer>
+        <p>&copy; 2025 Stationery Hub. All rights reserved.</p>
+    </footer>
+
+    <script>
+        // This script runs specifically on product-detail.html
+        document.addEventListener('DOMContentLoaded', () => {
+            // Function to apply theme (re-using the logic from script.js)
+            function applyThemeOnDetail(theme) {
+                const body = document.body;
+                if (theme === 'dark-theme') {
+                    body.classList.remove('light-theme');
+                    body.classList.add('dark-theme');
+                } else {
+                    body.classList.remove('dark-theme');
+                    body.classList.add('light-theme');
+                }
+            }
+
+            // Load theme preference from local storage on this page
+            const savedTheme = localStorage.getItem('theme');
+            if (savedTheme) {
+                applyThemeOnDetail(savedTheme);
+            } else {
+                // Default to light theme if no preference saved
+                applyThemeOnDetail('light-theme');
+            }
+
+            // Retrieve product ID from URL
+            const urlParams = new URLSearchParams(window.location.search);
+            const productId = urlParams.get('id');
+
+            // Define your product data for a stationery store
+            const allProductsData = [
+                {
+                    id: 1,
+                    name: 'Premium Gel Pen Set',
+                    description: 'A vibrant set of smooth-writing gel pens, perfect for notes, journaling, and creative projects. Quick-drying, fade-resistant ink.',
+                    price: '₹299',
+                    image: 'pic1.png' // Blue/dark grey theme
+                },
+                {
+                    id: 2,
+                    name: 'Leatherette Journal (A5)',
+                    description: 'Elegantly bound A5 journal with high-quality, acid-free paper. Ideal for writing, sketching, or planning. Features an elastic closure and ribbon bookmark.',
+                    price: '₹549',
+                    image: 'pic1.png' // Green/white theme
+                },
+                {
+                    id: 3,
+                    name: 'Colorful Sticky Notes Pack',
+                    description: 'A collection of brightly colored sticky notes in various sizes and shapes. Perfect for reminders, organizing, and adding flair to your workspace.',
+                    price: '₹120',
+                    image: 'pic1.png' // Gold/purple theme
+                },
+                {
+                    id: 4,
+                    name: 'Ergonomic Desk Organizer',
+                    description: 'Keep your desk clutter-free with this stylish and functional organizer. Multiple compartments for pens, clips, notes, and small accessories. Made from durable, eco-friendly materials.',
+                    price: '₹899',
+                    image: 'pic1.png' // Purple/white theme
+                },
+                {
+                    id: 5,
+                    name: 'Art Sketchbook (Hardcover)',
+                    description: 'Premium sketchbook with thick, textured paper suitable for pencils, charcoal, pastels, and light washes. Hardcover for durability and on-the-go creativity.',
+                    price: '₹750',
+                    image: 'pic1.png' // Blue/grey theme
+                },
+                {
+                    id: 6,
+                    name: 'Highlighter Assortment Pack',
+                    description: 'A set of chisel-tip highlighters in fluorescent and pastel shades. Perfect for emphasizing text, color-coding, and artistic endeavors. Smudge-proof ink.',
+                    price: '₹180',
+                    image: 'logo.png' // Green/dark grey theme
+                }
+            ];
+
+            let product = null;
+            if (productId) {
+                product = allProductsData.find(p => p.id === parseInt(productId));
+            }
+
+            const productImage = document.getElementById('product-image');
+            const productName = document.getElementById('product-name');
+            const productDescription = document.getElementById('product-description');
+            const productPrice = document.getElementById('product-price');
+            const whatsappLink = document.getElementById('whatsapp-link');
+
+            if (product) {
+                productImage.src = product.image;
+                productImage.alt = product.name;
+                productName.textContent = product.name;
+                productDescription.textContent = product.description;
+                productPrice.textContent = product.price;
+
+                const whatsappPhoneNumber = '919876543210'; // Replace with your WhatsApp number (e.g., +91XXXXXXXXXX without '+')
+                whatsappLink.href = `https://wa.me/${whatsappPhoneNumber}?text=Hello, I'm interested in selling my ${encodeURIComponent(product.name)} (ID: ${product.id}). Could you please guide me on the process?`;
+
+            } else {
+                productName.textContent = 'Product Not Found';
+                productDescription.textContent = 'Please go back to the main page to select a product.';
+                productPrice.textContent = '';
+                productImage.style.display = 'none'; // Hide image if product not found
+                whatsappLink.style.display = 'none'; // Hide WhatsApp button
+            }
+
+            // Get form elements
+            const contactForm = document.getElementById('contact-form');
+            const nameInput = document.getElementById('name');
+            const emailInput = document.getElementById('email');
+            const phoneInput = document.getElementById('phone');
+            const addressTextarea = document.getElementById('address');
+
+            // Function to generate the mailto body
+            function generateMailtoBody() {
+                const name = nameInput.value;
+                const email = emailInput.value;
+                const phone = phoneInput.value;
+                const address = addressTextarea.value;
+
+                let mailBody = `Hello,\n\nI am interested in selling a product through your platform.\n\n`;
+                if (product) {
+                    mailBody += `Product Name: ${product.name}\n`;
+                    mailBody += `Product ID: ${product.id}\n`;
+                    mailBody += `Product Description: ${product.description}\n`;
+                    mailBody += `Product Price: ${product.price}\n\n`;
+                }
+                mailBody += `My Contact Details:\n`;
+                mailBody += `Name: ${name}\n`;
+                mailBody += `Email: ${email}\n`;
+                mailBody += `Phone: ${phone}\n`;
+                mailBody += `Address: ${address}\n\n`;
+                mailBody += `Please let me know the next steps.\n\nThank you.`;
+
+                return encodeURIComponent(mailBody);
+            }
+
+            // Function to generate the WhatsApp message
+            function generateWhatsappMessage() {
+                const name = nameInput.value;
+                const phone = phoneInput.value;
+                const email = emailInput.value;
+                const address = addressTextarea.value;
+
+                let whatsappMsg = `Hello, I'm interested in selling my product.\n\n`;
+                if (product) {
+                    whatsappMsg += `Product: ${product.name} (ID: ${product.id})\n`;
+                    whatsappMsg += `Price: ${product.price}\n\n`;
+                }
+                whatsappMsg += `My Details:\n`;
+                whatsappMsg += `Name: ${name}\n`;
+                whatsappMsg += `Phone: ${phone}\n`;
+                whatsappMsg += `Email: ${email}\n`;
+                whatsappMsg += `Address: ${address}\n\n`;
+                whatsappMsg += `Could you please guide me on the process?`;
+
+                return encodeURIComponent(whatsappMsg);
+            }
+
+            // Update WhatsApp link dynamically as user types
+            contactForm.addEventListener('input', () => {
+                const whatsappPhoneNumber = '919876543210'; // Replace with your WhatsApp number
+                whatsappLink.href = `https://wa.me/${whatsappPhoneNumber}?text=${generateWhatsappMessage()}`;
+            });
+
+
+            // Handle form submission for "Continue" button
+            contactForm.addEventListener('submit', (event) => {
+                event.preventDefault(); // Prevent default form submission
+
+                // Basic validation
+                const name = nameInput.value.trim();
+                const email = emailInput.value.trim();
+                const phone = phoneInput.value.trim();
+                const address = addressTextarea.value.trim();
+
+                if (!name || !email || !phone || !address) {
+                    alert('Please fill in all contact details fields.');
+                    return;
+                }
+
+                // Phone number validation (at least 10 digits, stripping non-digits for check)
+                const cleanedPhone = phone.replace(/\D/g, ''); // Remove all non-digit characters
+                if (cleanedPhone.length < 10) {
+                    alert('Please enter a valid phone number with at least 10 digits.');
+                    return;
+                }
+
+                // All details are valid, prepare email redirection
+                const recipientEmail = 'your_stationary_store_email@example.com'; // IMPORTANT: Replace with the email address where you want to receive inquiries
+                const emailSubject = encodeURIComponent(`Stationery Sell Inquiry: ${product ? product.name : 'Unknown Product'} from ${name}`);
+                const emailBody = generateMailtoBody();
+
+                // Redirect to mail client
+                window.location.href = `mailto:${recipientEmail}?subject=${emailSubject}&body=${emailBody}`;
+
+                console.log("Form data collected (also sent to email client):", {
+                    productId: product ? product.id : null,
+                    name,
+                    email,
+                    phone,
+                    address
+                });
+            });
+        });
+    </script>
+</body>
+</html>
