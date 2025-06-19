@@ -1,0 +1,671 @@
+/* Basic Reset & Body Styles */
+body {
+    font-family: 'Segoe UI', Arial, sans-serif; /* A slightly more modern font */
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    transition: background-color 0.3s, color 0.3s; /* Smooth transition for theme change */
+}
+
+/* --- Light Theme Defaults (Keeping it for toggle, but main feel will be dark) --- */
+body.light-theme {
+    background-color: #e8eaf6; /* Light purplish-blue */
+    color: #212121; /* Dark grey */
+}
+
+body.light-theme header {
+    background-color: #673ab7; /* Deep purple */
+    color: white;
+}
+
+body.light-theme .product-card {
+    background-color: #ffffff;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15); /* Slightly stronger shadow */
+}
+
+body.light-theme .product-card h2 {
+    color: #424242; /* Darker grey for titles */
+}
+
+body.light-theme .category-selection h2 {
+    color: #673ab7;
+}
+
+body.light-theme .category-btn {
+    background-color: #cfd8dc; /* Light blue-grey */
+    color: #212121;
+    border: 1px solid #90a4ae;
+}
+body.light-theme .category-btn:hover {
+    background-color: #b0bec5;
+}
+
+body.light-theme .nav-button {
+    color: white;
+}
+
+body.light-theme .nav-button:hover {
+    background-color: #5e35b1; /* Slightly darker purple */
+}
+
+body.light-theme footer {
+    background-color: #424242; /* Dark grey */
+    color: #e0e0e0;
+}
+
+/* --- Dark Theme Styles (The primary "electronic" theme) --- */
+body.dark-theme {
+    background-color: #121212; /* Very dark background */
+    color: #e0e0e0; /* Light grey text */
+}
+
+body.dark-theme header {
+    background-color: #1f1f1f; /* Darker header */
+    color: #00e676; /* Vibrant green for contrast */
+    border-bottom: 2px solid #00e676; /* Accent border */
+}
+
+body.dark-theme .product-card {
+    background-color: #1e1e1e; /* Darker card background */
+    box-shadow: 0 4px 15px rgba(0,230,118,0.2); /* Green glow effect */
+    border: 1px solid #333; /* Subtle border */
+}
+
+body.dark-theme .product-card h2 {
+    color: #00e676; /* Vibrant green for titles */
+}
+
+body.dark-theme p {
+    color: #b0b0b0; /* Slightly lighter body text */
+}
+
+body.dark-theme .price {
+    color: #00b0ff; /* Electric blue for price */
+}
+
+body.dark-theme .category-selection h2 {
+    color: #00e676; /* Vibrant green for titles */
+}
+body.dark-theme .category-btn {
+    background-color: #2a2a2a; /* Dark button background */
+    color: #00e676; /* Vibrant green text */
+    border: 1px solid #00e676; /* Green border */
+}
+body.dark-theme .category-btn:hover {
+    background-color: #3a3a3a; /* Slightly lighter on hover */
+    color: #00e676;
+    box-shadow: 0 0 8px rgba(0,230,118,0.5); /* Green glow on hover */
+}
+
+body.dark-theme .nav-button {
+    color: #00e676; /* Vibrant green for nav text */
+}
+
+body.dark-theme .nav-button:hover {
+    background-color: #2a2a2a; /* Dark hover */
+    color: #00b0ff; /* Electric blue on hover */
+}
+
+body.dark-theme footer {
+    background-color: #0a0a0a; /* Even darker footer */
+    color: #9e9e9e; /* Muted text */
+    border-top: 1px solid #00e676; /* Green accent */
+}
+
+/* Theme Toggle Button Styling (Desktop & Default) */
+.theme-toggle-button {
+    background-color: #333; /* Dark background for button */
+    color: #00e676; /* Green text for button */
+    border: 1px solid #00e676; /* Green border */
+    padding: 8px 15px;
+    border-radius: 20px; /* Make it oval-ish */
+    cursor: pointer;
+    font-size: 0.9rem;
+    position: absolute; /* Position relative to its closest positioned ancestor (header) */
+    top: 1rem;
+    right: 1rem;
+    transition: background-color 0.3s, color 0.3s, border-color 0.3s, box-shadow 0.3s;
+    z-index: 10; /* Ensure button is above other content if overlapping */
+    min-width: 120px; /* Ensure enough width for text */
+    text-align: center; /* Center the text inside */
+}
+
+body.light-theme .theme-toggle-button {
+    background-color: #f0f0f0; /* Light background for button */
+    color: #333; /* Dark text for button */
+    border-color: #ccc;
+}
+
+.theme-toggle-button:hover {
+    opacity: 0.9;
+    box-shadow: 0 0 10px rgba(0,230,118,0.5); /* Green glow on hover */
+}
+body.light-theme .theme-toggle-button:hover {
+    box-shadow: 0 0 10px rgba(0,0,0,0.2); /* Subtle shadow for light mode */
+}
+
+
+/* Ensure header has position: relative for absolute positioning of the button */
+header {
+    position: relative;
+    background-color: #1f1f1f; /* Dark theme default */
+    color: #00e676; /* Green accent */
+    padding: 1rem 0;
+    text-align: center;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.3); /* Stronger shadow */
+    min-height: 100px; /* Increased min-height to accommodate new elements */
+    padding-bottom: 20px; /* Add padding at the bottom of header */
+}
+
+/* Main Navigation Styles (Home, About Us) */
+.main-nav {
+    position: absolute; /* Position relative to header */
+    top: 1rem; /* Adjust as needed, similar to theme toggle */
+    left: 1rem; /* Position on the left */
+    z-index: 10;
+    display: flex; /* Arrange buttons in a row */
+    gap: 10px; /* Space between nav buttons */
+}
+
+.nav-button {
+    display: inline-block;
+    padding: 8px 15px;
+    text-decoration: none;
+    border-radius: 5px;
+    font-weight: bold;
+    transition: background-color 0.3s ease, color 0.3s ease;
+    white-space: nowrap; /* Prevent text wrapping */
+    color: #00e676; /* Green accent */
+}
+
+
+header h1 {
+    margin: 0;
+    font-size: 2.5rem;
+    padding-top: 2rem; /* Adjusted padding to make space for top nav and theme button */
+    color: #00e676; /* Green accent */
+}
+
+header p {
+    font-size: 1.2rem;
+    color: #e0e0e0; /* Light grey */
+}
+
+/* Category Selection Styles */
+.category-selection {
+    margin-top: 20px;
+    padding: 0 20px;
+    text-align: center;
+}
+
+.category-selection h2 {
+    font-size: 1.8rem;
+    margin-bottom: 15px;
+    color: #00e676; /* Green accent */
+}
+
+.category-buttons {
+    display: flex;
+    flex-wrap: wrap; /* Allow buttons to wrap to next line */
+    justify-content: center; /* Center buttons horizontally */
+    gap: 10px; /* Space between category buttons */
+}
+
+.category-btn {
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 1rem;
+    font-weight: bold;
+    transition: background-color 0.3s, color 0.3s, border-color 0.3s, box-shadow 0.3s;
+    white-space: nowrap; /* Prevent text wrapping */
+    background-color: #2a2a2a; /* Dark button background */
+    color: #00e676; /* Green text */
+    border: 1px solid #00e676; /* Green border */
+}
+
+
+/* Existing CSS rules (product list, cards, buttons) */
+#product-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 20px;
+    padding: 20px;
+    max-width: 1200px;
+    margin: 20px auto;
+}
+
+.product-card {
+    border-radius: 8px;
+    overflow: hidden;
+    text-align: center;
+    padding-bottom: 15px;
+    transition: background-color 0.3s, box-shadow 0.3s, border-color 0.3s;
+    background-color: #1e1e1e; /* Dark card background */
+    box-shadow: 0 4px 15px rgba(0,230,118,0.2); /* Green glow */
+    border: 1px solid #333;
+}
+
+.product-card img {
+    max-width: 100%;
+    height: 200px;
+    object-fit: cover;
+    border-bottom: 1px solid #2a2a2a; /* Darker border */
+}
+
+/* Adjust image border for dark theme if needed */
+body.dark-theme .product-card img {
+    border-bottom-color: #2a2a2a;
+}
+
+
+.product-card .price {
+    font-size: 1.3rem;
+    font-weight: bold;
+    margin-bottom: 15px;
+    color: #00b0ff; /* Electric blue price */
+}
+
+.product-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    padding: 0 15px;
+    flex-wrap: wrap;
+}
+
+.btn {
+    display: inline-block;
+    padding: 10px 15px;
+    border-radius: 5px;
+    text-decoration: none;
+    color: white;
+    font-weight: bold;
+    transition: background-color 0.3s ease, box-shadow 0.3s;
+    flex-grow: 1;
+    text-align: center;
+    min-width: 120px;
+}
+
+.btn-sell {
+    background-color: #00e676; /* Vibrant green */
+}
+
+.btn-sell:hover {
+    background-color: #00c853; /* Slightly darker green */
+    box-shadow: 0 0 10px rgba(0,230,118,0.5); /* Green glow */
+}
+
+.btn-whatsapp {
+    background-color: #00b0ff; /* Electric blue */
+}
+
+.btn-whatsapp:hover {
+    background-color: #0091ea; /* Slightly darker blue */
+    box-shadow: 0 0 10px rgba(0,176,255,0.5); /* Blue glow */
+}
+
+
+/* Specific styles for product-detail.html */
+/* The main body styles and theme styles already apply */
+body {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh; /* Ensure body takes full viewport height for footer to stick to bottom */
+}
+.detail-header {
+    /* Uses main header styles for background/color */
+    background-color: #1f1f1f; /* Dark theme */
+    color: #00e676; /* Green accent */
+    padding: 1.5rem 0;
+    text-align: center;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+}
+body.dark-theme .detail-header {
+    background-color: #1f1f1f; /* Dark theme */
+    color: #00e676;
+}
+
+.detail-header h1 {
+    margin: 0;
+    font-size: 2.2rem;
+}
+
+.product-detail-container {
+    flex-grow: 1; /* Allow main content to take available space */
+    max-width: 800px;
+    margin: 30px auto;
+    padding: 25px;
+    background-color: #1e1e1e; /* Dark background */
+    border-radius: 8px;
+    box-shadow: 0 4px 15px rgba(0,230,118,0.2); /* Green glow */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    border: 1px solid #333;
+}
+body.dark-theme .product-detail-container {
+    background-color: #1e1e1e;
+    box-shadow: 0 4px 15px rgba(0,230,118,0.2);
+    color: #e0e0e0;
+}
+
+
+.product-detail-info {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-bottom: 25px;
+    text-align: center;
+}
+
+.product-detail-info img {
+    max-width: 100%;
+    height: 250px; /* Larger image for detail */
+    object-fit: contain; /* Contain the image within its bounds */
+    border: 1px solid #2a2a2a; /* Darker border */
+    border-radius: 8px;
+    margin-bottom: 20px;
+}
+body.dark-theme .product-detail-info img {
+    border-color: #2a2a2a;
+}
+
+.product-detail-info h2 {
+    font-size: 2rem;
+    color: #00e676; /* Green accent */
+    margin-bottom: 10px;
+}
+body.dark-theme .product-detail-info h2 {
+    color: #00e676; /* Green accent */
+}
+
+
+.product-detail-info p {
+    font-size: 1.1rem;
+    color: #b0b0b0; /* Light grey text */
+    line-height: 1.6;
+    margin-bottom: 5px;
+}
+body.dark-theme .product-detail-info p {
+    color: #b0b0b0; /* Dark theme */
+}
+
+.product-detail-info .price {
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: #00b0ff; /* Electric blue price */
+    margin-top: 15px;
+}
+body.dark-theme .product-detail-info .price {
+    color: #00b0ff; /* Electric blue price */
+}
+
+
+.user-details-form {
+    width: 100%;
+    max-width: 500px;
+    padding: 20px;
+    border: 1px solid #2a2a2a; /* Dark border */
+    border-radius: 8px;
+    margin-top: 20px;
+    background-color: #1f1f1f; /* Dark background */
+}
+body.dark-theme .user-details-form {
+    background-color: #1f1f1f;
+    border-color: #2a2a2a;
+}
+
+
+.user-details-form h3 {
+    margin-top: 0;
+    margin-bottom: 20px;
+    font-size: 1.6rem;
+    color: #00e676; /* Green accent */
+    text-align: center;
+}
+body.dark-theme .user-details-form h3 {
+    color: #00e676; /* Green accent */
+}
+
+
+.user-details-form label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: bold;
+    color: #e0e0e0; /* Light grey text */
+}
+body.dark-theme .user-details-form label {
+    color: #e0e0e0; /* Dark theme */
+}
+
+
+.user-details-form input[type="text"],
+.user-details-form input[type="email"],
+.user-details-form input[type="tel"],
+.user-details-form textarea {
+    width: calc(100% - 20px); /* Account for padding */
+    padding: 10px;
+    margin-bottom: 15px;
+    border: 1px solid #00b0ff; /* Electric blue border */
+    border-radius: 4px;
+    font-size: 1rem;
+    box-sizing: border-box; /* Include padding in width */
+    background-color: #2a2a2a; /* Dark input background */
+    color: #e0e0e0; /* Light text */
+}
+body.dark-theme .user-details-form input[type="text"],
+body.dark-theme .user-details-form input[type="email"],
+body.dark-theme .user-details-form input[type="tel"],
+body.dark-theme .user-details-form textarea {
+    background-color: #2a2a2a;
+    border-color: #00b0ff; /* Electric blue border */
+    color: #e0e0e0;
+}
+
+body.dark-theme .user-details-form input::placeholder,
+body.dark-theme .user-details-form textarea::placeholder {
+    color: #b0b0b0; /* Lighter placeholder text */
+}
+
+
+.user-details-form textarea {
+    resize: vertical; /* Allow vertical resizing */
+    min-height: 80px;
+}
+
+.form-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    margin-top: 25px;
+}
+
+.form-btn {
+    padding: 12px 25px;
+    border-radius: 5px;
+    text-decoration: none;
+    color: white;
+    font-weight: bold;
+    font-size: 1.1rem;
+    cursor: pointer;
+    border: none;
+    transition: background-color 0.3s ease, box-shadow 0.3s;
+}
+
+.btn-continue {
+    background-color: #00e676; /* Vibrant green */
+}
+
+.btn-continue:hover {
+    background-color: #00c853; /* Slightly darker green */
+    box-shadow: 0 0 10px rgba(0,230,118,0.5);
+}
+
+.btn-whatsapp-form {
+    background-color: #00b0ff; /* Electric blue */
+}
+
+.btn-whatsapp-form:hover {
+    background-color: #0091ea; /* Slightly darker blue */
+    box-shadow: 0 0 10px rgba(0,176,255,0.5);
+}
+
+/* Responsive Adjustments */
+@media (max-width: 768px) {
+    header {
+        padding-top: 1rem; /* Adjust overall header padding for smaller screens */
+        min-height: 120px; /* Give more space for elements */
+    }
+
+    .main-nav {
+        position: static; /* Stack nav buttons normally */
+        display: flex;
+        justify-content: center; /* Center them */
+        margin-bottom: 15px; /* Space below nav */
+        flex-wrap: wrap; /* Allow wrapping */
+        gap: 8px;
+    }
+
+    .nav-button {
+        padding: 6px 12px;
+        font-size: 0.85rem;
+    }
+
+    header h1 {
+        font-size: 2rem;
+        padding-top: 1rem; /* Adjust heading padding */
+    }
+    
+
+    #product-list {
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        padding: 15px;
+    }
+
+    .product-card h2 {
+        font-size: 1.3rem;
+    }
+
+    /* KEEP the theme toggle button absolute positioned and oval on smaller screens */
+    .theme-toggle-button {
+        position: absolute; /* Maintain absolute positioning */
+        top: 0.8rem; /* Adjust top for slightly smaller screens */
+        right: 0.8rem; /* Adjust right for slightly smaller screens */
+        padding: 6px 12px; /* Slightly smaller padding */
+        font-size: 0.8rem; /* Slightly smaller font */
+        border-radius: 20px; /* Keep it oval */
+        min-width: unset; /* Remove min-width to allow more flexibility */
+        width: fit-content; /* Allow width to adjust to text */
+    }
+
+    .category-selection h2 {
+        font-size: 1.5rem;
+    }
+
+    .category-btn {
+        padding: 8px 15px;
+        font-size: 0.9rem;
+    }
+    .about-section {
+        padding: 20px;
+        
+    }
+    
+
+    /* Responsive adjustments for product-detail.html */
+    .product-detail-container {
+        margin: 20px;
+        padding: 20px;
+    }
+    .product-detail-info img {
+        height: 200px;
+    }
+    .product-detail-info h2 {
+        font-size: 1.8rem;
+    }
+    .product-detail-info p {
+        font-size: 1rem;
+    }
+    .user-details-form {
+        padding: 15px;
+    }
+    .form-btn {
+        padding: 10px 20px;
+        font-size: 1rem;
+    }
+}
+
+@media (max-width: 480px) {
+    header h1 {
+        font-size: 1.5rem;
+    }
+
+    header p {
+        font-size: 1rem;
+    }
+
+    #product-list {
+        grid-template-columns: 1fr;
+        padding: 10px;
+    }
+
+    .product-card {
+        margin: 0 5px;
+    }
+
+    .product-buttons {
+        flex-direction: column;
+        gap: 8px;
+    }
+
+    .btn {
+        width: 90%;
+        margin: 0 auto;
+    }
+
+    /* Fine-tune button position for very small mobile screens */
+    .theme-toggle-button {
+        top: 0.5rem; /* Closer to the top edge */
+        right: 0.5rem; /* Closer to the right edge */
+        padding: 5px 10px; /* Smaller padding */
+        font-size: 0.75rem; /* Smaller font for tiny screens */
+    }
+
+    .category-selection h2 {
+        font-size: 1.3rem;
+    }
+
+    .category-btn {
+        padding: 7px 12px;
+        font-size: 0.85rem;
+    }
+
+    /* Responsive adjustments for product-detail.html */
+    .product-detail-container {
+        margin: 15px;
+        padding: 15px;
+    }
+    .product-detail-info img {
+        height: 180px;
+    }
+    .product-detail-info h2 {
+        font-size: 1.5rem;
+    }
+    .product-detail-info p {
+        font-size: 0.9rem;
+    }
+    .user-details-form input[type="text"],
+    .user-details-form input[type="email"],
+    .user-details-form input[type="tel"],
+    .user-details-form textarea {
+        width: 100%; /* Full width minus padding on smaller screens */
+    }
+    .form-buttons {
+        flex-direction: column; /* Stack buttons vertically */
+        gap: 10px;
+    }
+    .form-btn {
+        width: 100%; /* Make buttons full width */
+    }
+}
