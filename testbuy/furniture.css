@@ -1,0 +1,670 @@
+/* Basic Reset & Body Styles */
+body {
+    font-family: 'Open Sans', Arial, sans-serif; /* Modern, readable sans-serif */
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    transition: background-color 0.3s, color 0.3s; /* Smooth transition for theme change */
+}
+
+/* --- Light Theme Defaults (The primary "Furniture" theme) --- */
+body.light-theme {
+    background-color: #f5f5f5; /* Soft, warm white */
+    color: #444444; /* Muted dark grey for text */
+}
+
+body.light-theme header {
+    background-color: #8B4513; /* SaddleBrown - rich wood tone */
+    color: #ffffff;
+    border-bottom: 1px solid #6F360E; /* Darker wood accent */
+}
+
+body.light-theme .product-card {
+    background-color: #ffffff;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1); /* Gentle, inviting shadow */
+    border: 1px solid #e0e0e0; /* Subtle border */
+}
+
+body.light-theme .product-card h2 {
+    color: #A0522D; /* Sienna - warm, inviting brown */
+}
+
+body.light-theme .category-selection h2 {
+    color: #8B4513; /* SaddleBrown */
+}
+
+body.light-theme .category-btn {
+    background-color: #f0e6d2; /* Light, creamy beige */
+    color: #444444;
+    border: 1px solid #d4c8b2;
+}
+body.light-theme .category-btn:hover {
+    background-color: #e6ddce;
+    box-shadow: 0 0 5px rgba(0,0,0,0.05);
+}
+
+body.light-theme .nav-button {
+    color: #ffffff;
+}
+
+body.light-theme .nav-button:hover {
+    background-color: #6F360E; /* Darker wood tone */
+}
+
+body.light-theme footer {
+    background-color: #5C4033; /* Darker brown, strong base */
+    color: #f5f5f5;
+    border-top: 1px solid #8B4513;
+}
+
+/* --- Dark Theme Styles (Sophisticated evening look) --- */
+body.dark-theme {
+    background-color: #2D2D2D; /* Deep charcoal grey */
+    color: #E0E0E0; /* Soft light grey text */
+}
+
+body.dark-theme header {
+    background-color: #3C3C3C; /* Slightly lighter charcoal */
+    color: #F0A300; /* Amber - warm, inviting accent */
+    border-bottom: 1px solid #F0A300;
+}
+
+body.dark-theme .product-card {
+    background-color: #3C3C3C; /* Darker card background */
+    box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+    border: 1px solid #5C5C5C; /* Muted dark grey border */
+}
+
+body.dark-theme .product-card h2 {
+    color: #F0A300; /* Amber */
+}
+
+body.dark-theme p {
+    color: #B0B0B0; /* Slightly lighter body text */
+}
+
+body.dark-theme .price {
+    color: #7FFF00; /* Chartreuse - a fresh, natural green */
+}
+
+body.dark-theme .category-selection h2 {
+    color: #F0A300; /* Amber */
+}
+body.dark-theme .category-btn {
+    background-color: #4A4A4A; /* Dark button background */
+    color: #E0E0E0;
+    border: 1px solid #6A6A6A;
+}
+body.dark-theme .category-btn:hover {
+    background-color: #5A5A5A;
+    box-shadow: 0 0 8px rgba(0,0,0,0.2);
+}
+
+body.dark-theme .nav-button {
+    color: #E0E0E0;
+}
+
+body.dark-theme .nav-button:hover {
+    background-color: #4A4A4A;
+}
+
+body.dark-theme footer {
+    background-color: #1F1F1F; /* Even darker footer */
+    color: #B0B0B0;
+    border-top: 1px solid #4A4A4A;
+}
+
+/* Theme Toggle Button Styling (Desktop & Default) */
+.theme-toggle-button {
+    background-color: #D4C8B2; /* Light, creamy beige */
+    color: #444444; /* Dark text */
+    border: 1px solid #BCAAA4;
+    padding: 8px 15px;
+    border-radius: 20px;
+    cursor: pointer;
+    font-size: 0.9rem;
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    transition: background-color 0.3s, color 0.3s, border-color 0.3s, border-radius 0.3s;
+    z-index: 10;
+    min-width: 120px;
+    text-align: center;
+}
+
+body.dark-theme .theme-toggle-button {
+    background-color: #4A4A4A; /* Dark background for button */
+    color: #E0E0E0; /* Light text */
+    border-color: #6A6A6A;
+}
+
+.theme-toggle-button:hover {
+    opacity: 0.9;
+    box-shadow: 0 0 10px rgba(0,0,0,0.1);
+}
+body.dark-theme .theme-toggle-button:hover {
+    box-shadow: 0 0 10px rgba(0,0,0,0.3);
+}
+
+/* Ensure header has position: relative for absolute positioning of the button */
+header {
+    position: relative;
+    background-color: #8B4513; /* SaddleBrown */
+    color: #ffffff;
+    padding: 1rem 0;
+    text-align: center;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    min-height: 100px;
+    padding-bottom: 20px;
+}
+
+/* Main Navigation Styles (Home, About Us) */
+.main-nav {
+    position: absolute;
+    top: 1rem;
+    left: 1rem;
+    z-index: 10;
+    display: flex;
+    gap: 10px;
+}
+
+.nav-button {
+    display: inline-block;
+    padding: 8px 15px;
+    text-decoration: none;
+    border-radius: 5px;
+    font-weight: bold;
+    transition: background-color 0.3s ease, color 0.3s ease;
+    white-space: nowrap;
+    color: #ffffff;
+}
+
+
+header h1 {
+    margin: 0;
+    font-size: 2.5rem;
+    padding-top: 2rem;
+    color: #ffffff;
+}
+
+header p {
+    font-size: 1.2rem;
+    color: #f0f0f0;
+}
+
+/* Category Selection Styles */
+.category-selection {
+    margin-top: 20px;
+    padding: 0 20px;
+    text-align: center;
+}
+
+.category-selection h2 {
+    font-size: 1.8rem;
+    margin-bottom: 15px;
+    color: #8B4513; /* SaddleBrown */
+}
+
+.category-buttons {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 10px;
+}
+
+.category-btn {
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 1rem;
+    font-weight: bold;
+    transition: background-color 0.3s, color 0.3s, border-color 0.3s, box-shadow 0.3s;
+    white-space: nowrap;
+    background-color: #f0e6d2; /* Light, creamy beige */
+    color: #444444;
+    border: 1px solid #d4c8b2;
+}
+
+
+/* Existing CSS rules (product list, cards, buttons) */
+#product-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 20px;
+    padding: 20px;
+    max-width: 1200px;
+    margin: 20px auto;
+}
+
+.product-card {
+    border-radius: 8px;
+    overflow: hidden;
+    text-align: center;
+    padding-bottom: 15px;
+    transition: background-color 0.3s, box-shadow 0.3s, border-color 0.3s;
+    background-color: #ffffff;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    border: 1px solid #e0e0e0;
+}
+
+.product-card img {
+    max-width: 100%;
+    height: 200px;
+    object-fit: cover;
+    border-bottom: 1px solid #f0f0f0;
+}
+
+/* Adjust image border for dark theme if needed */
+body.dark-theme .product-card img {
+    border-bottom-color: #4A4A4A;
+}
+
+
+.product-card .price {
+    font-size: 1.3rem;
+    font-weight: bold;
+    margin-bottom: 15px;
+    color: #A0522D; /* Sienna */
+}
+
+.product-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    padding: 0 15px;
+    flex-wrap: wrap;
+}
+
+.btn {
+    display: inline-block;
+    padding: 10px 15px;
+    border-radius: 5px;
+    text-decoration: none;
+    color: white;
+    font-weight: bold;
+    transition: background-color 0.3s ease, box-shadow 0.3s;
+    flex-grow: 1;
+    text-align: center;
+    min-width: 120px;
+}
+
+.btn-sell {
+    background-color: #8B4513; /* SaddleBrown */
+}
+
+.btn-sell:hover {
+    background-color: #6F360E;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+
+.btn-whatsapp {
+    background-color: #4CAF50; /* A friendly, inviting green */
+}
+
+.btn-whatsapp:hover {
+    background-color: #388E3C;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+
+
+/* Specific styles for product-detail.html */
+/* The main body styles and theme styles already apply */
+body {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+.detail-header {
+    background-color: #8B4513; /* SaddleBrown */
+    color: #ffffff;
+    padding: 1.5rem 0;
+    text-align: center;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+body.dark-theme .detail-header {
+    background-color: #3C3C3C; /* Darker charcoal */
+    color: #F0A300;
+}
+
+.detail-header h1 {
+    margin: 0;
+    font-size: 2.2rem;
+}
+
+.product-detail-container {
+    flex-grow: 1;
+    max-width: 800px;
+    margin: 30px auto;
+    padding: 25px;
+    background-color: #ffffff;
+    border-radius: 8px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    border: 1px solid #e0e0e0;
+}
+body.dark-theme .product-detail-container {
+    background-color: #3C3C3C;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+    color: #E0E0E0;
+    border-color: #5C5C5C;
+}
+
+
+.product-detail-info {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-bottom: 25px;
+    text-align: center;
+}
+
+.product-detail-info img {
+    max-width: 100%;
+    height: 250px;
+    object-fit: contain;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    margin-bottom: 20px;
+}
+body.dark-theme .product-detail-info img {
+    border-color: #4A4A4A;
+}
+
+.product-detail-info h2 {
+    font-size: 2rem;
+    color: #A0522D; /* Sienna */
+    margin-bottom: 10px;
+}
+body.dark-theme .product-detail-info h2 {
+    color: #F0A300; /* Amber */
+}
+
+
+.product-detail-info p {
+    font-size: 1.1rem;
+    color: #6a6a6a;
+    line-height: 1.6;
+    margin-bottom: 5px;
+}
+body.dark-theme .product-detail-info p {
+    color: #B0B0B0;
+}
+
+.product-detail-info .price {
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: #A0522D; /* Sienna */
+    margin-top: 15px;
+}
+body.dark-theme .product-detail-info .price {
+    color: #7FFF00; /* Chartreuse */
+}
+
+
+.user-details-form {
+    width: 100%;
+    max-width: 500px;
+    padding: 20px;
+    border: 1px solid #d4c8b2; /* Light, warm border */
+    border-radius: 8px;
+    margin-top: 20px;
+    background-color: #fdfaf5; /* Very light, warm background */
+}
+body.dark-theme .user-details-form {
+    background-color: #3C3C3C;
+    border-color: #5C5C5C;
+}
+
+
+.user-details-form h3 {
+    margin-top: 0;
+    margin-bottom: 20px;
+    font-size: 1.6rem;
+    color: #444444;
+    text-align: center;
+}
+body.dark-theme .user-details-form h3 {
+    color: #E0E0E0;
+}
+
+
+.user-details-form label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: bold;
+    color: #444444;
+}
+body.dark-theme .user-details-form label {
+    color: #E0E0E0;
+}
+
+
+.user-details-form input[type="text"],
+.user-details-form input[type="email"],
+.user-details-form input[type="tel"],
+.user-details-form textarea {
+    width: calc(100% - 20px);
+    padding: 10px;
+    margin-bottom: 15px;
+    border: 1px solid #d4c8b2; /* Warm beige border */
+    border-radius: 4px;
+    font-size: 1rem;
+    box-sizing: border-box;
+    background-color: #ffffff;
+    color: #444444;
+}
+body.dark-theme .user-details-form input[type="text"],
+body.dark-theme .user-details-form input[type="email"],
+body.dark-theme .user-details-form input[type="tel"],
+body.dark-theme .user-details-form textarea {
+    background-color: #4A4A4A;
+    border-color: #6A6A6A;
+    color: #E0E0E0;
+}
+
+body.dark-theme .user-details-form input::placeholder,
+body.dark-theme .user-details-form textarea::placeholder {
+    color: #B0B0B0;
+}
+
+
+.user-details-form textarea {
+    resize: vertical;
+    min-height: 80px;
+}
+
+.form-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    margin-top: 25px;
+}
+
+.form-btn {
+    padding: 12px 25px;
+    border-radius: 5px;
+    text-decoration: none;
+    color: white;
+    font-weight: bold;
+    font-size: 1.1rem;
+    cursor: pointer;
+    border: none;
+    transition: background-color 0.3s ease, box-shadow 0.3s;
+}
+
+.btn-continue {
+    background-color: #8B4513; /* SaddleBrown */
+}
+
+.btn-continue:hover {
+    background-color: #6F360E;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+
+.btn-whatsapp-form {
+    background-color: #4CAF50; /* A friendly, inviting green */
+}
+
+.btn-whatsapp-form:hover {
+    background-color: #388E3C;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+
+/* Responsive Adjustments */
+@media (max-width: 768px) {
+    header {
+        padding-top: 1rem;
+        min-height: 120px;
+    }
+
+    .main-nav {
+        position: static;
+        display: flex;
+        justify-content: center;
+        margin-bottom: 15px;
+        flex-wrap: wrap;
+        gap: 8px;
+    }
+
+    .nav-button {
+        padding: 6px 12px;
+        font-size: 0.85rem;
+    }
+
+    header h1 {
+        font-size: 2rem;
+        padding-top: 1rem;
+    }
+    
+
+    #product-list {
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        padding: 15px;
+    }
+
+    .product-card h2 {
+        font-size: 1.3rem;
+    }
+
+    .theme-toggle-button {
+        position: absolute;
+        top: 0.8rem;
+        right: 0.8rem;
+        padding: 6px 12px;
+        font-size: 0.8rem;
+        border-radius: 20px;
+        min-width: unset;
+        width: fit-content;
+    }
+
+    .category-selection h2 {
+        font-size: 1.5rem;
+    }
+
+    .category-btn {
+        padding: 8px 15px;
+        font-size: 0.9rem;
+    }
+    .about-section {
+        padding: 20px;
+        
+    }
+    
+
+    /* Responsive adjustments for product-detail.html */
+    .product-detail-container {
+        margin: 20px;
+        padding: 20px;
+    }
+    .product-detail-info img {
+        height: 200px;
+    }
+    .product-detail-info h2 {
+        font-size: 1.8rem;
+    }
+    .product-detail-info p {
+        font-size: 1rem;
+    }
+    .user-details-form {
+        padding: 15px;
+    }
+    .form-btn {
+        padding: 10px 20px;
+        font-size: 1rem;
+    }
+}
+
+@media (max-width: 480px) {
+    header h1 {
+        font-size: 1.5rem;
+    }
+
+    header p {
+        font-size: 1rem;
+    }
+
+    #product-list {
+        grid-template-columns: 1fr;
+        padding: 10px;
+    }
+
+    .product-card {
+        margin: 0 5px;
+    }
+
+    .product-buttons {
+        flex-direction: column;
+        gap: 8px;
+    }
+
+    .btn {
+        width: 90%;
+        margin: 0 auto;
+    }
+
+    .theme-toggle-button {
+        top: 0.5rem;
+        right: 0.5rem;
+        padding: 5px 10px;
+        font-size: 0.75rem;
+    }
+
+    .category-selection h2 {
+        font-size: 1.3rem;
+    }
+
+    .category-btn {
+        padding: 7px 12px;
+        font-size: 0.85rem;
+    }
+
+    /* Responsive adjustments for product-detail.html */
+    .product-detail-container {
+        margin: 15px;
+        padding: 15px;
+    }
+    .product-detail-info img {
+        height: 180px;
+    }
+    .product-detail-info h2 {
+        font-size: 1.5rem;
+    }
+    .product-detail-info p {
+        font-size: 0.9rem;
+    }
+    .user-details-form input[type="text"],
+    .user-details-form input[type="email"],
+    .user-details-form input[type="tel"],
+    .user-details-form textarea {
+        width: 100%;
+    }
+    .form-buttons {
+        flex-direction: column;
+        gap: 10px;
+    }
+    .form-btn {
+        width: 100%;
+    }
+}
