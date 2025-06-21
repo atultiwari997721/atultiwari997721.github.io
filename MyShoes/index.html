@@ -71,7 +71,7 @@
 
     <!-- Shoe Details Modal (Hidden by default) -->
     <div id="shoe-details-modal" class="fixed inset-0 z-50 flex items-center justify-center p-4 modal-overlay hidden">
-        <div class="bg-gray-800 rounded-xl shadow-2xl w-full max-w-4xl p-6 md:p-8 relative transform scale-95 opacity-0 transition-all duration-300 ease-out">
+        <div class="bg-gray-800 rounded-xl shadow-2xl w-full max-w-md md:max-w-4xl p-6 md:p-8 relative transform scale-95 opacity-0 transition-all duration-300 ease-out">
             <button id="close-modal" class="absolute top-4 right-4 text-gray-400 hover:text-gray-100 text-3xl font-bold">&times;</button>
 
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-10">
@@ -91,7 +91,7 @@
                         </svg>
                     </button>
 
-                    <div id="modal-thumbnail-container" class="flex flex-wrap justify-center gap-3">
+                    <div id="modal-thumbnail-container" class="flex flex-wrap justify-center gap-3 w-full">
                         <!-- Thumbnails will be loaded here -->
                     </div>
                 </div>
@@ -99,17 +99,17 @@
                 <!-- Shoe Details and Actions -->
                 <div class="flex flex-col justify-between">
                     <div>
-                        <h3 id="modal-shoe-name" class="text-4xl font-extrabold text-gray-100 mb-3"></h3>
-                        <p id="modal-shoe-price" class="text-3xl font-semibold text-green-400 mb-6"></p>
+                        <h3 id="modal-shoe-name" class="text-4xl font-extrabold text-gray-100 mb-3 text-center md:text-left"></h3>
+                        <p id="modal-shoe-price" class="text-3xl font-semibold text-green-400 mb-6 text-center md:text-left"></p>
 
                         <div class="mb-6">
-                            <p class="text-xl font-medium text-gray-300 mb-3">Select Size:</p>
-                            <div id="modal-size-selection" class="flex flex-wrap gap-3">
+                            <p class="text-xl font-medium text-gray-300 mb-3 text-center md:text-left">Select Size:</p>
+                            <div id="modal-size-selection" class="flex flex-wrap justify-center md:justify-start gap-3">
                                 <!-- Size options will be loaded here -->
                             </div>
                         </div>
 
-                        <p id="modal-error-message" class="text-red-400 text-sm mb-4 hidden"></p>
+                        <p id="modal-error-message" class="text-red-400 text-sm mb-4 hidden text-center md:text-left"></p>
                     </div>
 
                     <button id="modal-buy-button" class="bg-gradient-to-r from-green-500 to-green-700 text-white text-xl font-bold py-4 px-6 rounded-lg shadow-lg hover:from-green-600 hover:to-green-800 transition transform hover:scale-105 active:scale-95 duration-200 w-full flex items-center justify-center space-x-2">
@@ -181,7 +181,7 @@
                 deliveryInfo: 'FREE delivery Thu, 3 Jul',
                 images: [
                     'https://placehold.co/600x400/FF33E9/000000?text=STUSSYY+Running+View+1',
-                    'https://placehold.co/600x400/C700E9/000000?text=STUSSYY+Running+View+2'
+                    'https://placehold.co/600x400/C700E9/000000?text=C700E9'
                 ],
                 sizes: ['UK 8', 'UK 9', 'UK 10'],
                 whatsappNumber: '919876543210' // Replace with your WhatsApp number
