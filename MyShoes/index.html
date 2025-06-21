@@ -335,7 +335,9 @@
                 );
 
                 card.dataset.shoeId = shoe.id;
-                const showSizeSelection = shoe.sizes && shoe.sizes.length > 0;
+                
+                // The main card itself will now open the modal on click
+                card.addEventListener('click', () => openShoeDetailsModal(shoe.id));
 
                 card.innerHTML = `
                     <div class="relative w-full h-48 md:h-56 overflow-hidden rounded-t-xl">
@@ -351,14 +353,24 @@
                             </div>
                             <p class="text-xs text-gray-400 mb-3">${shoe.deliveryInfo}</p>
                         </div>
-                        <button class="w-full bg-blue-600 text-white font-semibold py-2 px-4 rounded-lg
-                                        hover:bg-blue-700 transition duration-200 shadow-md text-base">
-                            ${showSizeSelection ? 'View Details & Select Size' : 'View Details'}
+                        <button class="card-buy-btn w-full bg-green-600 text-white font-semibold py-2 px-4 rounded-lg
+                                        hover:bg-green-700 transition duration-200 shadow-md text-base mt-auto">
+                            Buy now on WhatsApp
                         </button>
                     </div>
                 `;
                 shoeCardsContainer.appendChild(card);
-                card.addEventListener('click', () => openShoeDetailsModal(shoe.id));
+
+                // Add event listener to the specific "Buy now" button inside the card
+                const buyBtn = card.querySelector('.card-buy-btn');
+                buyBtn.addEventListener('click', (event) => {
+                    event.stopPropagation(); // Prevent the card's click event from firing
+                    const message = encodeURIComponent(
+                        `Hello! I'm interested in buying the "${shoe.name}". The listed price is ${shoe.price}. Please provide payment and delivery details.`
+                    );
+                    const whatsappUrl = `https://wa.me/${shoe.whatsappNumber}?text=${message}`;
+                    window.open(whatsappUrl, '_blank');
+                });
             });
             updateFilterButtonActiveState(categoryFilter);
         }
@@ -432,7 +444,7 @@
                 currentSelectedShoe.sizes.forEach(size => {
                     const label = document.createElement('label');
                     label.classList.add(
-                        'inline-flex', 'items-center', 'px-3', 'py-1.5', 'rounded-lg', 'border', 'border-gray-600', /* Smaller padding */
+                        'inline-flex', 'items-center', 'px-3', 'py-1.5', 'rounded-lg', 'border', 'border-gray-600', /* Darker border */
                         'cursor-pointer', 'text-gray-300', 'font-medium', 'hover:bg-gray-700', 'transition', 'duration-200',
                         'has-[:checked]:bg-blue-600', 'has-[:checked]:text-white', 'has-[:checked]:border-blue-600',
                         'has-[:checked]:shadow-md', 'text-sm' /* Smaller font size for sizes */
