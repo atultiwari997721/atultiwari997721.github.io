@@ -1,0 +1,457 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Shoe Showcase</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts - Inter -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #1a202c; /* Dark gray background for dark mode */
+            color: #e2e8f0; /* Light text color for dark mode */
+        }
+        /* Custom scrollbar for better aesthetics */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #2d3748; /* Darker track for dark mode */
+            border-radius: 10px;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #4a5568; /* Dark slate gray thumb for dark mode */
+            border-radius: 10px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #64748b; /* Lighter slate gray on hover */
+        }
+        .modal-overlay {
+            background-color: rgba(0, 0, 0, 0.8); /* Slightly darker overlay */
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col">
+
+    <!-- Header -->
+    <header class="bg-gradient-to-r from-blue-700 to-indigo-800 shadow-lg py-4 px-6 md:px-12 rounded-b-lg">
+        <div class="container mx-auto flex justify-between items-center">
+            <h1 class="text-3xl font-bold text-white tracking-wide">
+                <span class="inline-block transform -rotate-6 text-yellow-300">👟</span> ShoeVault
+            </h1>
+            <nav>
+                <ul class="flex space-x-6">
+                    <li><a href="#shoes" class="text-white hover:text-blue-200 transition duration-300 font-medium text-lg">Shop</a></li>
+                    <li><a href="#contact" class="text-white hover:text-blue-200 transition duration-300 font-medium text-lg">Contact</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Main Content Area -->
+    <main class="flex-grow container mx-auto p-4 md:p-8">
+        <section id="shoes" class="my-8">
+            <h2 class="text-4xl font-extrabold text-gray-100 mb-8 text-center">Our Latest Collection</h2>
+            <div id="shoe-cards-container" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
+                <!-- Shoe cards will be dynamically inserted here -->
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer id="contact" class="bg-gray-900 text-white py-6 px-4 md:px-8 rounded-t-lg">
+        <div class="container mx-auto text-center">
+            <p class="text-lg">&copy; 2025 ShoeVault. All rights reserved.</p>
+            <p class="mt-2 text-md">For inquiries, contact us via WhatsApp.</p>
+        </div>
+    </footer>
+
+    <!-- Shoe Details Modal (Hidden by default) -->
+    <div id="shoe-details-modal" class="fixed inset-0 z-50 flex items-center justify-center p-4 modal-overlay hidden">
+        <div class="bg-gray-800 rounded-xl shadow-2xl w-full max-w-4xl p-6 md:p-8 relative transform scale-95 opacity-0 transition-all duration-300 ease-out">
+            <button id="close-modal" class="absolute top-4 right-4 text-gray-400 hover:text-gray-100 text-3xl font-bold">&times;</button>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-10">
+                <!-- Image Carousel/Gallery -->
+                <div class="flex flex-col items-center relative"> <!-- Added relative for button positioning -->
+                    <img id="modal-main-image" src="" alt="Main Shoe Image" class="w-full h-auto object-cover rounded-lg shadow-md mb-4 max-h-80 md:max-h-96">
+                    
+                    <!-- Navigation Buttons -->
+                    <button id="prev-image" class="absolute left-2 top-1/2 -translate-y-1/2 bg-gray-700/70 text-white p-2 rounded-full hover:bg-gray-600/90 transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
+                        </svg>
+                    </button>
+                    <button id="next-image" class="absolute right-2 top-1/2 -translate-y-1/2 bg-gray-700/70 text-white p-2 rounded-full hover:bg-gray-600/90 transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                        </svg>
+                    </button>
+
+                    <div id="modal-thumbnail-container" class="flex flex-wrap justify-center gap-3">
+                        <!-- Thumbnails will be loaded here -->
+                    </div>
+                </div>
+
+                <!-- Shoe Details and Actions -->
+                <div class="flex flex-col justify-between">
+                    <div>
+                        <h3 id="modal-shoe-name" class="text-4xl font-extrabold text-gray-100 mb-3"></h3>
+                        <p id="modal-shoe-price" class="text-3xl font-semibold text-green-400 mb-6"></p>
+
+                        <div class="mb-6">
+                            <p class="text-xl font-medium text-gray-300 mb-3">Select Size:</p>
+                            <div id="modal-size-selection" class="flex flex-wrap gap-3">
+                                <!-- Size options will be loaded here -->
+                            </div>
+                        </div>
+
+                        <p id="modal-error-message" class="text-red-400 text-sm mb-4 hidden"></p>
+                    </div>
+
+                    <button id="modal-buy-button" class="bg-gradient-to-r from-green-500 to-green-700 text-white text-xl font-bold py-4 px-6 rounded-lg shadow-lg hover:from-green-600 hover:to-green-800 transition transform hover:scale-105 active:scale-95 duration-200 w-full flex items-center justify-center space-x-2">
+                        <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M12.04 2C7.94 2 4.54 5.39 4.54 9.5C4.54 12.38 6.13 14.86 8.78 16.36L7.33 21.46L12.04 20L16.75 21.46L15.3 16.36C17.95 14.86 19.54 12.38 19.54 9.5C19.54 5.39 16.14 2 12.04 2ZM12.04 4.5C14.73 4.5 16.94 6.71 16.94 9.5C16.94 12.29 14.73 14.5 12.04 14.5C9.35 14.5 7.14 12.29 7.14 9.5C7.14 6.71 9.35 4.5 12.04 4.5Z"/>
+                        </svg>
+                        <span>Buy on WhatsApp</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Data for your shoes
+        const shoesData = [
+            {
+                id: 'shoe1',
+                name: 'Urban Glide Sneakers',
+                price: '₹949',
+                originalPrice: '₹1,299',
+                discountPercentage: '27%',
+                deliveryInfo: 'FREE delivery Sun, 29 Jun',
+                images: [
+                    'https://placehold.co/600x400/FF5733/FFFFFF?text=Urban+Glide+Sneakers+View+1',
+                    'https://placehold.co/600x400/C70039/FFFFFF?text=Urban+Glide+Sneakers+View+2',
+                    'https://placehold.co/600x400/900C3F/FFFFFF?text=Urban+Glide+Sneakers+View+3',
+                    'https://placehold.co/600x400/581845/FFFFFF?text=Urban+Glide+Sneakers+View+4'
+                ],
+                sizes: ['UK 6', 'UK 7', 'UK 8', 'UK 9', 'UK 10'],
+                whatsappNumber: '919876543210' // Replace with your WhatsApp number
+            },
+            {
+                id: 'shoe2',
+                name: 'Elite Runner Pro',
+                price: '₹849',
+                originalPrice: '₹1,299',
+                discountPercentage: '35%',
+                deliveryInfo: 'FREE delivery Sun, 29 Jun',
+                images: [
+                    'https://placehold.co/600x400/33FF57/000000?text=Elite+Runner+Pro+View+1',
+                    'https://placehold.co/600x400/33C700/000000?text=Elite+Runner+Pro+View+2',
+                    'https://placehold.co/600x400/33900C/000000?text=Elite+Runner+Pro+View+3'
+                ],
+                sizes: ['UK 7', 'UK 8', 'UK 9', 'UK 10', 'UK 11'],
+                whatsappNumber: '919876543210' // Replace with your WhatsApp number
+            },
+            {
+                id: 'shoe3',
+                name: 'Memory Foam Mens Running Shoe',
+                price: '₹1,233',
+                originalPrice: '₹3,909',
+                discountPercentage: '69%',
+                deliveryInfo: 'FREE delivery Mon, 30 Jun',
+                images: [
+                    'https://placehold.co/600x400/3357FF/FFFFFF?text=Memory+Foam+Shoe+View+1',
+                    'https://placehold.co/600x400/3300FF/FFFFFF?text=Memory+Foam+Shoe+View+2',
+                    'https://placehold.co/600x400/5733FF/FFFFFF?text=Memory+Foam+Shoe+View+3'
+                ],
+                sizes: ['UK 6', 'UK 7', 'UK 8', 'UK 9'],
+                whatsappNumber: '919876543210' // Replace with your WhatsApp number
+            },
+            {
+                id: 'shoe4',
+                name: 'STUSSYY (Memory TECH) Running Shoes',
+                price: '₹1,519',
+                originalPrice: '₹3,699',
+                discountPercentage: '59%',
+                deliveryInfo: 'FREE delivery Thu, 3 Jul',
+                images: [
+                    'https://placehold.co/600x400/FF33E9/000000?text=STUSSYY+Running+View+1',
+                    'https://placehold.co/600x400/C700E9/000000?text=STUSSYY+Running+View+2'
+                ],
+                sizes: ['UK 8', 'UK 9', 'UK 10'],
+                whatsappNumber: '919876543210' // Replace with your WhatsApp number
+            },
+            {
+                id: 'shoe5',
+                name: 'MEXICO0-11 Casual Sneaker Shoes',
+                price: '₹799',
+                originalPrice: '₹1,499',
+                discountPercentage: '47%',
+                deliveryInfo: 'FREE delivery Sun, 29 Jun',
+                images: [
+                    'https://placehold.co/600x400/33FFFF/000000?text=MEXICO0-11+Sneaker+View+1',
+                    'https://placehold.co/600x400/00C7C7/000000?text=MEXICO0-11+Sneaker+View+2'
+                ],
+                sizes: ['UK 5', 'UK 6', 'UK 7', 'UK 8'],
+                whatsappNumber: '919876543210' // Replace with your WhatsApp number
+            },
+            {
+                id: 'shoe6',
+                name: '4 Tier Shoe Rack with Shelf',
+                price: '₹299',
+                originalPrice: '₹999',
+                discountPercentage: '70%',
+                deliveryInfo: 'FREE delivery Sat, 5 Jul',
+                images: [
+                    'https://placehold.co/600x400/FF8C00/FFFFFF?text=Shoe+Rack+View+1',
+                    'https://placehold.co/600x400/D46A00/FFFFFF?text=Shoe+Rack+View+2',
+                    'https://placehold.co/600x400/A05000/FFFFFF?text=Shoe+Rack+View+3'
+                ],
+                // Sizes are not applicable for a shoe rack, so we can omit or customize for this specific product
+                sizes: [], // Empty array as sizes are not relevant for a shoe rack
+                whatsappNumber: '919876543210' // Replace with your WhatsApp number
+            }
+        ];
+
+        // Get elements
+        const shoeCardsContainer = document.getElementById('shoe-cards-container');
+        const shoeDetailsModal = document.getElementById('shoe-details-modal');
+        const closeModalButton = document.getElementById('close-modal');
+        const modalMainImage = document.getElementById('modal-main-image');
+        const modalThumbnailContainer = document.getElementById('modal-thumbnail-container');
+        const modalShoeName = document.getElementById('modal-shoe-name');
+        const modalShoePrice = document.getElementById('modal-shoe-price');
+        const modalSizeSelection = document.getElementById('modal-size-selection');
+        const modalBuyButton = document.getElementById('modal-buy-button');
+        const modalErrorMessage = document.getElementById('modal-error-message');
+        // New elements for navigation buttons
+        const prevImageButton = document.getElementById('prev-image');
+        const nextImageButton = document.getElementById('next-image');
+
+        let currentSelectedShoe = null;
+        let selectedSize = '';
+        let currentImageIndex = 0; // To keep track of the current image being displayed
+
+        /**
+         * Generates and appends shoe cards to the container.
+         */
+        function renderShoeCards() {
+            shoeCardsContainer.innerHTML = ''; // Clear existing cards
+            shoesData.forEach(shoe => {
+                const card = document.createElement('div');
+                card.id = `shoe-card-${shoe.id}`;
+                card.classList.add(
+                    'bg-gray-800', 'rounded-xl', 'shadow-xl', 'overflow-hidden', 'cursor-pointer', /* Dark card background */
+                    'transform', 'hover:scale-105', 'transition-all', 'duration-300', 'ease-in-out',
+                    'flex', 'flex-col'
+                );
+
+                // Add data attributes for easy access
+                card.dataset.shoeId = shoe.id;
+
+                // Determine if size selection is needed (e.g., for shoes vs. shoe racks)
+                const showSizeSelection = shoe.sizes && shoe.sizes.length > 0;
+
+                card.innerHTML = `
+                    <div class="relative w-full h-48 md:h-56 overflow-hidden rounded-t-xl">
+                        <img src="${shoe.images[0]}" alt="${shoe.name}" class="w-full h-full object-cover transform hover:scale-110 transition duration-300 ease-in-out">
+                    </div>
+                    <div class="p-4 flex-grow flex flex-col justify-between">
+                        <div>
+                            <h3 class="text-xl font-bold text-gray-100 mb-1">${shoe.name}</h3>
+                            <div class="flex items-baseline mb-2">
+                                <p class="text-2xl font-bold text-green-400 mr-2">${shoe.price}</p>
+                                <p class="text-sm text-gray-400 line-through mr-2">MRP: ${shoe.originalPrice}</p>
+                                <p class="text-sm font-semibold text-red-400">(${shoe.discountPercentage} off)</p>
+                            </div>
+                            <p class="text-xs text-gray-400 mb-3">${shoe.deliveryInfo}</p>
+                        </div>
+                        <button class="w-full bg-blue-600 text-white font-semibold py-2 px-4 rounded-lg
+                                        hover:bg-blue-700 transition duration-200 shadow-md text-base">
+                            ${showSizeSelection ? 'View Details & Select Size' : 'View Details'}
+                        </button>
+                    </div>
+                `;
+                shoeCardsContainer.appendChild(card);
+
+                // Add click event listener to the card to open modal
+                card.addEventListener('click', () => openShoeDetailsModal(shoe.id));
+            });
+        }
+
+        /**
+         * Updates the main image and highlights the corresponding thumbnail.
+         * @param {number} index - The index of the image to display.
+         */
+        function updateMainImage(index) {
+            if (!currentSelectedShoe || index < 0 || index >= currentSelectedShoe.images.length) {
+                return;
+            }
+            currentImageIndex = index;
+            modalMainImage.src = currentSelectedShoe.images[currentImageIndex];
+
+            // Update active thumbnail highlighting
+            Array.from(modalThumbnailContainer.children).forEach((thumb, i) => {
+                if (i === currentImageIndex) {
+                    thumb.classList.add('border-blue-500');
+                } else {
+                    thumb.classList.remove('border-blue-500');
+                }
+            });
+        }
+
+        /**
+         * Opens the shoe details modal with information for the given shoe ID.
+         * @param {string} shoeId - The ID of the shoe to display.
+         */
+        function openShoeDetailsModal(shoeId) {
+            currentSelectedShoe = shoesData.find(shoe => shoe.id === shoeId);
+            if (!currentSelectedShoe) {
+                console.error('Shoe not found:', shoeId);
+                return;
+            }
+
+            // Reset selected size and error message
+            selectedSize = '';
+            modalErrorMessage.classList.add('hidden');
+            currentImageIndex = 0; // Reset to first image when modal opens
+
+            modalShoeName.textContent = currentSelectedShoe.name;
+            // Display price with original price and discount in modal
+            modalShoePrice.innerHTML = `
+                ${currentSelectedShoe.price}
+                <span class="text-lg text-gray-400 line-through ml-2">MRP: ${currentSelectedShoe.originalPrice}</span>
+                <span class="text-lg font-semibold text-red-400 ml-2">(${currentSelectedShoe.discountPercentage} off)</span>
+            `;
+
+            // Populate thumbnails
+            modalThumbnailContainer.innerHTML = '';
+            currentSelectedShoe.images.forEach((image, index) => {
+                const img = document.createElement('img');
+                img.src = image;
+                img.alt = `View ${index + 1} of ${currentSelectedShoe.name}`;
+                img.classList.add(
+                    'w-20', 'h-20', 'object-cover', 'rounded-md', 'shadow-sm', 'cursor-pointer',
+                    'border-2', 'border-transparent', 'hover:border-blue-500', 'transition', 'duration-200'
+                );
+                img.addEventListener('click', () => updateMainImage(index)); // Use updateMainImage
+                modalThumbnailContainer.appendChild(img);
+            });
+            // Display first image and highlight its thumbnail
+            updateMainImage(0);
+
+            // Populate size selection, hide if no sizes are applicable
+            modalSizeSelection.innerHTML = '';
+            const sizeSelectionContainer = modalSizeSelection.closest('div');
+            if (currentSelectedShoe.sizes && currentSelectedShoe.sizes.length > 0) {
+                sizeSelectionContainer.classList.remove('hidden'); // Show the size selection div
+                currentSelectedShoe.sizes.forEach(size => {
+                    const label = document.createElement('label');
+                    label.classList.add(
+                        'inline-flex', 'items-center', 'px-4', 'py-2', 'rounded-lg', 'border', 'border-gray-600', /* Darker border */
+                        'cursor-pointer', 'text-gray-300', 'font-medium', 'hover:bg-gray-700', 'transition', 'duration-200', /* Darker hover */
+                        'has-[:checked]:bg-blue-600', 'has-[:checked]:text-white', 'has-[:checked]:border-blue-600',
+                        'has-[:checked]:shadow-md'
+                    );
+                    label.innerHTML = `
+                        <input type="radio" name="shoe-size" value="${size}" class="hidden">
+                        <span>${size}</span>
+                    `;
+                    const input = label.querySelector('input');
+                    input.addEventListener('change', (event) => {
+                        selectedSize = event.target.value;
+                        modalErrorMessage.classList.add('hidden'); // Hide error on size selection
+                    });
+                    modalSizeSelection.appendChild(label);
+                });
+            } else {
+                sizeSelectionContainer.classList.add('hidden'); // Hide the size selection div
+                selectedSize = 'N/A'; // Set a default for items without sizes
+            }
+
+
+            // Show the modal with animation
+            shoeDetailsModal.classList.remove('hidden');
+            setTimeout(() => {
+                shoeDetailsModal.querySelector('div').classList.remove('scale-95', 'opacity-0');
+                shoeDetailsModal.querySelector('div').classList.add('scale-100', 'opacity-100');
+            }, 10); // Small delay to allow CSS transition
+        }
+
+        /**
+         * Closes the shoe details modal.
+         */
+        function closeShoeDetailsModal() {
+            shoeDetailsModal.querySelector('div').classList.remove('scale-100', 'opacity-100');
+            shoeDetailsModal.querySelector('div').classList.add('scale-95', 'opacity-0');
+            setTimeout(() => {
+                shoeDetailsModal.classList.add('hidden');
+                currentSelectedShoe = null;
+                selectedSize = '';
+            }, 300); // Match transition duration
+        }
+
+        /**
+         * Handles the click on the "Buy on WhatsApp" button.
+         * Constructs and opens the WhatsApp chat link.
+         */
+        modalBuyButton.addEventListener('click', () => {
+            if (!currentSelectedShoe) {
+                modalErrorMessage.textContent = 'Please select a shoe first.';
+                modalErrorMessage.classList.remove('hidden');
+                return;
+            }
+
+            // Check if size selection is applicable and if a size is selected
+            if (currentSelectedShoe.sizes && currentSelectedShoe.sizes.length > 0 && !selectedSize) {
+                modalErrorMessage.textContent = 'Please select a size before proceeding.';
+                modalErrorMessage.classList.remove('hidden');
+                return;
+            }
+
+            // Construct WhatsApp message
+            const sizeText = currentSelectedShoe.sizes && currentSelectedShoe.sizes.length > 0 ? ` in size ${selectedSize}` : '';
+            const message = encodeURIComponent(
+                `Hello! I'm interested in buying the "${currentSelectedShoe.name}"${sizeText}. The listed price is ${currentSelectedShoe.price}. Please provide payment and delivery details.`
+            );
+            const whatsappUrl = `https://wa.me/${currentSelectedShoe.whatsappNumber}?text=${message}`;
+
+            window.open(whatsappUrl, '_blank');
+            closeShoeDetailsModal(); // Close modal after opening WhatsApp
+        });
+
+        // Event listeners for navigation buttons
+        prevImageButton.addEventListener('click', () => {
+            if (currentSelectedShoe) {
+                const newIndex = (currentImageIndex - 1 + currentSelectedShoe.images.length) % currentSelectedShoe.images.length;
+                updateMainImage(newIndex);
+            }
+        });
+
+        nextImageButton.addEventListener('click', () => {
+            if (currentSelectedShoe) {
+                const newIndex = (currentImageIndex + 1) % currentSelectedShoe.images.length;
+                updateMainImage(newIndex);
+            }
+        });
+
+
+        // Event listener for closing the modal
+        closeModalButton.addEventListener('click', closeShoeDetailsModal);
+        // Close modal if clicked outside the content (on the overlay)
+        shoeDetailsModal.addEventListener('click', (event) => {
+            if (event.target === shoeDetailsModal) {
+                closeShoeDetailsModal();
+            }
+        });
+
+        // Initial render of shoe cards when the page loads
+        document.addEventListener('DOMContentLoaded', renderShoeCards);
+    </script>
+</body>
+</html>
