@@ -32,10 +32,28 @@
         .modal-overlay {
             background-color: rgba(0, 0, 0, 0.8); /* Slightly darker overlay */
         }
+        .filter-button {
+            background-color: #4a5568; /* Default gray for dark mode */
+            color: #e2e8f0; /* Light text */
+            padding: 0.75rem 1.25rem; /* px-5 py-2 (default was px-6 py-3) */
+            border-radius: 9999px; /* rounded-full */
+            font-weight: 600; /* font-semibold */
+            transition: all 0.2s ease-in-out;
+            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05); /* shadow-sm */
+        }
+        .filter-button:hover {
+            background-color: #2d3748; /* Darker hover */
+        }
         .filter-button.active {
             background-color: #3b82f6; /* Blue-500 */
             color: white;
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        @media (max-width: 639px) { /* Small screens (mobile) */
+            .filter-button {
+                padding: 0.5rem 1rem; /* Even smaller padding for mobile */
+                font-size: 0.875rem; /* text-sm */
+            }
         }
     </style>
 </head>
@@ -62,10 +80,10 @@
             <h2 class="text-4xl font-extrabold text-gray-100 mb-8 text-center">Our Latest Collection</h2>
             
             <!-- Filter Buttons -->
-            <div class="flex justify-center space-x-4 mb-8">
-                <button id="all-shoes-btn" class="filter-button bg-gray-700 text-gray-200 px-6 py-3 rounded-full font-semibold hover:bg-gray-600 transition-colors duration-200">All Shoes</button>
-                <button id="men-shoes-btn" class="filter-button bg-gray-700 text-gray-200 px-6 py-3 rounded-full font-semibold hover:bg-gray-600 transition-colors duration-200">For Men</button>
-                <button id="women-shoes-btn" class="filter-button bg-gray-700 text-gray-200 px-6 py-3 rounded-full font-semibold hover:bg-gray-600 transition-colors duration-200">For Women</button>
+            <div class="flex justify-center space-x-2 mb-8 flex-wrap">
+                <button id="all-shoes-btn" class="filter-button">All Shoes</button>
+                <button id="men-shoes-btn" class="filter-button">For Men</button>
+                <button id="women-shoes-btn" class="filter-button">For Women</button>
             </div>
 
             <div id="shoe-cards-container" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
@@ -509,9 +527,10 @@
             document.querySelectorAll('.filter-button').forEach(button => {
                 button.classList.remove('active');
             });
-            document.getElementById(`${activeCategory}-shoes-btn`)?.classList.add('active');
-            if (activeCategory === 'all') { // Special case for 'All Shoes' button
-                document.getElementById('all-shoes-btn').classList.add('active');
+            // Use querySelector for more flexible ID selection
+            const activeButton = document.querySelector(`#${activeCategory}-shoes-btn`);
+            if (activeButton) {
+                activeButton.classList.add('active');
             }
         }
 
