@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Email Verification</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* Custom styles for the Inter font */
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+    </style>
+</head>
+<body class="bg-gradient-to-br from-blue-50 to-indigo-100 min-h-screen flex items-center justify-center p-4">
+    <div class="bg-white rounded-3xl shadow-xl p-8 md:p-10 w-full max-w-md border border-gray-200">
+        <h1 class="text-4xl font-extrabold text-gray-800 text-center mb-6">
+            Email <span class="text-indigo-600">Verifier</span>
+        </h1>
+        <p class="text-center text-gray-600 mb-8">
+            Enter an email address to check its validity and status.
+        </p>
+
+        <div class="mb-6">
+            <label for="emailInput" class="block text-gray-700 text-sm font-semibold mb-2">
+                Email Address
+            </label>
+            <input
+                type="email"
+                id="emailInput"
+                class="shadow-sm appearance-none border rounded-xl w-full py-3 px-4 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-indigo-400 focus:border-transparent transition duration-200 ease-in-out"
+                placeholder="you@example.com"
+                aria-label="Email Address Input"
+            >
+        </div>
+
+        <button
+            id="verifyButton"
+            class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3 px-4 rounded-xl focus:outline-none focus:shadow-outline transition duration-300 ease-in-out transform hover:-translate-y-0.5 hover:scale-105 shadow-md hover:shadow-lg"
+        >
+            <span id="buttonText">Verify Email</span>
+            <svg id="loadingSpinner" class="hidden animate-spin h-5 w-5 text-white mx-auto" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+            </svg>
+        </button>
+
+        <div id="results" class="mt-8 p-6 bg-blue-50 rounded-xl border border-blue-200 text-gray-800 hidden">
+            <h2 class="text-xl font-semibold mb-4 text-center">Verification Results</h2>
+            <div id="resultContent" class="space-y-2 text-md">
+                <!-- Results will be displayed here -->
+            </div>
+            <p id="errorMessage" class="text-red-600 text-center mt-4 hidden">
+                <!-- Error messages will be displayed here -->
+            </p>
+        </div>
+    </div>
+
+    <script>
+        const emailInput = document.getElementById('emailInput');
+        const verifyButton = document.getElementById('verifyButton');
+        const buttonText = document.getElementById('buttonText');
+        const loadingSpinner = document.getElementById('loadingSpinner');
+        const resultsDiv = document.getElementById('results');
+        const resultContent = document.getElementById('resultContent');
+        const errorMessage = document.getElementById('errorMessage');
+
+        // IMPORTANT: Replace with your actual Email Verification API Key
+        const API_KEY = 'YOUR_API_KEY'; // <<<--- REPLACE THIS WITH YOUR API KEY
+
+        // IMPORTANT: Replace with your actual Email Verification API Endpoint
+        // Example: If you are using MailboxValidator, it might look like this:
+        // const API_ENDPOINT = 'https://api.mailboxvalidator.com/v1/validation/single';
+        // Check your chosen API provider's documentation for the correct endpoint.
+        const API_ENDPOINT = 'https://api.emailverification.com/v1/verify'; // <<<--- REPLACE THIS WITH YOUR API ENDPOINT
+
+        verifyButton.addEventListener('click', async () => {
+            const email = emailInput.value.trim();
+
+            // Reset previous results and error messages
+            resultsDiv.classList.add('hidden');
+            resultContent.innerHTML = '';
+            errorMessage.classList.add('hidden');
+            errorMessage.textContent = '';
+
+            if (!email) {
+                errorMessage.textContent = 'Please enter an email address.';
+                errorMessage.classList.remove('hidden');
+                resultsDiv.classList.remove('hidden'); // Show the results box even for an error
+                return;
+            }
+
+            // Basic client-side email format validation
+            if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+                errorMessage.textContent = 'Please enter a valid email format (e.g., example@domain.com).';
+                errorMessage.classList.remove('hidden');
+                resultsDiv.classList.remove('hidden');
+                return;
+            }
+
+            // Show loading state
+            buttonText.classList.add('hidden');
+            loadingSpinner.classList.remove('hidden');
+            verifyButton.disabled = true;
+
+            try {
+                // Construct the API URL. This will vary based on your API provider.
+                // For example, if your API uses 'email' and 'key' query parameters:
+                const url = `${API_ENDPOINT}?email=${encodeURIComponent(email)}&api_key=${API_KEY}`;
+                // Or if it's a POST request with JSON body:
+                /*
+                const response = await fetch(API_ENDPOINT, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${API_KEY}` // Or 'x-api-key' header
+                    },
+                    body: JSON.stringify({ email: email })
+                });
+                */
+
+                const response = await fetch(url); // Using GET for simplicity, adjust for POST if needed
+                const data = await response.json();
+
+                if (!response.ok) {
+                    // Handle API errors (e.g., rate limits, invalid API key)
+                    let errorText = 'An error occurred during verification.';
+                    if (data && data.message) {
+                        errorText = `API Error: ${data.message}`;
+                    } else if (response.status === 401) {
+                         errorText = 'API Error: Unauthorized. Check your API key.';
+                    } else if (response.status === 429) {
+                        errorText = 'API Error: Too many requests. Please try again later.';
+                    }
+                    errorMessage.textContent = errorText;
+                    errorMessage.classList.remove('hidden');
+                    resultsDiv.classList.remove('hidden');
+                    return;
+                }
+
+                // Display results based on your API's response structure
+                // This is a generic example; you'll need to adapt it to your API's specific fields.
+                // Common fields might include: 'status', 'valid', 'disposable', 'free_email', 'score', etc.
+
+                let status = 'Unknown';
+                let message = 'Could not determine status.';
+                let suggestions = '';
+
+                // Example of processing a common API response structure:
+                if (data.status) {
+                    status = data.status; // e.g., 'valid', 'invalid', 'deliverable', 'undeliverable'
+                }
+                if (data.message) {
+                    message = data.message;
+                } else if (data.is_valid !== undefined) {
+                    status = data.is_valid ? 'Valid' : 'Invalid';
+                    if (data.is_disposable) {
+                        suggestions += '<span class="text-orange-600">This is a disposable email address.</span> ';
+                    }
+                    if (data.is_free_email) {
+                        suggestions += 'This is a free email provider. ';
+                    }
+                    if (data.catch_all) {
+                        suggestions += '<span class="text-yellow-600">This domain uses a catch-all email server (may accept all emails regardless of existence).</span>';
+                    }
+                } else if (data.email_status) { // Another common field name
+                    status = data.email_status;
+                    if (data.did_you_mean) {
+                        suggestions += `Did you mean: <span class="font-medium text-blue-600">${data.did_you_mean}</span>?`;
+                    }
+                }
+
+                resultContent.innerHTML = `
+                    <p><strong>Email:</strong> ${email}</p>
+                    <p><strong>Status:</strong> <span class="font-bold ${status.toLowerCase() === 'valid' || status.toLowerCase() === 'deliverable' ? 'text-green-600' : 'text-red-600'}">${status}</span></p>
+                    ${message !== 'Could not determine status.' ? `<p><strong>Message:</strong> ${message}</p>` : ''}
+                    ${suggestions ? `<p><strong>Details:</strong> ${suggestions}</p>` : ''}
+                `;
+                resultsDiv.classList.remove('hidden');
+
+            } catch (error) {
+                console.error('Fetch error:', error);
+                errorMessage.textContent = 'Network error or unable to reach API. Please check your connection.';
+                errorMessage.classList.remove('hidden');
+                resultsDiv.classList.remove('hidden');
+            } finally {
+                // Hide loading state
+                buttonText.classList.remove('hidden');
+                loadingSpinner.classList.add('hidden');
+                verifyButton.disabled = false;
+            }
+        });
+    </script>
+</body>
+</html>
