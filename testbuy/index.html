@@ -243,7 +243,7 @@
             box-shadow: 0 4px 10px rgba(0,0,0,0.1);
         }
 
-
+        /* Generic Modal Styling (for Request and Cart) */
         .modal {
             display: none;
             position: fixed;
@@ -254,6 +254,7 @@
             align-items: center;
             z-index: 1001;
             animation: fadeIn 0.3s forwards;
+            overflow-y: auto; /* Enable scrolling for content that overflows */
         }
         .modal-content {
             background: var(--white);
@@ -264,6 +265,7 @@
             box-shadow: 0 10px 30px rgba(0,0,0,0.2);
             transform: translateY(-20px);
             animation: slideIn 0.3s forwards;
+            position: relative; /* For close button positioning */
         }
         .modal-content h3 {
             font-family: 'Montserrat', sans-serif;
@@ -305,7 +307,112 @@
         .modal-content button:hover {
             background: #3A7CCB;
         }
-        /* make for Auto Resolution change And Screen Adjustment */
+        /* Close button for modals */
+        .close-button {
+            position: absolute;
+            top: 15px;
+            right: 20px;
+            font-size: 1.8rem;
+            cursor: pointer;
+            color: #777;
+            transition: color 0.2s ease;
+        }
+        .close-button:hover {
+            color: #333;
+        }
+
+        /* Cart Modal Specific Styling */
+        #cart-modal .modal-content {
+            max-width: 600px; /* Larger for cart details */
+            padding: 2rem;
+        }
+        #cart-modal h3 {
+            margin-bottom: 1.2rem;
+            font-size: 2rem;
+        }
+        .cart-item {
+            display: flex;
+            align-items: center;
+            border-bottom: 1px solid #eee;
+            padding: 15px 0;
+            gap: 15px;
+        }
+        .cart-item:last-child {
+            border-bottom: none;
+        }
+        .cart-item img {
+            width: 80px;
+            height: 80px;
+            object-fit: cover;
+            border-radius: 5px;
+            border: 1px solid #ddd;
+            flex-shrink: 0; /* Prevent shrinking on smaller screens */
+        }
+        .item-details {
+            flex-grow: 1;
+        }
+        .item-details h4 {
+            margin: 0 0 5px 0;
+            font-size: 1.1rem;
+            color: var(--dark-bg);
+        }
+        .item-details p {
+            margin: 0;
+            font-size: 0.9rem;
+            color: var(--text-color);
+        }
+        .item-price-total {
+            font-weight: 700;
+            color: var(--primary-color);
+            font-size: 1.1rem;
+            text-align: right;
+            flex-shrink: 0;
+        }
+        .cart-summary {
+            margin-top: 20px;
+            padding-top: 15px;
+            border-top: 2px solid #eee;
+            text-align: right;
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: var(--dark-bg);
+        }
+        .cart-actions-modal {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-top: 25px;
+        }
+        .whatsapp-btn-modal {
+            background-color: #25D366; /* WhatsApp green */
+            color: white;
+            padding: 12px;
+            border-radius: 8px;
+            text-align: center;
+            text-decoration: none;
+            display: block;
+            transition: background-color 0.2s ease;
+        }
+        .whatsapp-btn-modal:hover {
+            background-color: #1DA851;
+        }
+        .buy-now-cart-btn-modal {
+            background-color: var(--buy-now-color);
+            color: white;
+            padding: 12px;
+            border-radius: 8px;
+            border: none;
+            cursor: pointer;
+            font-size: 1.1rem;
+            font-weight: 600;
+            transition: background-color 0.2s ease;
+        }
+        .buy-now-cart-btn-modal:hover {
+            background-color: #218838;
+        }
+
+
+        /* Animations */
         @keyframes fadeIn {
             from { opacity: 0; }
             to { opacity: 1; }
@@ -351,8 +458,7 @@
             box-shadow: 0 -2px 8px rgba(0,0,0,0.1);
         }
 
-        /* make it For Mobile Compatibility */
-
+        /* Mobile Compatibility for main layout */
         @media (max-width: 768px) {
             header {
                 flex-direction: column;
@@ -401,7 +507,7 @@
                 font-size: 1.6rem;
             }
         }
-        /* For Lower Screen Size */
+
         @media (max-width: 480px) {
             header {
                 padding: 0.8rem;
@@ -477,6 +583,28 @@
             marquee {
                 font-size: 1rem;
                 padding: 0.8rem;
+            }
+
+            /* Cart Modal on very small screens */
+            #cart-modal .modal-content {
+                width: 95%; /* Adjust width for very small screens */
+                padding: 1.5rem;
+            }
+            .cart-item {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 5px;
+            }
+            .cart-item img {
+                margin-bottom: 10px;
+            }
+            .item-price-total {
+                width: 100%;
+                text-align: left;
+                margin-top: 5px;
+            }
+            .cart-actions-modal button {
+                width: 100%;
             }
         }
     </style>
@@ -591,12 +719,13 @@
     <marquee behavior="scroll" direction="left">Thank You! Visit again! We are constantly adding new products!</marquee>
     <div class="request-section">
         <p>Can't find what you're looking for?</p>
-        <button class="request-btn" onclick="openModal()">Request an Item</button>
+        <button class="request-btn" onclick="openRequestModal()">Request an Item</button>
     </div>
 
 
-    <div class="modal" id="modal">
+    <div class="modal" id="request-modal">
         <div class="modal-content">
+            <span class="close-button" onclick="closeModal('request-modal')">&times;</span>
             <h3>Request Product</h3>
             <input type="text" id="requester-name" placeholder="Your Name" required>
             <input type="email" id="requester-email" placeholder="Email" required>
@@ -605,11 +734,27 @@
         </div>
     </div>
 
+    <div class="modal" id="cart-modal">
+        <div class="modal-content">
+            <span class="close-button" onclick="closeModal('cart-modal')">&times;</span>
+            <h3>Your Shopping Cart</h3>
+            <div id="cart-items-display">
+                </div>
+            <div class="cart-summary">
+                Total: <span id="cart-total-display">$0.00</span>
+            </div>
+            <div class="cart-actions-modal">
+                <a href="#" class="whatsapp-btn-modal" id="whatsapp-link" target="_blank">WhatsApp Us</a>
+                <button class="buy-now-cart-btn-modal" onclick="proceedToBuyCart()">Proceed to Buy</button>
+            </div>
+        </div>
+    </div>
+
     <script>
         let cart = [];
 
-        // Store product details including images
-        const products = [
+        // Store product details including images for easy lookup
+        const productsData = [
             { name: "Smartphone", price: 499, img: "https://via.placeholder.com/100x100/4A90E2/ffffff?text=Smartphone" },
             { name: "Headphones", price: 79, img: "https://via.placeholder.com/100x100/50E3C2/ffffff?text=Headphones" },
             { name: "Laptop", price: 899, img: "https://via.placeholder.com/100x100/E74C3C/ffffff?text=Laptop" },
@@ -627,27 +772,27 @@
         }
 
         document.addEventListener('DOMContentLoaded', () => {
-            // Add data-product-img attributes to cards based on the products array
+            // Add data-product-img attributes to cards based on the productsData array
             document.querySelectorAll('.card').forEach(card => {
                 const productName = card.dataset.productName;
-                const product = products.find(p => p.name === productName);
+                const product = productsData.find(p => p.name === productName);
                 if (product && product.img) {
                     card.dataset.productImg = product.img;
                 }
             });
 
-
+            // Add to Cart button event listener
             document.querySelectorAll('.add-to-cart-btn').forEach(button => {
                 button.addEventListener('click', (event) => {
                     const card = event.target.closest('.card');
                     const productName = card.dataset.productName;
                     const productPrice = parseFloat(card.dataset.productPrice);
-                    const productImg = card.dataset.productImg; // Get the image URL
+                    const productImg = card.dataset.productImg;
                     const quantityInput = card.querySelector('.item-quantity');
                     const quantity = parseInt(quantityInput.value);
 
                     if (isNaN(quantity) || quantity < 1) {
-                        // console.warn("Invalid quantity entered for " + productName);
+                        // Optionally add a small, non-intrusive visual feedback here
                         return;
                     }
 
@@ -665,7 +810,7 @@
                             name: productName,
                             price: productPrice,
                             quantity: quantity,
-                            img: productImg // Add image to cart item
+                            img: productImg
                         };
                         cart.push(item);
                     }
@@ -675,7 +820,7 @@
                 });
             });
 
-
+            // Buy Now button event listener
             document.querySelectorAll('.buy-now-btn').forEach(button => {
                 button.addEventListener('click', (event) => {
                     const card = event.target.closest('.card');
@@ -685,67 +830,52 @@
                     const quantity = parseInt(quantityInput.value);
 
                     if (isNaN(quantity) || quantity < 1) {
-                        // console.warn("Invalid quantity entered for " + productName);
                         return;
                     }
 
-                    console.log(`User is buying ${quantity} x ${productName} for $${(productPrice * quantity).toFixed(2)}.`);
+                    alert(`Proceeding to checkout for ${quantity} x ${productName} for $${(productPrice * quantity).toFixed(2)}.`);
                     // In a real application, this would redirect to a checkout page or trigger a purchase process.
-                    alert('Proceeding to checkout for your selected item!'); // A temporary alert for "Buy Now"
                 });
             });
 
-            document.getElementById('cart-button').addEventListener('click', () => {
-                openCartWindow();
-            });
+            // Cart button to open the cart modal
+            document.getElementById('cart-button').addEventListener('click', openCartModal);
         });
 
-        function openCartWindow() {
-            if (cart.length === 0) {
-                alert("Your cart is empty.");
-                return;
-            }
+        // --- Modal Functions ---
 
-            let cartContentHtml = `
-                <style>
-                    body { font-family: 'Open Sans', sans-serif; margin: 20px; background-color: #f4f4f4; color: #333; }
-                    .cart-container { max-width: 800px; margin: 0 auto; background-color: #fff; padding: 25px; border-radius: 10px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); }
-                    h2 { color: #2C3E50; text-align: center; margin-bottom: 25px; font-family: 'Montserrat', sans-serif; }
-                    .cart-item { display: flex; align-items: center; border-bottom: 1px solid #eee; padding: 15px 0; }
-                    .cart-item:last-child { border-bottom: none; }
-                    .cart-item img { width: 80px; height: 80px; object-fit: cover; border-radius: 5px; margin-right: 15px; border: 1px solid #ddd; }
-                    .item-details { flex-grow: 1; }
-                    .item-details h3 { margin: 0 0 5px 0; font-size: 1.1rem; color: #34495E; }
-                    .item-details p { margin: 0; font-size: 0.9rem; color: #666; }
-                    .item-price { font-weight: 700; color: #4A90E2; font-size: 1.1rem; }
-                    .cart-total { text-align: right; margin-top: 20px; font-size: 1.3rem; font-weight: 700; color: #2C3E50; }
-                    .cart-actions { text-align: center; margin-top: 30px; }
-                    .cart-actions button {
-                        padding: 12px 25px;
-                        margin: 0 10px;
-                        border: none;
-                        border-radius: 8px;
-                        cursor: pointer;
-                        font-size: 1rem;
-                        font-weight: 600;
-                        transition: background-color 0.3s ease, transform 0.2s ease;
-                    }
-                    .whatsapp-btn { background-color: #25D366; color: white; }
-                    .whatsapp-btn:hover { background-color: #1DA851; transform: translateY(-2px); }
-                    .buy-now-cart-btn { background-color: #28a745; color: white; }
-                    .buy-now-cart-btn:hover { background-color: #218838; transform: translateY(-2px); }
-                    @media (max-width: 600px) {
-                        .cart-item { flex-direction: column; align-items: flex-start; }
-                        .cart-item img { margin-bottom: 10px; margin-right: 0; }
-                        .item-details { width: 100%; }
-                        .cart-actions button { display: block; width: calc(100% - 20px); margin: 10px auto; }
-                    }
-                </style>
-                <div class="cart-container">
-                    <h2>Your Shopping Cart</h2>
-            `;
+        // Open generic modal (for request or cart)
+        function openModal(modalId) {
+            document.getElementById(modalId).style.display = "flex";
+        }
+
+        // Close generic modal
+        function closeModal(modalId) {
+            document.getElementById(modalId).style.display = "none";
+        }
+
+        // Open Request Item Modal
+        function openRequestModal() {
+            openModal('request-modal');
+        }
+
+        // Open Cart Modal
+        function openCartModal() {
+            const cartItemsDisplay = document.getElementById('cart-items-display');
+            const cartTotalDisplay = document.getElementById('cart-total-display');
+            const whatsappLink = document.getElementById('whatsapp-link');
+            let cartContentHtml = '';
             let total = 0;
             let whatsappMessage = "Hello S-Mart! I'd like to order the following items:\n\n";
+
+            if (cart.length === 0) {
+                cartItemsDisplay.innerHTML = '<p style="text-align: center; margin-top: 20px; color: #777;">Your cart is empty.</p>';
+                cartTotalDisplay.textContent = '$0.00';
+                whatsappLink.style.display = 'none'; // Hide WhatsApp button if cart is empty
+                document.querySelector('#cart-modal .buy-now-cart-btn-modal').style.display = 'none'; // Hide Buy Now
+                openModal('cart-modal');
+                return;
+            }
 
             cart.forEach(item => {
                 const itemTotal = item.price * item.quantity;
@@ -754,11 +884,10 @@
                     <div class="cart-item">
                         <img src="${item.img}" alt="${item.name}">
                         <div class="item-details">
-                            <h3>${item.name}</h3>
-                            <p>Quantity: ${item.quantity}</p>
-                            <p>Unit Price: $${item.price.toFixed(2)}</p>
+                            <h4>${item.name}</h4>
+                            <p>Qty: ${item.quantity} | Unit Price: $${item.price.toFixed(2)}</p>
                         </div>
-                        <div class="item-price">$${itemTotal.toFixed(2)}</div>
+                        <div class="item-price-total">$${itemTotal.toFixed(2)}</div>
                     </div>
                 `;
                 whatsappMessage += `- ${item.name} (Qty: ${item.quantity}) - $${item.price.toFixed(2)} each\n`;
@@ -766,43 +895,16 @@
 
             whatsappMessage += `\nTotal Cart Value: $${total.toFixed(2)}\n\nLooking forward to hearing from you!`;
 
-            cartContentHtml += `
-                    <div class="cart-total">Total: $${total.toFixed(2)}</div>
-                    <div class="cart-actions">
-                        <button class="whatsapp-btn" onclick="window.opener.whatsappCart('${encodeURIComponent(whatsappMessage)}')">WhatsApp Us</button>
-                        <button class="buy-now-cart-btn" onclick="window.opener.proceedToBuyCart()">Proceed to Buy</button>
-                    </div>
-                </div>
-            `;
+            cartItemsDisplay.innerHTML = cartContentHtml;
+            cartTotalDisplay.textContent = `$${total.toFixed(2)}`;
+            whatsappLink.href = `https://wa.me/919876543210?text=${encodeURIComponent(whatsappMessage)}`; // Your WhatsApp number here
+            whatsappLink.style.display = 'block'; // Show WhatsApp button
+            document.querySelector('#cart-modal .buy-now-cart-btn-modal').style.display = 'block'; // Show Buy Now
 
-            const newWindow = window.open('', 'ShoppingCart', 'width=800,height=600,scrollbars=yes,resizable=yes');
-            newWindow.document.write(cartContentHtml);
-            newWindow.document.close();
+            openModal('cart-modal');
         }
 
-        // Functions to be called from the new window
-        function whatsappCart(message) {
-            const phoneNumber = '919876543210'; // Replace with your actual WhatsApp number (e.g., your business number in India)
-            window.open(`https://wa.me/${phoneNumber}?text=${message}`, '_blank');
-        }
-
-        function proceedToBuyCart() {
-            alert('Thank you for your order! Proceeding to a secure checkout. (This is a demo action)');
-            // In a real application, you would navigate to a checkout page here.
-            // window.location.href = '/checkout';
-            // Optionally clear the cart after "purchase"
-            cart = [];
-            updateCartCount();
-            if (window.cartWindow && !window.cartWindow.closed) {
-                 window.cartWindow.close(); // Close the cart window if it's open
-            }
-        }
-
-
-        function openModal() {
-            document.getElementById("modal").style.display = "flex";
-        }
-
+        // Submit Request Item form
         function submitRequest() {
             const name = document.getElementById("requester-name").value;
             const email = document.getElementById("requester-email").value;
@@ -817,7 +919,8 @@
                     `This request was sent from the S-Mart website.`
                 );
                 window.location.href = `mailto:smartcollectionforme@gmail.com?subject=${subject}&body=${body}`;
-                document.getElementById("modal").style.display = "none";
+                closeModal('request-modal');
+                // Clear form fields
                 document.getElementById("requester-name").value = '';
                 document.getElementById("requester-email").value = '';
                 document.getElementById("item-details").value = '';
@@ -826,12 +929,26 @@
             }
         }
 
-        window.onclick = function(e) {
-            if (e.target == document.getElementById("modal")) {
-                document.getElementById("modal").style.display = "none";
+        // Handle "Proceed to Buy" from cart modal
+        function proceedToBuyCart() {
+            alert('Thank you for your order! Proceeding to a secure checkout. (This is a demo action)');
+            // In a real application, you would send cart data to a server and redirect to a checkout page.
+            cart = []; // Clear the cart after "purchase"
+            updateCartCount();
+            closeModal('cart-modal'); // Close the cart modal
+        }
+
+        // Close modal when clicking outside of it
+        window.onclick = function(event) {
+            if (event.target == document.getElementById("request-modal")) {
+                closeModal('request-modal');
+            }
+            if (event.target == document.getElementById("cart-modal")) {
+                closeModal('cart-modal');
             }
         }
 
+        // Filter products by search input
         function filterProducts() {
             const input = document.getElementById("search").value.toLowerCase();
             const cards = document.querySelectorAll(".card");
