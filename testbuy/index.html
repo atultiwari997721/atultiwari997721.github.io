@@ -47,10 +47,12 @@
             align-items: center;
             line-height: 1;
             padding: 0;
+            /* Ensure logo and subtext are always in a row on larger screens */
+            flex-wrap: nowrap; /* Prevent wrapping by default */
+            gap: 5px; /* Small gap between logo elements */
         }
 
         .logo span {
-            /* Removed background, color, font-size as it's now an image container */
             padding: 0px; /* Adjust padding for image */
             border-radius: 6px;
             margin-right: 12px;
@@ -67,6 +69,15 @@
             height: 100%;
             object-fit: contain; /* Ensure the whole image is visible */
             border-radius: 6px; /* Match parent border-radius */
+        }
+
+        .logo-subtext { /* New class for the added text in the header */
+            font-size: 0.7rem; /* Very small font size */
+            font-weight: 700; /* Bold */
+            margin-left: 10px; /* Space from the main S-Mart text */
+            white-space: nowrap; /* Prevent wrapping of this specific text */
+            align-self: flex-end; /* Align to the bottom of the logo text */
+            line-height: 1.2; /* Adjust line height for better alignment */
         }
 
 
@@ -136,12 +147,13 @@
             font-weight: 600;
             margin: 0;
         }
-        .tagline-subtext { /* New class for the added text */
-            font-size: 0.7rem; /* Very small font size */
+        .tagline-promo-text { /* New class for the promotional text */
+            font-size: 0.8rem; /* Slightly larger than logo-subtext for prominence */
             font-weight: 700; /* Bold */
+            text-transform: uppercase; /* All caps */
+            color: var(--offer-color); /* Use offer color */
             margin-top: -5px; /* Adjust margin to bring it closer to the main tagline */
             margin-bottom: 5px;
-            opacity: 0.8; /* Slightly less prominent */
         }
         .tagline-buttons {
             display: flex;
@@ -756,16 +768,31 @@
         @media (max-width: 480px) {
             header {
                 padding: 0.8rem;
+                min-height: 80px;
+                align-items: center; /* Align items to center for single row */
+                justify-content: space-between;
+                flex-wrap: wrap;
             }
             .logo {
                 font-size: 1.5rem;
+                flex-direction: row; /* Keep logo elements in a row */
+                align-items: center; /* Center items vertically in the row */
+                margin-bottom: 0; /* Remove bottom margin for single row */
+                flex-wrap: wrap; /* Allow wrapping of logo elements if screen is too small */
             }
             .logo span {
-                padding: 0px; /* Adjust padding for image */
+                padding: 0px;
                 margin-right: 8px;
-                font-size: 1rem; /* This will be overridden by image styles */
-                min-width: 30px; /* Smaller size for mobile logo container */
+                min-width: 30px;
                 height: 30px;
+            }
+            .logo-subtext {
+                font-size: 0.6rem;
+                margin-left: 0; /* Remove left margin for better flow */
+                margin-top: 0; /* Remove top margin */
+                white-space: nowrap; /* Prevent wrapping on mobile as well */
+                text-align: left;
+                align-self: center; /* Center with other items in the row */
             }
             .search-and-cart-wrapper {
                 flex-direction: row;
@@ -789,6 +816,11 @@
             .tagline-container {
                 font-size: 1rem;
                 padding: 0.8rem;
+            }
+            .tagline-promo-text { /* Mobile adjustment for promo text */
+                font-size: 0.7rem; /* Smaller font for mobile */
+                margin-top: -3px;
+                margin-bottom: 3px;
             }
             .tagline-buttons {
                 flex-direction: row; /* Keep buttons in a row on small screens */
@@ -983,6 +1015,7 @@
     <header>
         <div class="logo">
             <span><img src="pic.jpg" alt="S-Mart Logo"></span>S-Mart
+            <span class="logo-subtext">by the Students For the Students</span>
         </div>
         <div class="search-and-cart-wrapper">
             <div class="search-box">
@@ -995,7 +1028,7 @@
     </header>
     <div class="tagline-container">
         <p class="tagline-text"><strong>Smart people choose S-Mart</strong></p>
-        <p class="tagline-subtext"><strong>S-mart By the Students For the Students</strong></p>
+        <p class="tagline-promo-text">हम गर्व से कहते हैं — सब कुछ मार्केट प्राइस से कम दाम में, यहाँ तक कि एक पेन भी!</p>
         <div class="tagline-buttons">
             <button class="category-btn" onclick="openCategoryUrl('stationery')">Stationery</button>
             <button class="category-btn" onclick="openCategoryUrl('electronics')">Electronics</button>
@@ -1091,7 +1124,7 @@
                 images: [
                     "https://via.placeholder.com/400x300/4A90E2/FFFFFF?text=Smartphone+Front",
                     "https://via.placeholder.com/400x300/3A7CCB/FFFFFF?text=Smartphone+Back",
-                    "https://via.placeholder.com/400x300/2C3E50/FFFFFF?text=Smartphone+Side"
+                    "https://via.placeholder.0/2C3E50/FFFFFF?text=Smartphone+Side"
                 ],
                 offer: "₹250 Less than Market"
             },
@@ -1116,7 +1149,7 @@
                 images: [
                     "https://via.placeholder.com/400x300/F5A623/FFFFFF?text=Laptop+Open",
                     "https://via.placeholder.com/400x300/DB8E1A/FFFFFF?text=Laptop+Closed",
-                    "https://via.placeholder.com/400x300/C07B12/FFFFFF?text=Laptop+Keyboard"
+                    "https://via.placeholder.0/C07B12/FFFFFF?text=Laptop+Keyboard"
                 ],
                 offer: "Free Laptop Bag"
             },
