@@ -1,0 +1,1732 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>S-Mart</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&family=Open+Sans:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #4A90E2;
+            --secondary-color: #50E3C2;
+            --dark-bg: #2C3E50;
+            --text-color: #34495E;
+            --light-bg: #ECF0F1;
+            --white: #ffffff;
+            --danger-color: #E74C3C;
+            --buy-now-color: #28a745;
+            --offer-color: #E74C3C; /* New color for offers */
+        }
+
+        body {
+            margin: 0;
+            font-family: 'Open Sans', sans-serif;
+            background: var(--light-bg);
+            color: var(--text-color);
+            line-height: 1.6;
+        }
+
+        header {
+            background: var(--dark-bg);
+            color: var(--white);
+            padding: 1rem 2rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+        }
+
+        .logo {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 1.8rem;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            line-height: 1;
+            padding: 0;
+            /* Ensure logo and subtext are always in a row on larger screens */
+            flex-wrap: nowrap; /* Prevent wrapping by default */
+            gap: 5px; /* Small gap between logo elements */
+        }
+
+        .logo span {
+            padding: 0px; /* Adjust padding for image */
+            border-radius: 6px;
+            margin-right: 12px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            min-width: 38px; /* Maintain container size */
+            height: 38px; /* Maintain container size */
+            box-sizing: border-box;
+            overflow: hidden; /* Ensure image doesn't spill out */
+        }
+        .logo span img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain; /* Ensure the whole image is visible */
+            border-radius: 6px; /* Match parent border-radius */
+        }
+
+        .logo-subtext { /* New class for the added text in the header */
+            font-size: 0.7rem; /* Very small font size */
+            font-weight: 700; /* Bold */
+            margin-left: 10px; /* Space from the main S-Mart text */
+            white-space: nowrap; /* Prevent wrapping of this specific text */
+            align-self: flex-end; /* Align to the bottom of the logo text */
+            line-height: 1.2; /* Adjust line height for better alignment */
+            text-transform: uppercase; /* Make it all caps */
+        }
+
+
+        .search-and-cart-wrapper {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            position: relative; /* For the notification message */
+        }
+
+        .search-box {
+            flex-grow: 1;
+        }
+
+        .search-box input {
+            padding: 10px 15px;
+            border-radius: 25px;
+            border: 1px solid var(--primary-color);
+            width: 350px;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            height: 40px;
+            box-sizing: border-box;
+        }
+        .search-box input:focus {
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(74, 144, 226, 0.3);
+        }
+
+        .cart-btn {
+            background: var(--secondary-color);
+            color: var(--dark-bg);
+            border: none;
+            padding: 10px 20px;
+            border-radius: 25px;
+            font-weight: 600;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            height: 40px;
+            box-sizing: border-box;
+            white-space: nowrap;
+        }
+        .cart-btn:hover {
+            background: #41D5B8;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        }
+
+        /* Added to cart notification */
+        .add-to-cart-notification {
+            position: absolute;
+            top: 100%; /* Position below the cart button */
+            right: 0;
+            background-color: #4CAF50; /* Green background */
+            color: white;
+            padding: 8px 15px;
+            border-radius: 8px;
+            font-size: 0.85rem;
+            white-space: nowrap;
+            opacity: 0;
+            transform: translateY(10px);
+            transition: opacity 0.3s ease, transform 0.3s ease;
+            z-index: 1002; /* Ensure it's above other elements */
+            box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+        }
+        .add-to-cart-notification.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+
+        .tagline-container { /* Changed from .tagline to a container for better layout */
+            background-color: var(--primary-color);
+            color: var(--white);
+            padding: 1rem;
+            font-size: 1.2rem;
+            font-family: 'Montserrat', sans-serif;
+            text-align: center;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            display: flex; /* Use flexbox for button layout */
+            flex-direction: column; /* Stack text and buttons */
+            align-items: center; /* Center items horizontally */
+            gap: 10px; /* Space between text and buttons */
+        }
+        .tagline-text {
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin: 0;
+        }
+        .tagline-promo-text { /* New class for the promotional text */
+            font-size: 0.8rem; /* Slightly larger than logo-subtext for prominence */
+            font-weight: 700; /* Bold */
+            text-transform: uppercase; /* All caps */
+            color: var(--offer-color); /* Use offer color */
+            margin-top: -5px; /* Adjust margin to bring it closer to the main tagline */
+            margin-bottom: 5px;
+        }
+        .tagline-buttons {
+            display: flex;
+            gap: 10px; /* Space between buttons */
+            flex-wrap: wrap; /* Allow buttons to wrap on smaller screens */
+            justify-content: center; /* Center buttons when wrapped */
+        }
+        .tagline-buttons .category-btn {
+            background: var(--dark-bg);
+            color: var(--white);
+            border: none;
+            padding: 8px 15px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.3s ease, transform 0.2s ease;
+        }
+        .tagline-buttons .category-btn:hover {
+            background: var(--secondary-color);
+            color: var(--dark-bg);
+            transform: translateY(-2px);
+        }
+
+
+        .container {
+            padding: 3rem 2rem;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 2rem;
+        }
+
+        .card {
+            background: var(--white);
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+            display: flex;
+            flex-direction: column;
+        }
+        .card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 12px 25px rgba(0,0,0,0.15);
+        }
+        .card img {
+            width: 100%;
+            height: 220px;
+            object-fit: cover;
+            border-bottom: 1px solid var(--light-bg);
+            cursor: pointer; /* Indicate clickable */
+        }
+        .card-body {
+            padding: 1.5rem;
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+        .card-title {
+            font-size: 1.3rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            color: var(--dark-bg);
+        }
+        .card-description {
+            font-size: 0.9rem;
+            color: #666;
+            margin-bottom: 0.8rem;
+            flex-grow: 1;
+        }
+        .card-price {
+            color: var(--primary-color);
+            font-size: 1.2rem;
+            font-weight: 700;
+            margin: 0.8rem 0 0.4rem 0; /* Adjusted margin to make space for offer */
+            display: flex; /* Use flex to align market price and current price */
+            align-items: baseline; /* Align text baselines */
+            gap: 10px; /* Space between prices */
+        }
+        .card-price .market-price {
+            color: #888; /* Grey out market price */
+            font-size: 0.9rem;
+            font-weight: 400;
+            text-decoration: line-through; /* Strikethrough for market price */
+        }
+        .product-offer { /* New style for product offer */
+            color: var(--offer-color);
+            font-size: 0.9rem;
+            font-weight: 600;
+            margin-bottom: 0.8rem;
+        }
+        .card-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 1rem;
+        }
+        .card button {
+            padding: 10px 15px;
+            border: none;
+            background: var(--dark-bg);
+            color: var(--white);
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            flex: 1;
+        }
+        .card button:hover {
+            background: var(--primary-color);
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        }
+        .card .buy-now-btn {
+            background: var(--buy-now-color);
+        }
+        .card .buy-now-btn:hover {
+            background: #218838;
+        }
+
+        .request-section {
+            margin: 3rem auto;
+            padding: 2rem;
+            text-align: center;
+            background: var(--white);
+            border-radius: 12px;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.08);
+            max-width: 800px;
+        }
+        .request-section p {
+            font-size: 1.1rem;
+            margin-bottom: 1rem;
+            color: var(--text-color);
+        }
+        .request-btn {
+            padding: 12px 25px;
+            background: var(--danger-color);
+            color: var(--white);
+            border: none;
+            border-radius: 8px;
+            font-size: 1.1rem;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+        .request-btn:hover {
+            background: #CC332C;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        }
+
+        /* Generic Modal Styling (for Request, Cart, and Quantity, Image Gallery) */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background: rgba(0,0,0,0.6);
+            justify-content: center;
+            align-items: center;
+            z-index: 1001;
+            animation: fadeIn 0.3s forwards;
+            overflow-y: auto;
+        }
+        .modal-content {
+            background: var(--white);
+            padding: 2.5rem;
+            border-radius: 12px;
+            width: 90%;
+            max-width: 400px; /* Default max-width for smaller modals */
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            transform: translateY(-20px);
+            animation: slideIn 0.3s forwards;
+            position: relative;
+        }
+        .modal-content h3 {
+            font-family: 'Montserrat', sans-serif;
+            color: var(--dark-bg);
+            margin-top: 0;
+            margin-bottom: 1.5rem;
+            font-size: 1.8rem;
+            text-align: center;
+        }
+        .modal-content input[type="text"],
+        .modal-content input[type="email"],
+        .modal-content input[type="number"],
+        .modal-content textarea {
+            width: calc(100% - 20px);
+            padding: 12px;
+            margin: 10px 0;
+            border-radius: 8px;
+            border: 1px solid #DCDCDC;
+            font-size: 1rem;
+            transition: border-color 0.3s ease;
+        }
+        .modal-content input:focus,
+        .modal-content textarea:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 2px rgba(74, 144, 226, 0.2);
+        }
+        .modal-content button {
+            background: var(--primary-color);
+            color: var(--white);
+            padding: 12px;
+            width: 100%;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-top: 1rem;
+            transition: background 0.3s ease;
+        }
+        .modal-content button:hover {
+            background: #3A7CCB;
+        }
+        /* Close button for modals */
+        .close-button {
+            position: absolute;
+            top: 15px;
+            right: 20px;
+            font-size: 1.8rem;
+            cursor: pointer;
+            color: #777;
+            transition: color 0.2s ease;
+        }
+        .close-button:hover {
+            color: #333;
+        }
+
+        /* Cart Modal Specific Styling */
+        #cart-modal .modal-content {
+            max-width: 300px; /* Further reduced max-width for desktop cart modal */
+            padding: 0.6rem; /* Further reduced padding for a more compact look */
+        }
+        #cart-modal h3 {
+            margin-bottom: 0.4rem;
+            font-size: 1.3rem; /* Slightly smaller header */
+        }
+        #cart-items-display { /* Added for scrollbar */
+            max-height: 45vh; /* Increased max height for scrolling */
+            overflow-y: auto; /* Enable vertical scrolling */
+            padding-right: 5px; /* Space for scrollbar */
+            /* Custom scrollbar styles */
+            scrollbar-width: thin; /* "auto" or "thin" */
+            scrollbar-color: var(--primary-color) var(--light-bg); /* thumb and track color */
+        }
+
+        /* Webkit (Chrome, Safari) scrollbar styles */
+        #cart-items-display::-webkit-scrollbar {
+            width: 5px; /* Narrower scrollbar */
+        }
+        #cart-items-display::-webkit-scrollbar-track {
+            background: var(--light-bg);
+            border-radius: 10px;
+        }
+        #cart-items-display::-webkit-scrollbar-thumb {
+            background-color: var(--primary-color);
+            border-radius: 10px;
+            border: 1px solid var(--light-bg); /* Thinner border */
+        }
+
+        .cart-item {
+            display: flex;
+            align-items: center; /* Vertically align items in the middle */
+            justify-content: space-between;
+            border-bottom: 1px solid #eee;
+            padding: 4px 0; /* Reduced padding */
+            gap: 3px; /* Reduced gap */
+        }
+        .cart-item:last-child {
+            border-bottom: none;
+        }
+
+        /* Container for image and remove button - Desktop/Tablet */
+        .item-visual-area {
+            flex-shrink: 0; /* Prevent this block from shrinking */
+            width: 40px; /* Fixed width for visual area to prevent image/button from distorting */
+            height: 40px; /* Ensure it's a square container for the image */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: relative; /* Needed for absolute positioning of remove button */
+        }
+
+        .cart-item img {
+            width: 40px; /* Smaller image for a more compact cart */
+            height: 40px;
+            object-fit: cover;
+            border-radius: 5px;
+            border: 1px solid #ddd;
+            flex-shrink: 0;
+            max-width: 100%; /* Ensure image scales down within its container */
+            height: auto; /* Maintain aspect ratio */
+        }
+        .item-info-and-price { /* New container for details and total price */
+            display: flex;
+            flex-direction: column;
+            flex-grow: 1; /* Allows details to take available space */
+            min-width: 100px; /* Ensure details are not too small */
+        }
+        .item-details {
+            /* No specific flex properties needed here, just text styling */
+        }
+        .item-details h4 {
+            margin: 0 0 0px 0; /* Reduced margin */
+            font-size: 0.8rem; /* Slightly smaller font */
+            color: var(--dark-bg);
+            white-space: nowrap; /* Prevent wrapping */
+            overflow: hidden; /* Hide overflow */
+            text-overflow: ellipsis; /* Add ellipsis for overflow */
+        }
+        .item-details p {
+            margin: 0;
+            font-size: 0.6rem; /* Slightly smaller font */
+            color: var(--text-color);
+        }
+        .item-price-total-display { /* Renamed for clarity */
+            font-weight: 700;
+            color: var(--primary-color);
+            font-size: 0.8rem; /* Slightly smaller font */
+            text-align: right; /* Align to right for consistency with total */
+            margin-top: 0px; /* Reduced margin */
+            display: flex; /* Make it a flex container */
+            align-items: center; /* Align items vertically */
+            justify-content: flex-end; /* Align to the right */
+            gap: 5px; /* Small gap between price and button */
+        }
+        .cart-summary {
+            margin-top: 6px; /* Reduced margin */
+            padding-top: 4px; /* Reduced padding */
+            border-top: 2px solid #eee;
+            text-align: right;
+            font-size: 0.9rem; /* Slightly smaller font */
+            font-weight: 700;
+            color: var(--dark-bg);
+        }
+        .cart-actions-modal {
+            display: flex;
+            flex-direction: column;
+            gap: 3px; /* Reduced gap */
+            margin-top: 8px; /* Reduced margin */
+        }
+        .whatsapp-btn-modal {
+            background-color: #25D366;
+            color: white;
+            padding: 5px; /* Reduced padding */
+            border-radius: 8px;
+            text-align: center;
+            text-decoration: none;
+            display: block;
+            transition: background-color 0.2s ease;
+            font-weight: 600;
+            font-size: 0.75rem; /* Reduced font size */
+        }
+        .whatsapp-btn-modal:hover {
+            background-color: #1DA851;
+        }
+        .buy-now-cart-btn-modal {
+            background-color: var(--buy-now-color);
+            color: white;
+            padding: 5px; /* Reduced padding */
+            border-radius: 8px;
+            border: none;
+            cursor: pointer;
+            font-size: 0.75rem; /* Reduced font size */
+            font-weight: 600;
+            transition: background-color 0.2s ease;
+        }
+        .buy-now-cart-btn-modal:hover {
+            background-color: #218838;
+        }
+
+        /* Adjusted Remove button styling - Very small and positioned next to price */
+        .cart-item .remove-item-btn { /* Increased specificity */
+            background: var(--danger-color);
+            color: var(--white);
+            border: none;
+            border-radius: 3px;
+            padding: 1px 4px; /* Slightly more padding for readability, but still small */
+            cursor: pointer;
+            font-size: 0.6rem; /* Slightly larger font for readability */
+            transition: background-color 0.2s ease;
+            white-space: nowrap;
+            text-align: center;
+            width: fit-content;
+            line-height: 1;
+        }
+        .cart-item .remove-item-btn:hover {
+            background: #CC332C;
+        }
+
+
+        /* Quantity Modal Specific Styling */
+        #quantity-modal .modal-content {
+            max-width: 350px;
+            padding: 1.5rem;
+            text-align: center;
+        }
+        #quantity-modal h3 {
+            font-size: 1.6rem;
+            margin-bottom: 1rem;
+        }
+        #quantity-modal p {
+            margin-bottom: 1.5rem;
+            font-size: 1.1rem;
+        }
+        #quantity-modal input[type="number"] {
+            width: 100px;
+            text-align: center;
+            font-size: 1.2rem;
+            padding: 10px;
+            border: 2px solid var(--primary-color);
+        }
+        #quantity-modal .modal-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 1.5rem;
+        }
+        #quantity-modal .modal-actions button {
+            flex: 1;
+            margin-top: 0;
+        }
+        #quantity-modal #qty-confirm-add {
+            background-color: var(--primary-color);
+        }
+        #quantity-modal #qty-confirm-buy {
+            background-color: var(--buy-now-color);
+        }
+        #quantity-modal #qty-cancel {
+            background-color: #7f8c8d;
+        }
+        #quantity-modal #qty-cancel:hover {
+            background-color: #6c7a7b;
+        }
+
+        /* Image Gallery Modal Specific Styling */
+        #image-gallery-modal .modal-content {
+            max-width: 700px; /* Larger max-width for image gallery */
+            padding: 1.5rem;
+            text-align: center;
+        }
+        .gallery-main-area {
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 1rem;
+            width: 100%; /* Take full width of modal content */
+            max-width: 600px; /* Max width for consistency */
+            margin-left: auto;
+            margin-right: auto;
+            box-sizing: border-box;
+        }
+        #main-gallery-image {
+            max-width: 100%; /* Max width of its parent (gallery-main-area's content area) */
+            height: auto;
+            max-height: 400px;
+            object-fit: contain;
+            border-radius: 8px;
+            border: 1px solid #ddd;
+            display: block;
+        }
+        /* Removed .gallery-nav-button, #prev-image-btn, #next-image-btn styles */
+
+        #gallery-thumbnails {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 10px;
+            margin-top: 1rem;
+            max-height: 120px; /* Limit height for scrollable thumbnails */
+            overflow-y: auto;
+            padding-bottom: 5px; /* Space for scrollbar */
+            scrollbar-width: thin;
+            scrollbar-color: var(--primary-color) var(--light-bg);
+        }
+        #gallery-thumbnails::-webkit-scrollbar {
+            height: 5px; /* Horizontal scrollbar for thumbnails */
+        }
+        #gallery-thumbnails::-webkit-scrollbar-track {
+            background: var(--light-bg);
+            border-radius: 10px;
+        }
+        #gallery-thumbnails::-webkit-scrollbar-thumb {
+            background-color: var(--primary-color);
+            border-radius: 10px;
+            border: 1px solid var(--light-bg);
+        }
+        .thumbnail-image {
+            width: 80px;
+            height: 80px;
+            object-fit: cover;
+            border-radius: 6px;
+            cursor: pointer;
+            border: 2px solid transparent;
+            transition: border-color 0.2s ease, transform 0.1s ease;
+        }
+        .thumbnail-image:hover {
+            border-color: var(--primary-color);
+            transform: scale(1.05);
+        }
+        .thumbnail-image.active {
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(74, 144, 226, 0.3);
+        }
+
+
+        /* Animations */
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        @keyframes slideIn {
+            from { transform: translateY(-50px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        .about {
+            margin-top: 3rem;
+            padding: 2.5rem;
+            background-color: var(--dark-bg);
+            color: var(--white);
+            text-align: center;
+        }
+        .about h2 {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 2rem;
+            margin-bottom: 1.5rem;
+            color: var(--secondary-color);
+        }
+        .about p {
+            max-width: 900px;
+            margin: 0 auto 1.5rem auto;
+            font-size: 1rem;
+            line-height: 1.8;
+            opacity: 0.9;
+        }
+        .about p:last-child {
+            margin-bottom: 0;
+            font-size: 0.9rem;
+            opacity: 0.7;
+        }
+
+        marquee {
+            margin-top: 2rem;
+            padding: 1rem;
+            background-color: var(--primary-color);
+            color: var(--white);
+            font-size: 1.2rem;
+            font-weight: 600;
+            box-shadow: 0 -2px 8px rgba(0,0,0,0.1);
+        }
+
+        /* Mobile Compatibility for main layout */
+        @media (max-width: 768px) {
+            header {
+                flex-direction: column;
+                gap: 1rem;
+                padding: 1rem;
+            }
+            .search-and-cart-wrapper {
+                flex-direction: row;
+                width: 100%;
+                justify-content: center;
+                align-items: center;
+                gap: 10px;
+            }
+            .search-box {
+                flex-grow: 1;
+                max-width: 60%;
+            }
+            .search-box input {
+                width: 100%;
+                max-width: none;
+            }
+            .cart-btn {
+                flex-shrink: 0;
+                padding: 10px 15px;
+                font-size: 0.9rem;
+            }
+            .container {
+                padding: 2rem 1rem;
+                grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+                gap: 1.5rem;
+            }
+            .card-title {
+                font-size: 1.1rem;
+            }
+            .card-description {
+                font-size: 0.8rem;
+            }
+            .card-price {
+                font-size: 1rem;
+            }
+            .product-offer { /* Mobile adjustment */
+                font-size: 0.8rem;
+            }
+            .card img {
+                height: 180px; /* Increased image height for tablet */
+            }
+            .request-section {
+                padding: 1.5rem;
+                margin: 2rem auto;
+            }
+            .about h2 {
+                font-size: 1.6rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            header {
+                padding: 0.8rem;
+                min-height: 80px;
+                align-items: center; /* Align items to center for single row */
+                justify-content: space-between;
+                flex-wrap: wrap;
+            }
+            .logo {
+                font-size: 1.5rem;
+                flex-direction: row; /* Keep logo elements in a row */
+                align-items: center; /* Center items vertically in the row */
+                margin-bottom: 0; /* Remove bottom margin for single row */
+                flex-wrap: wrap; /* Allow wrapping of logo elements if screen is too small */
+            }
+            .logo span {
+                padding: 0px;
+                margin-right: 8px;
+                min-width: 30px;
+                height: 30px;
+            }
+            .logo-subtext {
+                font-size: 0.6rem;
+                margin-left: 0; /* Remove left margin for better flow */
+                margin-top: 0; /* Remove top margin */
+                white-space: nowrap; /* Prevent wrapping on mobile as well */
+                text-align: left;
+                align-self: center; /* Center with other items in the row */
+            }
+            .search-and-cart-wrapper {
+                flex-direction: row;
+                gap: 10px;
+                align-items: center;
+                justify-content: center;
+                width: 100%;
+            }
+            .search-box {
+                width: 60%;
+                max-width: none;
+            }
+            .search-box input {
+                width: 100%;
+            }
+            .cart-btn {
+                width: auto;
+                padding: 8px 12px;
+                font-size: 0.85rem;
+            }
+            .tagline-container {
+                font-size: 1rem;
+                padding: 0.8rem;
+            }
+            .tagline-promo-text { /* Mobile adjustment for promo text */
+                font-size: 0.7rem; /* Smaller font for mobile */
+                margin-top: -3px;
+                margin-bottom: 3px;
+            }
+            .tagline-buttons {
+                flex-direction: row; /* Keep buttons in a row on small screens */
+                gap: 5px;
+                width: 100%; /* Ensure the container takes full width */
+                flex-wrap: wrap; /* Allow wrapping if space is too constrained */
+                justify-content: center; /* Center buttons horizontally */
+            }
+            .tagline-buttons .category-btn {
+                width: auto; /* Auto width based on content */
+                flex-grow: 1; /* Allow buttons to grow and fill space, but not force full width */
+                max-width: calc(33% - 5px); /* Max width to ensure 3 buttons fit, accounting for gap */
+                padding: 6px 10px;
+                font-size: 0.8rem;
+            }
+            .container {
+                grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+                gap: 1rem;
+                padding: 1.5rem 0.5rem;
+            }
+            .card img {
+                height: 150px; /* Made image taller for mobile */
+            }
+            .card-body {
+                padding: 0.8rem;
+            }
+            .card-title {
+                font-size: 0.9rem;
+                margin-bottom: 0.2rem;
+            }
+            .card-description {
+                font-size: 0.7rem; /* Reduced font size for description */
+                margin-bottom: 0.3rem; /* Reduced margin for description */
+                display: -webkit-box;
+                -webkit-line-clamp: 2; /* Limit description to 2 lines */
+                -webkit-box-orient: vertical;
+                overflow: hidden;
+                text-overflow: ellipsis;
+            }
+            .card-price {
+                font-size: 0.85rem;
+                margin: 0.3rem 0 0.2rem 0; /* Mobile adjustment */
+            }
+            .product-offer { /* Mobile adjustment */
+                font-size: 0.75rem;
+                margin-bottom: 0.5rem;
+            }
+            .card-actions {
+                flex-direction: column;
+                gap: 5px;
+            }
+            .card button {
+                padding: 8px 10px;
+                font-size: 0.8rem;
+            }
+            .request-btn {
+                font-size: 1rem;
+                padding: 10px 20px;
+            }
+            .modal-content {
+                padding: 1.5rem;
+            }
+            .modal-content h3 {
+                font-size: 1.5rem;
+            }
+            marquee {
+                font-size: 1rem;
+                padding: 0.8rem;
+            }
+
+            /* --- Specific Cart Modal Adjustments for Mobile --- */
+            #cart-modal .modal-content {
+                width: 95%;
+                max-width: 240px; /* Further reduced max-width for mobile cart modal */
+                padding: 0.4rem; /* Even smaller padding for mobile */
+            }
+            #cart-modal h3 {
+                font-size: 1.2rem; /* Further smaller header */
+                margin-bottom: 0.4rem;
+            }
+            #cart-items-display { /* Added for scrollbar */
+                max-height: 40vh; /* Max height for scrolling */
+                overflow-y: auto; /* Enable vertical scrolling */
+                padding-right: 4px; /* Space for scrollbar */
+            }
+            .cart-item {
+                flex-direction: row; /* Keep image and details side-by-side */
+                align-items: center; /* Vertically align items in the middle */
+                justify-content: space-between; /* Distribute space */
+                gap: 4px; /* Reduced gap */
+                padding: 4px 0; /* Reduced padding */
+                flex-wrap: nowrap; /* Prevent wrapping for main row elements */
+            }
+
+            .item-visual-area {
+                width: 40px; /* Even smaller image area for mobile */
+                height: 40px;
+                flex-shrink: 0; /* Don't shrink */
+                margin-right: 4px; /* Space between image and text */
+                position: relative; /* Needed for absolute positioning of remove button */
+            }
+
+            .cart-item img {
+                width: 40px; /* Image size for mobile */
+                height: 40px;
+            }
+
+            .item-info-and-price {
+                flex-grow: 1; /* Allow details to take available space */
+                min-width: 70px; /* Ensure details are not too small */
+                display: flex;
+                flex-direction: column;
+                text-align: left; /* Align text left */
+            }
+
+            .item-details h4 {
+                font-size: 0.8rem; /* Even smaller font for name */
+                margin-bottom: 1px; /* Reduced margin */
+            }
+            .item-details p {
+                font-size: 0.65rem; /* Even smaller font for qty/unit price */
+            }
+
+            .item-price-total-display {
+                font-size: 0.8rem; /* Even smaller total price */
+                text-align: left; /* Align to left below details */
+                margin-top: 1px; /* Reduced margin */
+                display: flex; /* Make it a flex container */
+                align-items: center; /* Align items vertically */
+                justify-content: space-between; /* Distribute space between price and button */
+            }
+
+            .remove-item-btn {
+                width: auto; /* Auto width based on content */
+                padding: 0px 2px; /* Even smaller padding */
+                font-size: 0.4rem; /* Even smaller font size */
+                margin-left: 2px; /* Reduced space from price/details */
+                align-self: center; /* Vertically center with image/details */
+                position: static; /* Remove absolute positioning on mobile for inline flow */
+                line-height: 1; /* Compact line height */
+            }
+            .cart-summary {
+                font-size: 0.8rem; /* Even smaller summary font */
+                padding-top: 4px;
+            }
+            .cart-actions-modal {
+                margin-top: 6px; /* Reduced margin */
+            }
+            .cart-actions-modal button,
+            .whatsapp-btn-modal {
+                padding: 5px; /* Reduced padding */
+                font-size: 0.7rem; /* Reduced font size */
+            }
+
+            /* Quantity modal on small screens */
+            #quantity-modal .modal-content {
+                max-width: 90%;
+                padding: 0.7rem;
+            }
+            #quantity-modal h3 {
+                font-size: 1.1rem;
+            }
+            #quantity-modal p {
+                font-size: 0.8rem;
+            }
+            #quantity-modal input[type="number"] {
+                width: 50px;
+                font-size: 0.9rem;
+            }
+            #quantity-modal .modal-actions button {
+                font-size: 0.7rem;
+                padding: 5px 7px;
+            }
+
+            /* Image Gallery Modal on small screens */
+            #image-gallery-modal .modal-content {
+                max-width: 95%;
+                padding: 1rem;
+            }
+            #main-gallery-image {
+                max-height: 250px;
+            }
+            .thumbnail-image {
+                width: 60px;
+                height: 60px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="logo">
+            <span><img src="pic.jpg" alt="S-Mart Logo"></span>S-Mart
+            <span class="logo-subtext">by the Students For the Students</span>
+        </div>
+        <div class="search-and-cart-wrapper">
+            <div class="search-box">
+                <input type="text" id="search" placeholder="Search products..." onkeyup="filterProducts()">
+            </div>
+            <button class="cart-btn" id="cart-button">
+                🛒 Cart (<span id="cart-count">0</span>)
+            </button>
+            <div id="add-to-cart-notification" class="add-to-cart-notification"></div>
+        </div>
+    </header>
+    <div class="tagline-container">
+        <p class="tagline-text"><strong>Smart people choose S-Mart</strong></p>
+        <p class="tagline-promo-text">We proudly say - Everything below market price, even a pen!</p>
+        <div class="tagline-buttons">
+            <button class="category-btn" onclick="openCategoryUrl('stationery')">Stationery</button>
+            <button class="category-btn" onclick="openCategoryUrl('electronics')">Electronics</button>
+            <button class="category-btn" onclick="openCategoryUrl('clothes')">Clothes</button>
+        </div>
+    </div>
+
+    <div class="container" id="product-list">
+        <!-- Product cards will be inserted here dynamically -->
+    </div>
+    <marquee behavior="scroll" direction="left">Thank You! Visit again! We are constantly adding new products!</marquee>
+    <div class="request-section">
+        <p>Can't find what you're looking for?</p>
+        <button class="request-btn" onclick="openRequestModal()">Request an Item</button>
+    </div>
+
+
+    <!-- Request Modal -->
+    <div class="modal" id="request-modal">
+        <div class="modal-content">
+            <span class="close-button" onclick="closeModal('request-modal')">&times;</span>
+            <h3>Request Product</h3>
+            <input type="text" id="requester-name" placeholder="Your Name" required>
+            <input type="text" id="requester-whatsapp" placeholder="WhatsApp Number" pattern="[0-9]{10,15}" title="Please enter a valid WhatsApp number (10-15 digits)" required>
+            <textarea id="item-details" rows="4" placeholder="Item details (e.g., specific brand, model, features)" required></textarea>
+            <button onclick="submitRequest()">Submit Request</button>
+        </div>
+    </div>
+
+    <!-- Cart Modal -->
+    <div class="modal" id="cart-modal">
+        <div class="modal-content">
+            <span class="close-button" onclick="closeModal('cart-modal')">&times;</span>
+            <h3>Your Shopping Cart</h3>
+            <div id="cart-items-display">
+                <!-- Cart items will be dynamically loaded here -->
+            </div>
+            <div class="cart-summary">
+                Total: <span id="cart-total-display">$0.00</span>
+            </div>
+            <div class="cart-actions-modal">
+                <a href="#" class="whatsapp-btn-modal" id="whatsapp-link" target="_blank">WhatsApp Us</a>
+                <button class="buy-now-cart-btn-modal" onclick="proceedToBuyCart()">Proceed to Buy</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Quantity Selection Modal -->
+    <div class="modal" id="quantity-modal">
+        <div class="modal-content">
+            <span class="close-button" onclick="closeModal('quantity-modal')">&times;</span>
+            <h3>Select Quantity</h3>
+            <p>How many <span id="qty-product-name"></span>s?</p>
+            <input type="number" id="quantity-input" value="1" min="1">
+            <div class="modal-actions">
+                <button id="qty-confirm-add">Add to Cart</button>
+                <button id="qty-confirm-buy">Buy Now</button>
+                <button id="qty-cancel" onclick="closeModal('quantity-modal')">Cancel</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Image Gallery Modal -->
+    <div class="modal" id="image-gallery-modal">
+        <div class="modal-content">
+            <span class="close-button" onclick="closeModal('image-gallery-modal')">&times;</span>
+            <h3 id="gallery-product-name">Product Images</h3>
+            <p id="gallery-product-offer" style="color: var(--offer-color); font-weight: 600; margin-top: -10px; margin-bottom: 15px;"></p>
+            <div class="gallery-main-area">
+                <img id="main-gallery-image" src="" alt="Main Product Image">
+            </div>
+            <div id="gallery-thumbnails">
+                <!-- Thumbnails will be dynamically loaded here -->
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let cart = [];
+        let currentProduct = null;
+        let currentAction = '';
+        let currentGalleryImages = []; // Stores images for the currently open gallery
+        let currentGalleryIndex = 0; // Stores the index of the currently displayed image
+
+        // Helper to get/set reveal timestamp from local storage
+        function getRevealTimestamp(productCode) {
+            const key = `revealTimestamp_${productCode}`;
+            let timestamp = localStorage.getItem(key);
+
+            if (!timestamp || parseInt(timestamp) < Date.now()) {
+                // If no timestamp or it's in the past, set a new one (2 days, 5 hours, 1 minute from now)
+                const twoDays = 2 * 24 * 60 * 60 * 1000;
+                const fiveHours = 5 * 60 * 60 * 1000;
+                const oneMinute = 1 * 60 * 1000;
+                const duration = twoDays + fiveHours + oneMinute;
+                timestamp = Date.now() + duration;
+                localStorage.setItem(key, timestamp.toString());
+            }
+            return parseInt(timestamp);
+        }
+
+        // Function to check if a product should be revealed
+        function isProductRevealed(productCode) {
+            const key = `revealTimestamp_${productCode}`;
+            const timestamp = localStorage.getItem(key);
+            return timestamp && parseInt(timestamp) <= Date.now();
+        }
+
+        // Function to mark a product as revealed (remove its timestamp)
+        function markProductAsRevealed(productCode) {
+            localStorage.removeItem(`revealTimestamp_${productCode}`);
+        }
+
+        // Product data - This is the single place to manage product information
+        const productsData = [
+            {
+                code: "S001",
+                name: "Smartphone",
+                description: "A powerful smartphone with a stunning display and long battery life.",
+                price: 499,
+                marketPrice: 599, // Added market price
+                images: [
+                    "pic.jpg",
+                    "pic.jpg",
+                    "pic.jpg"
+                ],
+                offer: "₹250 Less than Market",
+                revealingSoon: true // Mark this product as revealing soon
+            },
+            {
+                code: "S002",
+                name: "Headphones",
+                description: "Immersive audio experience with noise-cancelling features.",
+                price: 79,
+                marketPrice: 99, // Added market price
+                images: [
+                    "pic.jpg",
+                    "pic.jpg"
+                ],
+                offer: "10% Off Today!"
+            },
+            {
+                code: "S003",
+                name: "Laptop",
+                description: "High-performance laptop for work and entertainment.",
+                price: 899,
+                marketPrice: 1099, // Added market price
+                images: [
+                    "pic.jpg",
+                    "pic.jpg",
+                    "pic.jpg"
+                ],
+                offer: "Free Laptop Bag",
+                revealingSoon: true // Mark this product as revealing soon
+            },
+            {
+                code: "S004",
+                name: "Camera",
+                description: "Capture breathtaking moments with this professional-grade camera.",
+                price: 299,
+                marketPrice: 350, // Added market price
+                images: [
+                    "pic.jpg",
+                    "pic.jpg"
+                ],
+                offer: "₹150 Off + Free Tripod"
+            },
+            {
+                code: "S005",
+                name: "Smartwatch",
+                description: "Track your fitness and stay connected on the go.",
+                price: 199,
+                marketPrice: 249, // Added market price
+                images: [
+                    "pic.jpg",
+                    "pic.jpg"
+                ],
+                offer: "20% Discount"
+            },
+            {
+                code: "S006",
+                name: "Tablet",
+                description: "Portable and versatile tablet for productivity and leisure.",
+                price: 349,
+                marketPrice: 399, // Added market price
+                images: [
+                    "pic.jpg",
+                    "pic.jpg"
+                ],
+                offer: "Free Screen Protector"
+            },
+            {
+                code: "S007",
+                name: "Wireless Earbuds",
+                description: "Compact and crystal-clear sound earbuds for daily use.",
+                price: 59,
+                marketPrice: 75, // Added market price
+                images: [
+                    "pic.jpg",
+                    "pic.jpg"
+                ],
+                offer: "Buy 1 Get 1 Free!"
+            },
+            {
+                code: "S008",
+                name: "Gaming Mouse",
+                description: "Precision gaming mouse with customizable RGB lighting.",
+                price: 45,
+                marketPrice: 60, // Added market price
+                images: [
+                    "pic.jpg",
+                    "pic.jpg"
+                ],
+                offer: "₹50 Off"
+            }
+        ];
+
+        // --- Local Storage Functions ---
+        function saveCart() {
+            try {
+                localStorage.setItem('sMartCart', JSON.stringify(cart));
+            } catch (e) {
+                console.error("Error saving cart to local storage:", e);
+            }
+        }
+
+        function loadCart() {
+            try {
+                const storedCart = localStorage.getItem('sMartCart');
+                if (storedCart) {
+                    cart = JSON.parse(storedCart);
+                }
+            } catch (e) {
+                console.error("Error loading cart from local storage:", e);
+                cart = [];
+            }
+        }
+
+        // --- Dynamic Product Card Generation ---
+        function renderProducts(filterText = '') {
+            const productListContainer = document.getElementById('product-list');
+            productListContainer.innerHTML = '';
+            const lowerCaseFilter = filterText.toLowerCase();
+
+            const filteredProducts = productsData.filter(product =>
+                product.name.toLowerCase().includes(lowerCaseFilter) ||
+                product.description.toLowerCase().includes(lowerCaseFilter) ||
+                product.code.toLowerCase().includes(lowerCaseFilter)
+            );
+
+            if (filteredProducts.length === 0 && filterText.length > 0) {
+                productListContainer.innerHTML = '<p style="text-align: center; width: 100%; grid-column: 1 / -1; color: #777;">No products found matching your search.</p>';
+                return;
+            }
+
+
+            filteredProducts.forEach(product => {
+                const card = document.createElement('div');
+                card.className = 'card';
+                card.setAttribute('data-product-code', product.code); // Add data attribute for easy lookup
+
+                // Check if the product is revealed or still revealing
+                const isRevealed = isProductRevealed(product.code);
+
+                if (product.revealingSoon && !isRevealed) {
+                    // Product is revealing soon and not yet revealed
+                    const revealTimestamp = getRevealTimestamp(product.code); // Ensure timestamp is set/retrieved
+
+                    card.innerHTML = `
+                        <img src="${product.images[0]}" alt="${product.name}"
+                             onerror="this.onerror=null;this.src='pic.jpg';"
+                             onclick="openImageGalleryModal('${product.code}', 0)">
+                        <div class="card-body">
+                            <div class="card-title">${product.name}</div>
+                            <p class="card-description" style="filter: blur(3px); color: #888;">Revealing Soon!</p>
+                            <div class="card-price" style="filter: blur(3px); color: #888;">$XXX.XX</div>
+                            <p class="product-offer" style="color: var(--offer-color); font-weight: 600; margin-bottom: 0.8rem;">
+                                <span id="countdown-${product.code}">Loading countdown...</span>
+                            </p>
+                            <div class="card-actions">
+                                <button class="add-to-cart-btn" disabled style="cursor: not-allowed; opacity: 0.6;">Add to Cart</button>
+                                <button class="buy-now-btn" disabled style="cursor: not-allowed; opacity: 0.6;">Buy Now</button>
+                            </div>
+                        </div>
+                    `;
+                    productListContainer.appendChild(card);
+                    // Initialize countdown for this product
+                    startCountdown(product.code, revealTimestamp);
+
+                } else {
+                    // Product is not revealing soon, or it has already been revealed
+                    card.innerHTML = `
+                        <img src="${product.images[0]}" alt="${product.name}"
+                             onerror="this.onerror=null;this.src='pic.jpg';"
+                             onclick="openImageGalleryModal('${product.code}', 0)">
+                        <div class="card-body">
+                            <div class="card-title">${product.name}</div>
+                            <p class="card-description">${product.description}</p>
+                            <div class="card-price">
+                                ${product.marketPrice ? `<span class="market-price">Market Price: $${product.marketPrice.toFixed(2)}</span>` : ''}
+                                $${product.price.toFixed(2)}
+                            </div>
+                            ${product.offer ? `<p class="product-offer">Offer: ${product.offer}</p>` : ''}
+                            <div class="card-actions">
+                                <button class="add-to-cart-btn">Add to Cart</button>
+                                <button class="buy-now-btn">Buy Now</button>
+                            </div>
+                        </div>
+                    `;
+                    productListContainer.appendChild(card);
+
+                    // Add event listeners for non-revealing products
+                    card.querySelector('.add-to-cart-btn').addEventListener('click', () => {
+                        currentProduct = { ...product };
+                        currentAction = 'add';
+                        openQuantityModal();
+                    });
+
+                    card.querySelector('.buy-now-btn').addEventListener('click', () => {
+                        currentProduct = { ...product };
+                        currentAction = 'buy';
+                        openQuantityModal();
+                    });
+                }
+            });
+        }
+
+        const countdownIntervals = {}; // To store interval IDs for each product
+
+        function startCountdown(productCode, targetTimestamp) {
+            // Clear any existing interval for this product to prevent duplicates
+            if (countdownIntervals[productCode]) {
+                clearInterval(countdownIntervals[productCode]);
+            }
+
+            const update = () => {
+                const now = Date.now();
+                const distance = targetTimestamp - now;
+
+                const countdownElement = document.getElementById(`countdown-${productCode}`);
+
+                if (distance < 0) {
+                    clearInterval(countdownIntervals[productCode]);
+                    if (countdownElement) {
+                        countdownElement.textContent = "Revealed!";
+                        // Mark product as revealed and re-render to show actual details
+                        markProductAsRevealed(productCode);
+                        renderProducts(document.getElementById('search').value); // Re-render all products to update display
+                    }
+                    return;
+                }
+
+                const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+                const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+                const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+                if (countdownElement) {
+                    countdownElement.textContent = `Revealing in: ${days}d ${hours}h ${minutes}m ${seconds}s`;
+                }
+            };
+
+            update(); // Initial call to display immediately
+            countdownIntervals[productCode] = setInterval(update, 1000);
+        }
+
+
+        // --- Cart Display and Logic ---
+        function updateCartCount() {
+            let totalItems = 0;
+            cart.forEach(item => {
+                totalItems += item.quantity;
+            });
+            document.getElementById("cart-count").textContent = totalItems;
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            loadCart();
+            updateCartCount();
+            renderProducts(); // Initial render to set up products and countdowns
+
+            document.getElementById('qty-confirm-add').addEventListener('click', () => {
+                handleQuantityConfirm('add');
+            });
+            document.getElementById('qty-confirm-buy').addEventListener('click', () => {
+                handleQuantityConfirm('buy');
+            });
+
+            document.getElementById('cart-button').addEventListener('click', openCartModal);
+
+            // Removed event listeners for gallery navigation buttons
+        });
+
+        // --- Modal Functions ---
+        function openModal(modalId) {
+            document.getElementById(modalId).style.display = "flex";
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeModal(modalId) {
+            document.getElementById(modalId).style.display = "none";
+            document.body.style.overflow = '';
+        }
+
+        function openRequestModal() {
+            openModal('request-modal');
+        }
+
+        function openQuantityModal() {
+            document.getElementById('qty-product-name').textContent = currentProduct.name;
+            document.getElementById('quantity-input').value = 1; // Reset quantity
+            openModal('quantity-modal');
+        }
+
+        function handleQuantityConfirm(action) {
+            const quantity = parseInt(document.getElementById('quantity-input').value);
+            if (isNaN(quantity) || quantity <= 0) {
+                // Using a simple message for invalid quantity, not an alert
+                showNotification("Please enter a valid quantity.", 'error');
+                return;
+            }
+
+            if (action === 'add') {
+                addToCart(currentProduct, quantity);
+            } else if (action === 'buy') {
+                buyNow(currentProduct, quantity);
+            }
+            closeModal('quantity-modal');
+        }
+
+        function addToCart(product, quantity) {
+            const existingItemIndex = cart.findIndex(item => item.code === product.code); // Use product code for uniqueness
+
+            if (existingItemIndex > -1) {
+                cart[existingItemIndex].quantity += quantity;
+            } else {
+                // When adding to cart, store only the first image URL for cart display
+                cart.push({ ...product, img: product.images[0], quantity: quantity });
+            }
+            saveCart();
+            updateCartCount();
+            showNotification(`${quantity} of ${product.name} added to cart!`, 'success');
+        }
+
+        // Function to show a small notification message
+        let notificationTimeout;
+        function showNotification(message, type = 'info') {
+            const notificationElement = document.getElementById('add-to-cart-notification');
+            notificationElement.textContent = message;
+            notificationElement.className = `add-to-cart-notification show ${type}`; // Add type for styling if needed
+
+            clearTimeout(notificationTimeout);
+            notificationTimeout = setTimeout(() => {
+                notificationElement.classList.remove('show');
+            }, 3000); // Hide after 3 seconds
+        }
+
+
+        function buyNow(product, quantity) {
+            const message = `Hello S-Mart! I'd like to purchase ${quantity} of "${product.name}" (Code: ${product.code}) for a total of $${(product.price * quantity).toFixed(2)}.`;
+            const whatsappUrl = `https://wa.me/YOUR_WHATSAPP_NUMBER?text=${encodeURIComponent(message)}`; // Replace YOUR_WHATSAPP_NUMBER
+            window.open(whatsappUrl, '_blank');
+        }
+
+        function openCartModal() {
+            const cartItemsDisplay = document.getElementById('cart-items-display');
+            const cartTotalDisplay = document.getElementById('cart-total-display');
+            const whatsappLink = document.getElementById('whatsapp-link');
+            const buyNowButton = document.querySelector('#cart-modal .buy-now-cart-btn-modal');
+
+            let cartContentHtml = '';
+            let total = 0;
+            let whatsappMessage = "Hello S-Mart! I'd like to order the following items:\n\n";
+
+            if (cart.length === 0) {
+                cartItemsDisplay.innerHTML = '<p style="text-align: center; margin-top: 20px; color: #777;">Your cart is empty.</p>';
+                cartTotalDisplay.textContent = '$0.00';
+                whatsappLink.style.display = 'none';
+                buyNowButton.style.display = 'none';
+                openModal('cart-modal');
+                return;
+            }
+
+            cart.forEach((item, index) => {
+                const itemTotal = item.price * item.quantity;
+                total += itemTotal;
+                cartContentHtml += `
+                    <div class="cart-item">
+                        <div class="item-visual-area">
+                            <img src="${item.img}" alt="${item.name}" onerror="this.onerror=null;this.src='pic.jpg';">
+                        </div>
+                        <div class="item-info-and-price">
+                            <h4>${item.name} <span style="font-size: 0.6em; color: #999;">(${item.code})</span></h4>
+                            <p>Qty: ${item.quantity} | Unit Price: $${item.price.toFixed(2)}</p>
+                            <div class="item-price-total-display">
+                                $${itemTotal.toFixed(2)}
+                                <button class="remove-item-btn" data-index="${index}">Remove</button>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                whatsappMessage += `${item.name} (Code: ${item.code}, Qty: ${item.quantity}) - $${itemTotal.toFixed(2)}\n`;
+            });
+
+            whatsappMessage += `\nTotal: $${total.toFixed(2)}\n\n`;
+            whatsappMessage += "Please confirm availability and payment details.";
+
+            cartItemsDisplay.innerHTML = cartContentHtml;
+            cartTotalDisplay.textContent = `$${total.toFixed(2)}`;
+            whatsappLink.href = `https://wa.me/YOUR_WHATSAPP_NUMBER?text=${encodeURIComponent(whatsappMessage)}`; // Replace YOUR_WHATSAPP_NUMBER
+            whatsappLink.style.display = 'block';
+            buyNowButton.style.display = 'block';
+
+            // Add event listeners to remove buttons
+            document.querySelectorAll('.remove-item-btn').forEach(button => {
+                button.addEventListener('click', (event) => {
+                    const indexToRemove = parseInt(event.target.dataset.index);
+                    removeItemFromCart(indexToRemove);
+                });
+            });
+
+            openModal('cart-modal');
+        }
+
+        function removeItemFromCart(index) {
+            if (index > -1 && index < cart.length) {
+                cart.splice(index, 1);
+                saveCart();
+                updateCartCount();
+                openCartModal(); // Re-render cart after removal
+            }
+        }
+
+        function proceedToBuyCart() {
+            if (cart.length === 0) {
+                showNotification("Your cart is empty. Please add items before proceeding to buy.", 'error');
+                return;
+            }
+
+            let message = "Hello S-Mart! I'd like to purchase the following items from my cart:\n\n";
+            let total = 0;
+            cart.forEach(item => {
+                message += `${item.name} (Code: ${item.code}, Qty: ${item.quantity}) - $${(item.price * item.quantity).toFixed(2)}\n`;
+                total += item.price * item.quantity;
+            });
+            message += `\nTotal Cart Value: $${total.toFixed(2)}\n\n`;
+            message += "Please provide details for payment and delivery. Thank you!";
+
+            const whatsappUrl = `https://wa.me/YOUR_WHATSAPP_NUMBER?text=${encodeURIComponent(message)}`; // Replace YOUR_WHATSAPP_NUMBER
+            window.open(whatsappUrl, '_blank');
+            closeModal('cart-modal');
+            // Optionally clear cart after proceeding to buy if that's your business logic
+            // cart = [];
+            // saveCart();
+            // updateCartCount();
+        }
+
+        function submitRequest() {
+            const name = document.getElementById('requester-name').value;
+            const whatsapp = document.getElementById('requester-whatsapp').value;
+            const details = document.getElementById('item-details').value;
+
+            if (!name || !whatsapp || !details) {
+                showNotification("Please fill in all required fields for the request.", 'error');
+                return;
+            }
+
+            let message = `Hello S-Mart! I'd like to request an item.\n\n`;
+            message += `Name: ${name}\n`;
+            message += `WhatsApp: ${whatsapp}\n\n`;
+            message += `Item Details:\n${details}`;
+
+            const whatsappUrl = `https://wa.me/+917828706954?text=${encodeURIComponent(message)}`;
+            window.open(whatsappUrl, '_blank');
+
+            showNotification("Your request has been submitted via WhatsApp!", 'success');
+            closeModal('request-modal');
+            document.getElementById('requester-name').value = '';
+            document.getElementById('requester-whatsapp').value = '';
+            document.getElementById('item-details').value = '';
+        }
+
+        // Function to open specific URLs based on category
+        function openCategoryUrl(category) {
+            let url = '';
+            switch(category) {
+                case 'stationery':
+                    url = 'https://www.google.com/search?q=S-Mart+stationery'; // Placeholder URL
+                    break;
+                case 'electronics':
+                    url = 'https://www.google.com/search?q=S-Mart+electronics'; // Placeholder URL
+                    break;
+                case 'clothes':
+                    url = 'https://www.google.com/search?q=S-Mart+clothes'; // Placeholder URL
+                    break;
+                default:
+                    url = 'https://www.google.com/search?q=S-Mart'; // Default URL
+            }
+            window.open(url, '_blank');
+        }
+
+        function filterProducts() {
+            const searchText = document.getElementById('search').value;
+            renderProducts(searchText);
+        }
+
+        // --- Image Gallery Functions ---
+        function openImageGalleryModal(productCode, initialImageIndex = 0) {
+            const product = productsData.find(p => p.code === productCode);
+            if (!product || !product.images || product.images.length === 0) {
+                console.error("Product or images not found for code:", productCode);
+                return;
+            }
+
+            currentGalleryImages = product.images;
+            currentGalleryIndex = initialImageIndex;
+
+            const galleryProductName = document.getElementById('gallery-product-name');
+            const galleryProductOffer = document.getElementById('gallery-product-offer');
+            const mainImage = document.getElementById('main-gallery-image');
+            const thumbnailsContainer = document.getElementById('gallery-thumbnails');
+            thumbnailsContainer.innerHTML = ''; // Clear previous thumbnails
+
+            // Update the modal title with the product name
+            galleryProductName.textContent = product.name;
+            galleryProductOffer.textContent = product.offer ? `Offer: ${product.offer}` : ''; // Set offer text
+
+            // Set the initial main image
+            updateMainGalleryImage();
+
+            // Populate thumbnails
+            currentGalleryImages.forEach((imageUrl, index) => {
+                const thumbnail = document.createElement('img');
+                thumbnail.src = imageUrl; // Use pic.jpg directly
+                thumbnail.alt = `${product.name} - Image ${index + 1}`;
+                thumbnail.className = 'thumbnail-image';
+                if (index === currentGalleryIndex) {
+                    thumbnail.classList.add('active'); // Highlight active thumbnail
+                }
+                thumbnail.addEventListener('click', () => {
+                    currentGalleryIndex = index;
+                    updateMainGalleryImage();
+                    // Update active class
+                    document.querySelectorAll('.thumbnail-image').forEach(thumb => thumb.classList.remove('active'));
+                    thumbnail.classList.add('active');
+                });
+                thumbnailsContainer.appendChild(thumbnail);
+            });
+
+            openModal('image-gallery-modal');
+        }
+
+        function updateMainGalleryImage() {
+            const mainImage = document.getElementById('main-gallery-image');
+            mainImage.src = currentGalleryImages[currentGalleryIndex];
+            mainImage.alt = `Product Image ${currentGalleryIndex + 1}`;
+
+            // Update active thumbnail
+            document.querySelectorAll('#gallery-thumbnails .thumbnail-image').forEach((thumb, index) => {
+                if (index === currentGalleryIndex) {
+                    thumb.classList.add('active');
+                } else {
+                    thumb.classList.remove('active');
+                }
+            });
+
+            // No navigation button visibility control needed as buttons are removed
+        }
+
+        // Removed showPrevImage and showNextImage functions
+
+    </script>
+
+</body>
+</html>
