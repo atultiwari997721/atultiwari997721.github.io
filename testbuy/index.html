@@ -136,6 +136,13 @@
             font-weight: 600;
             margin: 0;
         }
+        .tagline-subtext { /* New class for the added text */
+            font-size: 0.7rem; /* Very small font size */
+            font-weight: 700; /* Bold */
+            margin-top: -5px; /* Adjust margin to bring it closer to the main tagline */
+            margin-bottom: 5px;
+            opacity: 0.8; /* Slightly less prominent */
+        }
         .tagline-buttons {
             display: flex;
             gap: 10px; /* Space between buttons */
@@ -988,6 +995,7 @@
     </header>
     <div class="tagline-container">
         <p class="tagline-text"><strong>Smart people choose S-Mart</strong></p>
+        <p class="tagline-subtext"><strong>S-mart By the Students For the Students</strong></p>
         <div class="tagline-buttons">
             <button class="category-btn" onclick="openCategoryUrl('stationery')">Stationery</button>
             <button class="category-btn" onclick="openCategoryUrl('electronics')">Electronics</button>
@@ -1081,7 +1089,7 @@
                 price: 499,
                 marketPrice: 599, // Added market price
                 images: [
-                    "pic.jpg",
+                    "https://via.placeholder.com/400x300/4A90E2/FFFFFF?text=Smartphone+Front",
                     "https://via.placeholder.com/400x300/3A7CCB/FFFFFF?text=Smartphone+Back",
                     "https://via.placeholder.com/400x300/2C3E50/FFFFFF?text=Smartphone+Side"
                 ],
