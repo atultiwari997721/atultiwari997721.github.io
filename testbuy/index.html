@@ -1122,9 +1122,9 @@
                 price: 499,
                 marketPrice: 599, // Added market price
                 images: [
-                    "https://via.placeholder.com/400x300/4A90E2/FFFFFF?text=Smartphone+Front",
-                    "https://via.placeholder.com/400x300/3A7CCB/FFFFFF?text=Smartphone+Back",
-                    "https://via.placeholder.0/2C3E50/FFFFFF?text=Smartphone+Side"
+                    "pic.jpg",
+                    "pic.jpg",
+                    "pic.jpg"
                 ],
                 offer: "₹250 Less than Market"
             },
@@ -1135,8 +1135,8 @@
                 price: 79,
                 marketPrice: 99, // Added market price
                 images: [
-                    "https://via.placeholder.com/400x300/50E3C2/FFFFFF?text=Headphones+Main",
-                    "https://via.placeholder.com/400x300/41D5B8/FFFFFF?text=Headphones+Detail"
+                    "pic.jpg",
+                    "pic.jpg"
                 ],
                 offer: "10% Off Today!"
             },
@@ -1147,9 +1147,9 @@
                 price: 899,
                 marketPrice: 1099, // Added market price
                 images: [
-                    "https://via.placeholder.com/400x300/F5A623/FFFFFF?text=Laptop+Open",
-                    "https://via.placeholder.com/400x300/DB8E1A/FFFFFF?text=Laptop+Closed",
-                    "https://via.placeholder.0/C07B12/FFFFFF?text=Laptop+Keyboard"
+                    "pic.jpg",
+                    "pic.jpg",
+                    "pic.jpg"
                 ],
                 offer: "Free Laptop Bag"
             },
@@ -1160,8 +1160,8 @@
                 price: 299,
                 marketPrice: 350, // Added market price
                 images: [
-                    "https://via.placeholder.com/400x300/9013FE/FFFFFF?text=Camera+Front",
-                    "https://via.placeholder.com/400x300/7B0CDA/FFFFFF?text=Camera+Lens"
+                    "pic.jpg",
+                    "pic.jpg"
                 ],
                 offer: "₹150 Off + Free Tripod"
             },
@@ -1172,8 +1172,8 @@
                 price: 199,
                 marketPrice: 249, // Added market price
                 images: [
-                    "https://via.placeholder.com/400x300/BD10E0/FFFFFF?text=Smartwatch+Display",
-                    "https://via.placeholder.com/400x300/A00DC0/FFFFFF?text=Smartwatch+Side"
+                    "pic.jpg",
+                    "pic.jpg"
                 ],
                 offer: "20% Discount"
             },
@@ -1184,8 +1184,8 @@
                 price: 349,
                 marketPrice: 399, // Added market price
                 images: [
-                    "https://via.placeholder.com/400x300/4A4A4A/FFFFFF?text=Tablet+Screen",
-                    "https://via.placeholder.com/400x300/3A3A3A/FFFFFF?text=Tablet+Back"
+                    "pic.jpg",
+                    "pic.jpg"
                 ],
                 offer: "Free Screen Protector"
             },
@@ -1196,8 +1196,8 @@
                 price: 59,
                 marketPrice: 75, // Added market price
                 images: [
-                    "https://via.placeholder.com/400x300/7ED321/FFFFFF?text=Earbuds+Case",
-                    "https://via.placeholder.com/400x300/6BBF1A/FFFFFF?text=Earbuds+InEar"
+                    "pic.jpg",
+                    "pic.jpg"
                 ],
                 offer: "Buy 1 Get 1 Free!"
             },
@@ -1208,8 +1208,8 @@
                 price: 45,
                 marketPrice: 60, // Added market price
                 images: [
-                    "https://via.placeholder.com/400x300/50E3C2/FFFFFF?text=Mouse+Top",
-                    "https://via.placeholder.com/400x300/41D5B8/FFFFFF?text=Mouse+Side"
+                    "pic.jpg",
+                    "pic.jpg"
                 ],
                 offer: "₹50 Off"
             }
@@ -1259,8 +1259,8 @@
                 card.className = 'card';
 
                 card.innerHTML = `
-                    <img src="${product.images[0].replace('400x300', '300x220')}" alt="${product.name}"
-                         onerror="this.onerror=null;this.src='https://placehold.co/300x220/cccccc/333333?text=Image+Not+Found';"
+                    <img src="${product.images[0]}" alt="${product.name}"
+                         onerror="this.onerror=null;this.src='pic.jpg';"
                          onclick="openImageGalleryModal('${product.code}', 0)">
                     <div class="card-body">
                         <div class="card-title">${product.name}</div>
@@ -1401,7 +1401,7 @@
                 cartContentHtml += `
                     <div class="cart-item">
                         <div class="item-visual-area">
-                            <img src="${item.img}" alt="${item.name}" onerror="this.onerror=null;this.src='https://via.placeholder.co/80x80/cccccc/333333?text=Image';">
+                            <img src="${item.img}" alt="${item.name}" onerror="this.onerror=null;this.src='pic.jpg';">
                         </div>
                         <div class="item-info-and-price">
                             <h4>${item.name} <span style="font-size: 0.6em; color: #999;">(${item.code})</span></h4>
@@ -1542,7 +1542,7 @@
             // Populate thumbnails
             currentGalleryImages.forEach((imageUrl, index) => {
                 const thumbnail = document.createElement('img');
-                thumbnail.src = imageUrl.replace('400x300', '80x80'); // Use smaller version for thumbnail
+                thumbnail.src = imageUrl; // Use pic.jpg directly
                 thumbnail.alt = `${product.name} - Image ${index + 1}`;
                 thumbnail.className = 'thumbnail-image';
                 if (index === currentGalleryIndex) {
