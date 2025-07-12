@@ -1113,6 +1113,35 @@
         let currentGalleryImages = []; // Stores images for the currently open gallery
         let currentGalleryIndex = 0; // Stores the index of the currently displayed image
 
+        // Helper to get/set reveal timestamp from local storage
+        function getRevealTimestamp(productCode) {
+            const key = `revealTimestamp_${productCode}`;
+            let timestamp = localStorage.getItem(key);
+
+            if (!timestamp || parseInt(timestamp) < Date.now()) {
+                // If no timestamp or it's in the past, set a new one (2 days, 5 hours, 1 minute from now)
+                const twoDays = 2 * 24 * 60 * 60 * 1000;
+                const fiveHours = 5 * 60 * 60 * 1000;
+                const oneMinute = 1 * 60 * 1000;
+                const duration = twoDays + fiveHours + oneMinute;
+                timestamp = Date.now() + duration;
+                localStorage.setItem(key, timestamp.toString());
+            }
+            return parseInt(timestamp);
+        }
+
+        // Function to check if a product should be revealed
+        function isProductRevealed(productCode) {
+            const key = `revealTimestamp_${productCode}`;
+            const timestamp = localStorage.getItem(key);
+            return timestamp && parseInt(timestamp) <= Date.now();
+        }
+
+        // Function to mark a product as revealed (remove its timestamp)
+        function markProductAsRevealed(productCode) {
+            localStorage.removeItem(`revealTimestamp_${productCode}`);
+        }
+
         // Product data - This is the single place to manage product information
         const productsData = [
             {
@@ -1126,7 +1155,8 @@
                     "pic.jpg",
                     "pic.jpg"
                 ],
-                offer: "₹250 Less than Market"
+                offer: "₹250 Less than Market",
+                revealingSoon: true // Mark this product as revealing soon
             },
             {
                 code: "S002",
@@ -1151,7 +1181,8 @@
                     "pic.jpg",
                     "pic.jpg"
                 ],
-                offer: "Free Laptop Bag"
+                offer: "Free Laptop Bag",
+                revealingSoon: true // Mark this product as revealing soon
             },
             {
                 code: "S004",
@@ -1257,40 +1288,111 @@
             filteredProducts.forEach(product => {
                 const card = document.createElement('div');
                 card.className = 'card';
+                card.setAttribute('data-product-code', product.code); // Add data attribute for easy lookup
 
-                card.innerHTML = `
-                    <img src="${product.images[0]}" alt="${product.name}"
-                         onerror="this.onerror=null;this.src='pic.jpg';"
-                         onclick="openImageGalleryModal('${product.code}', 0)">
-                    <div class="card-body">
-                        <div class="card-title">${product.name}</div>
-                        <p class="card-description">${product.description}</p>
-                        <div class="card-price">
-                            ${product.marketPrice ? `<span class="market-price">Market Price: $${product.marketPrice.toFixed(2)}</span>` : ''}
-                            $${product.price.toFixed(2)}
+                // Check if the product is revealed or still revealing
+                const isRevealed = isProductRevealed(product.code);
+
+                if (product.revealingSoon && !isRevealed) {
+                    // Product is revealing soon and not yet revealed
+                    const revealTimestamp = getRevealTimestamp(product.code); // Ensure timestamp is set/retrieved
+
+                    card.innerHTML = `
+                        <img src="${product.images[0]}" alt="${product.name}"
+                             onerror="this.onerror=null;this.src='pic.jpg';"
+                             onclick="openImageGalleryModal('${product.code}', 0)">
+                        <div class="card-body">
+                            <div class="card-title">${product.name}</div>
+                            <p class="card-description" style="filter: blur(3px); color: #888;">Revealing Soon!</p>
+                            <div class="card-price" style="filter: blur(3px); color: #888;">$XXX.XX</div>
+                            <p class="product-offer" style="color: var(--offer-color); font-weight: 600; margin-bottom: 0.8rem;">
+                                <span id="countdown-${product.code}">Loading countdown...</span>
+                            </p>
+                            <div class="card-actions">
+                                <button class="add-to-cart-btn" disabled style="cursor: not-allowed; opacity: 0.6;">Add to Cart</button>
+                                <button class="buy-now-btn" disabled style="cursor: not-allowed; opacity: 0.6;">Buy Now</button>
+                            </div>
                         </div>
-                        ${product.offer ? `<p class="product-offer">Offer: ${product.offer}</p>` : ''}
-                        <div class="card-actions">
-                            <button class="add-to-cart-btn">Add to Cart</button>
-                            <button class="buy-now-btn">Buy Now</button>
+                    `;
+                    productListContainer.appendChild(card);
+                    // Initialize countdown for this product
+                    startCountdown(product.code, revealTimestamp);
+
+                } else {
+                    // Product is not revealing soon, or it has already been revealed
+                    card.innerHTML = `
+                        <img src="${product.images[0]}" alt="${product.name}"
+                             onerror="this.onerror=null;this.src='pic.jpg';"
+                             onclick="openImageGalleryModal('${product.code}', 0)">
+                        <div class="card-body">
+                            <div class="card-title">${product.name}</div>
+                            <p class="card-description">${product.description}</p>
+                            <div class="card-price">
+                                ${product.marketPrice ? `<span class="market-price">Market Price: $${product.marketPrice.toFixed(2)}</span>` : ''}
+                                $${product.price.toFixed(2)}
+                            </div>
+                            ${product.offer ? `<p class="product-offer">Offer: ${product.offer}</p>` : ''}
+                            <div class="card-actions">
+                                <button class="add-to-cart-btn">Add to Cart</button>
+                                <button class="buy-now-btn">Buy Now</button>
+                            </div>
                         </div>
-                    </div>
-                `;
+                    `;
+                    productListContainer.appendChild(card);
 
-                card.querySelector('.add-to-cart-btn').addEventListener('click', () => {
-                    currentProduct = { ...product };
-                    currentAction = 'add';
-                    openQuantityModal();
-                });
+                    // Add event listeners for non-revealing products
+                    card.querySelector('.add-to-cart-btn').addEventListener('click', () => {
+                        currentProduct = { ...product };
+                        currentAction = 'add';
+                        openQuantityModal();
+                    });
 
-                card.querySelector('.buy-now-btn').addEventListener('click', () => {
-                    currentProduct = { ...product };
-                    currentAction = 'buy';
-                    openQuantityModal();
-                });
-
-                productListContainer.appendChild(card);
+                    card.querySelector('.buy-now-btn').addEventListener('click', () => {
+                        currentProduct = { ...product };
+                        currentAction = 'buy';
+                        openQuantityModal();
+                    });
+                }
             });
+        }
+
+        const countdownIntervals = {}; // To store interval IDs for each product
+
+        function startCountdown(productCode, targetTimestamp) {
+            // Clear any existing interval for this product to prevent duplicates
+            if (countdownIntervals[productCode]) {
+                clearInterval(countdownIntervals[productCode]);
+            }
+
+            const update = () => {
+                const now = Date.now();
+                const distance = targetTimestamp - now;
+
+                const countdownElement = document.getElementById(`countdown-${productCode}`);
+
+                if (distance < 0) {
+                    clearInterval(countdownIntervals[productCode]);
+                    if (countdownElement) {
+                        countdownElement.textContent = "Revealed!";
+                        // Mark product as revealed and re-render to show actual details
+                        markProductAsRevealed(productCode);
+                        renderProducts(document.getElementById('search').value); // Re-render all products to update display
+                    }
+                    return;
+                }
+
+                const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+                const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+                const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+                if (countdownElement) {
+                    countdownElement.textContent = `Revealing in: ${days}d ${hours}h ${minutes}m ${seconds}s`;
+                }
+            };
+
+            update(); // Initial call to display immediately
+            countdownIntervals[productCode] = setInterval(update, 1000);
         }
 
 
@@ -1306,7 +1408,7 @@
         document.addEventListener('DOMContentLoaded', () => {
             loadCart();
             updateCartCount();
-            renderProducts();
+            renderProducts(); // Initial render to set up products and countdowns
 
             document.getElementById('qty-confirm-add').addEventListener('click', () => {
                 handleQuantityConfirm('add');
