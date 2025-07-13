@@ -241,20 +241,23 @@
         .card-title {
             font-size: 1.3rem;
             font-weight: 600;
-            margin-bottom: 0.5rem;
+            margin-bottom: 0.2rem; /* Reduced margin */
             color: var(--dark-bg);
         }
         .card-description {
             font-size: 0.9rem;
             color: #666;
-            margin-bottom: 0.8rem;
+            margin-bottom: 0.2rem; /* Reduced margin */
             flex-grow: 1;
+            white-space: nowrap; /* Forces text into a single line */
+            overflow: hidden;    /* Hides overflowing content */
+            text-overflow: ellipsis; /* Adds "..." for overflowed text */
         }
         .card-price {
             color: var(--primary-color);
             font-size: 1.2rem;
             font-weight: 700;
-            margin: 0.8rem 0 0.4rem 0; /* Adjusted margin to make space for offer */
+            margin: 0.2rem 0 0.2rem 0; /* Adjusted margin to make space for offer */
             display: flex; /* Use flex to align market price and current price */
             align-items: baseline; /* Align text baselines */
             gap: 10px; /* Space between prices */
@@ -269,7 +272,7 @@
             color: var(--offer-color);
             font-size: 0.9rem;
             font-weight: 600;
-            margin-bottom: 0.8rem;
+            margin-bottom: 0.5rem; /* Reduced margin */
         }
         .card-actions {
             display: flex;
@@ -735,6 +738,15 @@
         }
 
         /* Mobile Compatibility for main layout */
+        @media (min-width: 769px) { /* Apply only for screens larger than mobile/tablet */
+            .container {
+                grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); /* Made cards slightly smaller */
+                gap: 1.5rem; /* Reduced gap */
+            }
+        }
+
+
+        /* Mobile Compatibility for main layout */
         @media (max-width: 768px) {
             header {
                 flex-direction: column;
@@ -763,23 +775,29 @@
             }
             .container {
                 padding: 2rem 1rem;
-                grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-                gap: 1.5rem;
+                grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); /* Made cards even smaller for tablet */
+                gap: 1rem; /* Reduced gap */
             }
             .card-title {
-                font-size: 1.1rem;
+                font-size: 1rem; /* Slightly smaller on tablets */
             }
             .card-description {
-                font-size: 0.8rem;
+                font-size: 0.75rem; /* Slightly smaller on tablets */
+                margin-bottom: 0.1rem; /* Further reduced margin for description */
             }
             .card-price {
-                font-size: 1rem;
+                font-size: 0.9rem; /* Slightly smaller on tablets */
+                margin: 0.1rem 0 0.1rem 0; /* Adjusted margin */
             }
             .product-offer { /* Mobile adjustment */
-                font-size: 0.8rem;
+                font-size: 0.7rem;
+                margin-bottom: 0.3rem;
             }
             .card img {
-                height: 180px; /* Increased image height for tablet */
+                height: 160px; /* Adjusted image height for tablet */
+            }
+            .card-body {
+                padding: 1rem; /* Reduced padding for card body */
             }
             .request-section {
                 padding: 1.5rem;
@@ -862,44 +880,39 @@
                 font-size: 0.8rem;
             }
             .container {
-                grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-                gap: 1rem;
-                padding: 1.5rem 0.5rem;
+                grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); /* Even smaller cards for mobile */
+                gap: 0.8rem; /* Further reduced gap */
+                padding: 1rem 0.5rem; /* Reduced overall container padding */
             }
             .card img {
-                height: 150px; /* Made image taller for mobile */
+                height: 120px; /* Made image smaller for mobile */
             }
             .card-body {
-                padding: 0.8rem;
+                padding: 0.5rem; /* Further reduced padding for card body */
             }
             .card-title {
-                font-size: 0.9rem;
-                margin-bottom: 0.2rem;
+                font-size: 0.8rem;
+                margin-bottom: 0.1rem;
             }
             .card-description {
-                font-size: 0.7rem; /* Reduced font size for description */
-                margin-bottom: 0.3rem; /* Reduced margin for description */
-                display: -webkit-box;
-                -webkit-line-clamp: 2; /* Limit description to 2 lines */
-                -webkit-box-orient: vertical;
-                overflow: hidden;
-                text-overflow: ellipsis;
+                font-size: 0.65rem; /* Even smaller font size for description */
+                margin-bottom: 0.1rem; /* Minimal margin */
+                -webkit-line-clamp: 1; /* Ensure 1 line even if it was more before */
             }
             .card-price {
-                font-size: 0.85rem;
-                margin: 0.3rem 0 0.2rem 0; /* Mobile adjustment */
-            }
-            .product-offer { /* Mobile adjustment */
                 font-size: 0.75rem;
-                margin-bottom: 0.5rem;
+                margin: 0.1rem 0 0.1rem 0;
+            }
+            .product-offer {
+                font-size: 0.65rem;
+                margin-bottom: 0.3rem;
             }
             .card-actions {
-                flex-direction: column;
-                gap: 5px;
+                gap: 3px; /* Smaller gap between buttons */
             }
             .card button {
-                padding: 8px 10px;
-                font-size: 0.8rem;
+                padding: 6px 8px; /* Smaller button padding */
+                font-size: 0.7rem; /* Smaller button font size */
             }
             .request-btn {
                 font-size: 1rem;
@@ -918,119 +931,101 @@
 
             /* --- Specific Cart Modal Adjustments for Mobile --- */
             #cart-modal .modal-content {
-                width: 95%;
-                max-width: 240px; /* Further reduced max-width for mobile cart modal */
-                padding: 0.4rem; /* Even smaller padding for mobile */
+                width: 95%; /* Increased width for mobile cart modal */
+                max-width: 95%; /* Increased max-width for mobile cart modal */
+                padding: 0.8rem; /* Increased padding for mobile */
             }
             #cart-modal h3 {
-                font-size: 1.2rem; /* Further smaller header */
-                margin-bottom: 0.4rem;
+                font-size: 1.3rem; /* Slightly larger header */
+                margin-bottom: 0.6rem;
             }
             #cart-items-display { /* Added for scrollbar */
-                max-height: 40vh; /* Max height for scrolling */
-                overflow-y: auto; /* Enable vertical scrolling */
-                padding-right: 4px; /* Space for scrollbar */
+                max-height: 50vh; /* Increased max height for scrolling */
+                padding-right: 8px; /* Space for scrollbar */
             }
             .cart-item {
-                flex-direction: row; /* Keep image and details side-by-side */
-                align-items: center; /* Vertically align items in the middle */
-                justify-content: space-between; /* Distribute space */
-                gap: 4px; /* Reduced gap */
-                padding: 4px 0; /* Reduced padding */
-                flex-wrap: nowrap; /* Prevent wrapping for main row elements */
+                gap: 8px; /* Increased gap */
+                padding: 8px 0; /* Increased padding */
             }
 
             .item-visual-area {
-                width: 40px; /* Even smaller image area for mobile */
-                height: 40px;
-                flex-shrink: 0; /* Don't shrink */
-                margin-right: 4px; /* Space between image and text */
-                position: relative; /* Needed for absolute positioning of remove button */
+                width: 50px; /* Larger image area for mobile */
+                height: 50px;
+                margin-right: 8px; /* Space between image and text */
             }
 
             .cart-item img {
-                width: 40px; /* Image size for mobile */
-                height: 40px;
+                width: 50px; /* Image size for mobile */
+                height: 50px;
             }
 
             .item-info-and-price {
-                flex-grow: 1; /* Allow details to take available space */
-                min-width: 70px; /* Ensure details are not too small */
-                display: flex;
-                flex-direction: column;
-                text-align: left; /* Align text left */
+                min-width: 100px; /* Ensure details are not too small */
             }
 
             .item-details h4 {
-                font-size: 0.8rem; /* Even smaller font for name */
-                margin-bottom: 1px; /* Reduced margin */
+                font-size: 0.9rem; /* Slightly larger font for name */
+                margin-bottom: 2px; /* Adjusted margin */
             }
             .item-details p {
-                font-size: 0.65rem; /* Even smaller font for qty/unit price */
+                font-size: 0.75rem; /* Slightly larger font for qty/unit price */
             }
 
             .item-price-total-display {
-                font-size: 0.8rem; /* Even smaller total price */
-                text-align: left; /* Align to left below details */
-                margin-top: 1px; /* Reduced margin */
-                display: flex; /* Make it a flex container */
-                align-items: center; /* Align items vertically */
-                justify-content: space-between; /* Distribute space between price and button */
+                font-size: 0.9rem; /* Slightly larger total price */
+                margin-top: 2px; /* Adjusted margin */
+                gap: 8px; /* Increased gap between price and button */
             }
 
             .remove-item-btn {
-                width: auto; /* Auto width based on content */
-                padding: 0px 2px; /* Even smaller padding */
-                font-size: 0.4rem; /* Even smaller font size */
-                margin-left: 2px; /* Reduced space from price/details */
-                align-self: center; /* Vertically center with image/details */
-                position: static; /* Remove absolute positioning on mobile for inline flow */
-                line-height: 1; /* Compact line height */
+                padding: 2px 6px; /* Larger padding for better touch target */
+                font-size: 0.7rem; /* Larger font size for readability */
+                margin-left: 5px; /* Increased space from price/details */
             }
             .cart-summary {
-                font-size: 0.8rem; /* Even smaller summary font */
-                padding-top: 4px;
+                font-size: 1rem; /* Larger summary font */
+                padding-top: 8px;
             }
             .cart-actions-modal {
-                margin-top: 6px; /* Reduced margin */
+                margin-top: 10px; /* Increased margin */
             }
             .cart-actions-modal button,
             .whatsapp-btn-modal {
-                padding: 5px; /* Reduced padding */
-                font-size: 0.7rem; /* Reduced font size */
+                padding: 8px; /* Increased padding */
+                font-size: 0.85rem; /* Increased font size */
             }
 
             /* Quantity modal on small screens */
             #quantity-modal .modal-content {
-                max-width: 90%;
-                padding: 0.7rem;
+                max-width: 95%;
+                padding: 1.2rem;
             }
             #quantity-modal h3 {
-                font-size: 1.1rem;
+                font-size: 1.4rem;
             }
             #quantity-modal p {
-                font-size: 0.8rem;
+                font-size: 1rem;
             }
             #quantity-modal input[type="number"] {
-                width: 50px;
-                font-size: 0.9rem;
+                width: 70px;
+                font-size: 1.1rem;
             }
             #quantity-modal .modal-actions button {
-                font-size: 0.7rem;
-                padding: 5px 7px;
+                font-size: 0.8rem;
+                padding: 8px 10px;
             }
 
             /* Image Gallery Modal on small screens */
             #image-gallery-modal .modal-content {
                 max-width: 95%;
-                padding: 1rem;
+                padding: 1.2rem;
             }
             #main-gallery-image {
-                max-height: 250px;
+                max-height: 300px;
             }
             .thumbnail-image {
-                width: 60px;
-                height: 60px;
+                width: 70px;
+                height: 70px;
             }
         }
     </style>
@@ -1063,8 +1058,7 @@
     </div>
 
     <div class="container" id="product-list">
-        <!-- Product cards will be inserted here dynamically -->
-    </div>
+        </div>
     <marquee behavior="scroll" direction="left">Thank You! Visit again! We are constantly adding new products!</marquee>
     <div class="request-section">
         <p>Can't find what you're looking for?</p>
@@ -1072,7 +1066,6 @@
     </div>
 
 
-    <!-- Request Modal -->
     <div class="modal" id="request-modal">
         <div class="modal-content">
             <span class="close-button" onclick="closeModal('request-modal')">&times;</span>
@@ -1084,16 +1077,14 @@
         </div>
     </div>
 
-    <!-- Cart Modal -->
     <div class="modal" id="cart-modal">
         <div class="modal-content">
             <span class="close-button" onclick="closeModal('cart-modal')">&times;</span>
             <h3>Your Shopping Cart</h3>
             <div id="cart-items-display">
-                <!-- Cart items will be dynamically loaded here -->
-            </div>
+                </div>
             <div class="cart-summary">
-                Total: <span id="cart-total-display">$0.00</span>
+                Total: <span id="cart-total-display">₹0.00</span>
             </div>
             <div class="cart-actions-modal">
                 <a href="#" class="whatsapp-btn-modal" id="whatsapp-link" target="_blank">WhatsApp Us</a>
@@ -1102,7 +1093,6 @@
         </div>
     </div>
 
-    <!-- Quantity Selection Modal -->
     <div class="modal" id="quantity-modal">
         <div class="modal-content">
             <span class="close-button" onclick="closeModal('quantity-modal')">&times;</span>
@@ -1117,7 +1107,6 @@
         </div>
     </div>
 
-    <!-- Image Gallery Modal -->
     <div class="modal" id="image-gallery-modal">
         <div class="modal-content">
             <span class="close-button" onclick="closeModal('image-gallery-modal')">&times;</span>
@@ -1127,8 +1116,7 @@
                 <img id="main-gallery-image" src="" alt="Main Product Image">
             </div>
             <div id="gallery-thumbnails">
-                <!-- Thumbnails will be dynamically loaded here -->
-            </div>
+                </div>
         </div>
     </div>
 
@@ -1330,7 +1318,7 @@
                         <div class="card-body">
                             <div class="card-title">${product.name}</div>
                             <p class="card-description" style="filter: blur(3px); color: #888;">Revealing Soon!</p>
-                            <div class="card-price" style="filter: blur(3px); color: #888;">$XXX.XX</div>
+                            <div class="card-price" style="filter: blur(3px); color: #888;">₹XXX.XX</div>
                             <p class="product-offer" style="color: var(--offer-color); font-weight: 600; margin-bottom: 0.8rem;">
                                 <span id="countdown-${product.code}">Loading countdown...</span>
                             </p>
@@ -1354,8 +1342,8 @@
                             <div class="card-title">${product.name}</div>
                             <p class="card-description">${product.description}</p>
                             <div class="card-price">
-                                ${product.marketPrice ? `<span class="market-price">Market Price: $${product.marketPrice.toFixed(2)}</span>` : ''}
-                                $${product.price.toFixed(2)}
+                                ${product.marketPrice ? `<span class="market-price">Market Price: ₹${product.marketPrice.toFixed(2)}</span>` : ''}
+                                ₹${product.price.toFixed(2)}
                             </div>
                             ${product.offer ? `<p class="product-offer">Offer: ${product.offer}</p>` : ''}
                             <div class="card-actions">
@@ -1514,7 +1502,7 @@
 
 
         function buyNow(product, quantity) {
-            const message = `Hello S-Mart! I'd like to purchase ${quantity} of "${product.name}" (Code: ${product.code}) for a total of $${(product.price * quantity).toFixed(2)}.`;
+            const message = `Hello S-Mart! I'd like to purchase ${quantity} of "${product.name}" (Code: ${product.code}) for a total of ₹${(product.price * quantity).toFixed(2)}.`;
             const whatsappUrl = `https://wa.me/YOUR_WHATSAPP_NUMBER?text=${encodeURIComponent(message)}`; // Replace YOUR_WHATSAPP_NUMBER
             window.open(whatsappUrl, '_blank');
         }
@@ -1531,7 +1519,7 @@
 
             if (cart.length === 0) {
                 cartItemsDisplay.innerHTML = '<p style="text-align: center; margin-top: 20px; color: #777;">Your cart is empty.</p>';
-                cartTotalDisplay.textContent = '$0.00';
+                cartTotalDisplay.textContent = '₹0.00';
                 whatsappLink.style.display = 'none';
                 buyNowButton.style.display = 'none';
                 openModal('cart-modal');
@@ -1548,22 +1536,22 @@
                         </div>
                         <div class="item-info-and-price">
                             <h4>${item.name} <span style="font-size: 0.6em; color: #999;">(${item.code})</span></h4>
-                            <p>Qty: ${item.quantity} | Unit Price: $${item.price.toFixed(2)}</p>
+                            <p>Qty: ${item.quantity} | Unit Price: ₹${item.price.toFixed(2)}</p>
                             <div class="item-price-total-display">
-                                $${itemTotal.toFixed(2)}
+                                ₹${itemTotal.toFixed(2)}
                                 <button class="remove-item-btn" data-index="${index}">Remove</button>
                             </div>
                         </div>
                     </div>
                 `;
-                whatsappMessage += `${item.name} (Code: ${item.code}, Qty: ${item.quantity}) - $${itemTotal.toFixed(2)}\n`;
+                whatsappMessage += `${item.name} (Code: ${item.code}, Qty: ${item.quantity}) - ₹${itemTotal.toFixed(2)}\n`;
             });
 
-            whatsappMessage += `\nTotal: $${total.toFixed(2)}\n\n`;
+            whatsappMessage += `\nTotal: ₹${total.toFixed(2)}\n\n`;
             whatsappMessage += "Please confirm availability and payment details.";
 
             cartItemsDisplay.innerHTML = cartContentHtml;
-            cartTotalDisplay.textContent = `$${total.toFixed(2)}`;
+            cartTotalDisplay.textContent = `₹${total.toFixed(2)}`;
             whatsappLink.href = `https://wa.me/YOUR_WHATSAPP_NUMBER?text=${encodeURIComponent(whatsappMessage)}`; // Replace YOUR_WHATSAPP_NUMBER
             whatsappLink.style.display = 'block';
             buyNowButton.style.display = 'block';
@@ -1597,10 +1585,10 @@
             let message = "Hello S-Mart! I'd like to purchase the following items from my cart:\n\n";
             let total = 0;
             cart.forEach(item => {
-                message += `${item.name} (Code: ${item.code}, Qty: ${item.quantity}) - $${(item.price * item.quantity).toFixed(2)}\n`;
+                message += `${item.name} (Code: ${item.code}, Qty: ${item.quantity}) - ₹${(item.price * item.quantity).toFixed(2)}\n`;
                 total += item.price * item.quantity;
             });
-            message += `\nTotal Cart Value: $${total.toFixed(2)}\n\n`;
+            message += `\nTotal Cart Value: ₹${total.toFixed(2)}\n\n`;
             message += "Please provide details for payment and delivery. Thank you!";
 
             const whatsappUrl = `https://wa.me/YOUR_WHATSAPP_NUMBER?text=${encodeURIComponent(message)}`; // Replace YOUR_WHATSAPP_NUMBER
