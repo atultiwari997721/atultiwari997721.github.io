@@ -17,7 +17,7 @@
             align-items: center;
             min-height: 100vh;
             margin: 0;
-            padding: 20px;
+            padding: 1rem; /* Adjusted padding for mobile */
             box-sizing: border-box;
         }
         .container {
@@ -39,6 +39,8 @@
             transition: all 0.2s ease-in-out;
             border: none;
             box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            /* Make buttons full width on small screens, then revert on larger screens */
+            width: 100%;
         }
         .btn-primary {
             background: linear-gradient(145deg, #4299e1, #3182ce); /* Blue gradient */
@@ -62,8 +64,8 @@
             color: #e2e8f0;
             border-radius: 0.5rem;
             padding: 0.5rem 1rem;
-            width: 100%;
-            max-width: 150px;
+            width: 100%; /* Make inputs full width */
+            max-width: 150px; /* Max width for larger screens */
         }
         .game-section {
             border: 1px solid #4a5568;
@@ -75,15 +77,35 @@
             background-color: #1a202c;
             border: 2px solid #4299e1;
             border-radius: 0.5rem;
-            width: 80px;
-            height: 80px;
+            width: 60px; /* Smaller reels for mobile */
+            height: 60px; /* Smaller reels for mobile */
             display: flex;
             justify-content: center;
             align-items: center;
-            font-size: 2.5rem;
+            font-size: 2rem; /* Smaller font for mobile */
             font-weight: bold;
             color: #48bb78; /* Green for symbols */
-            margin: 0 0.5rem;
+            margin: 0 0.25rem; /* Reduced margin for mobile */
+        }
+        @media (min-width: 640px) { /* Tailwind's 'sm' breakpoint */
+            .btn {
+                width: auto; /* Buttons auto-width on larger screens */
+            }
+            #generateQrAndSimulateBtn { /* Specific width for this button on larger screens */
+                width: 256px; /* w-64 */
+            }
+            #spinBtn, #guessBtn { /* Specific width for these buttons on larger screens */
+                width: 192px; /* w-48 */
+            }
+            input[type="number"] {
+                max-width: 150px;
+            }
+            .slot-reel {
+                width: 80px; /* Original size for larger screens */
+                height: 80px; /* Original size for larger screens */
+                font-size: 2.5rem; /* Original font size for larger screens */
+                margin: 0 0.5rem; /* Original margin for larger screens */
+            }
         }
         .slot-reels-container {
             display: flex;
@@ -127,8 +149,23 @@
             border-radius: 0.5rem;
             margin-bottom: 0.5rem;
             display: flex;
+            flex-direction: column; /* Stack items on small screens */
             justify-content: space-between;
-            align-items: center;
+            align-items: flex-start; /* Align to start on small screens */
+        }
+        @media (min-width: 640px) {
+            .win-history-item {
+                flex-direction: row; /* Row layout on larger screens */
+                align-items: center; /* Center items on larger screens */
+            }
+        }
+        #paymentLink {
+            display: none; /* Hidden by default */
+            margin-top: 1rem;
+            color: #63b3ed; /* A nice blue for links */
+            text-decoration: underline;
+            font-weight: 600;
+            cursor: pointer;
         }
     </style>
 </head>
@@ -136,12 +173,12 @@
     <div class="container">
         <!-- Header Section -->
         <div class="flex justify-between items-center mb-4">
-            <h1 class="text-3xl font-bold text-blue-400">Simulated Gambling</h1>
-            <div class="text-xl font-semibold">Balance: <span id="balance">30</span> MAK Coins</div>
+            <h1 class="text-2xl sm:text-3xl font-bold text-blue-400">Simulated Gambling</h1>
+            <div class="text-lg sm:text-xl font-semibold">Balance: <span id="balance">30</span> MAK Coins</div>
         </div>
 
         <!-- Navigation -->
-        <div class="flex justify-center gap-4 mb-6">
+        <div class="flex flex-col sm:flex-row justify-center gap-2 sm:gap-4 mb-6">
             <button id="showCasinoBtn" class="btn btn-primary">Casino Game</button>
             <button id="showNumbersBtn" class="btn btn-secondary">Numbers Game</button>
             <button id="showDepositBtn" class="btn btn-secondary">Deposit Funds</button>
@@ -150,62 +187,61 @@
 
         <!-- Deposit Section -->
         <div id="depositSection" class="game-section hidden">
-            <h2 class="text-2xl font-semibold mb-4 text-center text-blue-300">Deposit Funds (Simulated Backend)</h2>
+            <h2 class="text-xl sm:text-2xl font-semibold mb-4 text-center text-blue-300">Deposit Funds (Simulated Backend)</h2>
             <div class="flex flex-col items-center gap-4">
-                <p class="text-lg text-center text-yellow-300">
-                    This is a simulation. In a real application, you would scan this QR code to deposit money.
+                <p class="text-base sm:text-lg text-center text-yellow-300">
+                    This is a simulation. In a real application, you would scan this QR code or click the link to deposit money.
                     Enter the amount you wish to deposit and click "Generate QR & Simulate Payment".
                 </p>
-                <div class="flex items-center gap-2">
+                <div class="flex flex-col sm:flex-row items-center gap-2 w-full">
                     <label for="depositAmountInput" class="text-lg">Deposit Amount (MAK Coins):</label>
                     <input type="number" id="depositAmountInput" value="100" min="1" class="text-center">
                 </div>
-                <button id="generateQrAndSimulateBtn" class="btn btn-primary w-64">Generate QR & Simulate Payment</button>
-                <img id="qrCodeImage" src="" alt="UPI QR Code" class="rounded-lg border-2 border-blue-400 w-48 h-48">
-                <p id="depositMessage" class="text-xl font-semibold mt-4 text-center"></p>
+                <button id="generateQrAndSimulateBtn" class="btn btn-primary">Generate QR & Simulate Payment</button>
+                <img id="qrCodeImage" src="" alt="UPI QR Code" class="rounded-lg border-2 border-blue-400 w-40 h-40 sm:w-48 sm:h-48">
+                <a id="paymentLink" href="#" target="_blank" class="text-lg">Click here to simulate payment app</a>
+                <p id="depositMessage" class="text-base sm:text-xl font-semibold mt-4 text-center"></p>
             </div>
         </div>
 
         <!-- Casino Game Section -->
         <div id="casinoGame" class="game-section hidden">
-            <h2 class="text-2xl font-semibold mb-4 text-center text-blue-300">Casino (Slot Machine)</h2>
-            <p class="text-lg text-center mb-4">Guaranteed Wins Remaining: <span id="casinoWinsRemainingDisplay" class="font-bold text-green-400"></span></p>
+            <h2 class="text-xl sm:text-2xl font-semibold mb-4 text-center text-blue-300">Casino (Slot Machine)</h2>
+            <p class="text-base sm:text-lg text-center mb-4">Guaranteed Wins Remaining: <span id="casinoWinsRemainingDisplay" class="font-bold text-green-400"></span></p>
             <div class="flex flex-col items-center gap-4">
-                <div class="flex items-center gap-2">
+                <div class="flex flex-col sm:flex-row items-center gap-2 w-full">
                     <label for="casinoBet" class="text-lg">Bet Amount (MAK Coins):</label>
                     <input type="number" id="casinoBet" value="10" min="1" class="text-center">
                 </div>
-                <button id="spinBtn" class="btn btn-primary w-48">Spin</button>
+                <button id="spinBtn" class="btn btn-primary">Spin</button>
                 <div class="slot-reels-container">
                     <div id="reel1" class="slot-reel">?</div>
                     <div id="reel2" class="slot-reel">?</div>
                     <div id="reel3" class="slot-reel">?</div>
                 </div>
-                <p id="casinoResult" class="text-xl font-semibold mt-4 text-center"></p>
+                <p id="casinoResult" class="text-base sm:text-xl font-semibold mt-4 text-center"></p>
             </div>
         </div>
 
         <!-- Numbers Game Section -->
         <div id="numbersGame" class="game-section hidden">
-            <h2 class="text-2xl font-semibold mb-4 text-center text-blue-300">Numbers Game (1-10)</h2>
-            <p class="text-lg text-center mb-4">Guaranteed Wins Remaining: <span id="numbersWinsRemainingDisplay" class="font-bold text-green-400"></span></p>
-            <div class="flex flex-col items-center gap-4">
-                <div class="flex items-center gap-2">
-                    <label for="numbersBet" class="text-lg">Bet Amount (MAK Coins):</label>
-                    <input type="number" id="numbersBet" value="10" min="1" class="text-center">
-                </div>
-                <div class="flex items-center gap-2">
-                    <label for="chosenNumber" class="text-lg">Choose a number (1-10):</label>
-                    <input type="number" id="chosenNumber" value="5" min="1" max="10" class="text-center">
-                </div>
-                <button id="guessBtn" class="btn btn-primary w-48">Guess</button>
-                <p id="numbersResult" class="text-xl font-semibold mt-4 text-center"></p>
+            <h2 class="text-xl sm:text-2xl font-semibold mb-4 text-center text-blue-300">Numbers Game (1-10)</h2>
+            <p class="text-base sm:text-lg text-center mb-4">Guaranteed Wins Remaining: <span id="numbersWinsRemainingDisplay" class="font-bold text-green-400"></span></p>
+            <div class="flex flex-col sm:flex-row items-center gap-2 w-full">
+                <label for="numbersBet" class="text-lg">Bet Amount (MAK Coins):</label>
+                <input type="number" id="numbersBet" value="10" min="1" class="text-center">
             </div>
+            <div class="flex flex-col sm:flex-row items-center gap-2 w-full">
+                <label for="chosenNumber" class="text-lg">Choose a number (1-10):</label>
+                <input type="number" id="chosenNumber" value="5" min="1" max="10" class="text-center">
+            </div>
+            <button id="guessBtn" class="btn btn-primary">Guess</button>
+            <p id="numbersResult" class="text-base sm:text-xl font-semibold mt-4 text-center"></p>
         </div>
 
         <!-- Win History Section -->
         <div id="winHistorySection" class="game-section hidden">
-            <h2 class="text-2xl font-semibold mb-4 text-center text-blue-300">Win History</h2>
+            <h2 class="text-xl sm:text-2xl font-semibold mb-4 text-center text-blue-300">Win History</h2>
             <div id="winHistoryList" class="flex flex-col gap-2">
                 <p class="text-center text-gray-400" id="noWinHistoryMessage">No wins recorded yet.</p>
             </div>
@@ -214,8 +250,8 @@
         <!-- Message Box -->
         <div id="messageBoxOverlay" class="message-box-overlay"></div>
         <div id="messageBox" class="message-box">
-            <p id="messageBoxText" class="text-xl"></p>
-            <button id="messageBoxCloseBtn" class="btn btn-primary">OK</button>
+            <p id="messageBoxText" class="text-lg sm:text-xl"></p>
+            <button id="messageBoxCloseBtn" class="btn btn-primary w-24">OK</button>
         </div>
     </div>
 
@@ -259,6 +295,7 @@
         const qrCodeImage = document.getElementById('qrCodeImage');
         const depositAmountInput = document.getElementById('depositAmountInput');
         const generateQrAndSimulateBtn = document.getElementById('generateQrAndSimulateBtn'); 
+        const paymentLink = document.getElementById('paymentLink'); // New payment link element
         const depositMessageDisplay = document.getElementById('depositMessage');
 
         // Win History Elements
@@ -352,6 +389,8 @@
             // Reset deposit section state when shown
             qrCodeImage.style.display = 'none'; // Hide QR initially
             qrCodeImage.src = ''; // Clear QR source
+            paymentLink.style.display = 'none'; // Hide payment link initially
+            paymentLink.href = '#'; // Clear link href
             depositMessageDisplay.textContent = ''; // Clear message
             generateQrAndSimulateBtn.disabled = false; // Enable button
             showGame(depositSection); 
@@ -387,7 +426,7 @@
             return true;
         }
 
-        // --- Deposit Logic (Simulated Backend with QR) ---
+        // --- Deposit Logic (Simulated Backend with QR and Link) ---
         generateQrAndSimulateBtn.addEventListener('click', () => { // Event listener for "Generate QR & Simulate Payment"
             const depositAmount = parseFloat(depositAmountInput.value);
 
@@ -402,11 +441,15 @@
             qrCodeImage.src = `https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${encodeURIComponent(qrData)}`;
             qrCodeImage.style.display = 'block'; // Show the QR code
 
-            depositMessageDisplay.textContent = "Generating QR and simulating payment...";
+            // Generate payment link with the entered amount
+            paymentLink.href = qrData; // Set the UPI deep link as href
+            paymentLink.style.display = 'block'; // Show the payment link
+
+            depositMessageDisplay.textContent = "QR code and payment link generated. Simulating payment...";
             depositMessageDisplay.style.color = '#cbd5e0'; // Gray for processing
             generateQrAndSimulateBtn.disabled = true; // Disable button during simulation
 
-            // Simulate a backend delay for processing the deposit
+            // Simulate a backend delay for processing the deposit (now 90 seconds)
             setTimeout(() => {
                 userBalance += depositAmount; // Add the user-specified amount
                 updateBalanceDisplay();
@@ -414,7 +457,8 @@
                 depositMessageDisplay.style.color = '#48bb78'; // Green for success
                 generateQrAndSimulateBtn.disabled = false; // Re-enable button for new transaction
                 qrCodeImage.style.display = 'none'; // Hide QR after payment
-            }, 2000); // 2-second delay to simulate backend processing
+                paymentLink.style.display = 'none'; // Hide payment link after payment
+            }, 90000); // 90-second delay to simulate backend processing
         });
 
 
