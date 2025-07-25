@@ -32,7 +32,7 @@
             gap: 1.5rem;
         }
         .btn {
-            padding: 0.75rem 1.5rem;
+            padding: 0.5rem 1rem; /* Smaller padding for buttons */
             border-radius: 0.5rem;
             font-weight: 600;
             cursor: pointer;
@@ -41,6 +41,7 @@
             box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
             /* Make buttons full width on small screens, then revert on larger screens */
             width: 100%;
+            font-size: 0.875rem; /* Smaller font size for buttons */
         }
         .btn-primary {
             background: linear-gradient(145deg, #4299e1, #3182ce); /* Blue gradient */
@@ -90,6 +91,7 @@
         @media (min-width: 640px) { /* Tailwind's 'sm' breakpoint */
             .btn {
                 width: auto; /* Buttons auto-width on larger screens */
+                font-size: 1rem; /* Original font size for buttons */
             }
             #generateQrAndSimulateBtn { /* Specific width for this button on larger screens */
                 width: 256px; /* w-64 */
@@ -178,7 +180,7 @@
         </div>
 
         <!-- Navigation -->
-        <div class="flex flex-col sm:flex-row justify-center gap-2 sm:gap-4 mb-6">
+        <div class="flex flex-wrap justify-center gap-2 mb-6"> <!-- Changed to flex-wrap and reduced gap -->
             <button id="showCasinoBtn" class="btn btn-primary">Casino Game</button>
             <button id="showNumbersBtn" class="btn btn-secondary">Numbers Game</button>
             <button id="showDepositBtn" class="btn btn-secondary">Deposit Funds</button>
