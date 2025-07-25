@@ -32,16 +32,16 @@
             gap: 1.5rem;
         }
         .btn {
-            padding: 0.5rem 1rem; /* Smaller padding for buttons */
+            padding: 0.5rem 0.75rem; /* Further reduced padding for smaller buttons */
             border-radius: 0.5rem;
             font-weight: 600;
             cursor: pointer;
             transition: all 0.2s ease-in-out;
             border: none;
             box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
-            /* Make buttons full width on small screens, then revert on larger screens */
-            width: 100%;
-            font-size: 0.875rem; /* Smaller font size for buttons */
+            font-size: 0.75rem; /* Even smaller font size for buttons on small screens */
+            white-space: nowrap; /* Prevent text wrapping */
+            flex-shrink: 0; /* Prevent buttons from shrinking */
         }
         .btn-primary {
             background: linear-gradient(145deg, #4299e1, #3182ce); /* Blue gradient */
@@ -90,8 +90,8 @@
         }
         @media (min-width: 640px) { /* Tailwind's 'sm' breakpoint */
             .btn {
-                width: auto; /* Buttons auto-width on larger screens */
-                font-size: 1rem; /* Original font size for buttons */
+                font-size: 0.875rem; /* Adjusted font size for larger screens */
+                padding: 0.5rem 1rem; /* Adjusted padding for larger screens */
             }
             #generateQrAndSimulateBtn { /* Specific width for this button on larger screens */
                 width: 256px; /* w-64 */
@@ -201,7 +201,7 @@
                 </div>
                 <button id="generateQrAndSimulateBtn" class="btn btn-primary">Generate QR & Simulate Payment</button>
                 <img id="qrCodeImage" src="" alt="UPI QR Code" class="rounded-lg border-2 border-blue-400 w-40 h-40 sm:w-48 sm:h-48">
-                <a id="paymentLink" href="#" target="_blank" class="text-lg">Click here to simulate payment app</a>
+                <a id="paymentLink" href="#" target="_blank" rel="noopener noreferrer" class="text-lg">Click here to simulate payment app</a>
                 <p id="depositMessage" class="text-base sm:text-xl font-semibold mt-4 text-center"></p>
             </div>
         </div>
@@ -232,13 +232,14 @@
             <div class="flex flex-col sm:flex-row items-center gap-2 w-full">
                 <label for="numbersBet" class="text-lg">Bet Amount (MAK Coins):</label>
                 <input type="number" id="numbersBet" value="10" min="1" class="text-center">
+                </div>
+                <div class="flex flex-col sm:flex-row items-center gap-2 w-full">
+                    <label for="chosenNumber" class="text-lg">Choose a number (1-10):</label>
+                    <input type="number" id="chosenNumber" value="5" min="1" max="10" class="text-center">
+                </div>
+                <button id="guessBtn" class="btn btn-primary">Guess</button>
+                <p id="numbersResult" class="text-base sm:text-xl font-semibold mt-4 text-center"></p>
             </div>
-            <div class="flex flex-col sm:flex-row items-center gap-2 w-full">
-                <label for="chosenNumber" class="text-lg">Choose a number (1-10):</label>
-                <input type="number" id="chosenNumber" value="5" min="1" max="10" class="text-center">
-            </div>
-            <button id="guessBtn" class="btn btn-primary">Guess</button>
-            <p id="numbersResult" class="text-base sm:text-xl font-semibold mt-4 text-center"></p>
         </div>
 
         <!-- Win History Section -->
@@ -306,7 +307,7 @@
 
         // Message Box Elements
         const messageBox = document.getElementById('messageBox');
-        const messageBoxOverlay = document.getElementById('messageBoxOverlay');
+        const messageBoxOverlay = document.getElementById('messageBoxOverlay'); 
         const messageBoxText = document.getElementById('messageBoxText');
         const messageBoxCloseBtn = document.getElementById('messageBoxCloseBtn');
 
@@ -466,7 +467,7 @@
 
         // --- Casino Game Logic (Simulated Backend) ---
 
-        const casinoSymbols = ['🍒', '🍋', '🔔', '💎', '🍀']; // Slot machine symbols
+        const casinoSymbols = ['🍒', '�', '🔔', '💎', '🍀']; // Slot machine symbols
 
         /**
          * @function generateCasinoOutcome
@@ -627,3 +628,4 @@
     </script>
 </body>
 </html>
+�
