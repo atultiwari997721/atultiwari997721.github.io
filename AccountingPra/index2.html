@@ -278,6 +278,51 @@
                         { particular: 'Cash A/c', type: 'Credit', amount: '2000' },
                     ],
                 },
+                {
+                    id: 'je21',
+                    questionText: 'Purchased computer for office use Rs. 30,000 by cheque.',
+                    type: 'journal_entry',
+                    expectedAnswer: [
+                        { particular: 'Computer A/c', type: 'Debit', amount: '30000' },
+                        { particular: 'Bank A/c', type: 'Credit', amount: '30000' },
+                    ],
+                },
+                {
+                    id: 'je22',
+                    questionText: 'Paid for advertisements Rs. 2,500.',
+                    type: 'journal_entry',
+                    expectedAnswer: [
+                        { particular: 'Advertisement Expenses A/c', type: 'Debit', amount: '2500' },
+                        { particular: 'Cash A/c', type: 'Credit', amount: '2500' },
+                    ],
+                },
+                {
+                    id: 'je23',
+                    questionText: 'Received dividend Rs. 700.',
+                    type: 'journal_entry',
+                    expectedAnswer: [
+                        { particular: 'Cash A/c', type: 'Debit', amount: '700' },
+                        { particular: 'Dividend Received A/c', type: 'Credit', amount: '700' },
+                    ],
+                },
+                {
+                    id: 'je24',
+                    questionText: 'Paid for repairs to machinery Rs. 1,200.',
+                    type: 'journal_entry',
+                    expectedAnswer: [
+                        { particular: 'Repairs A/c', type: 'Debit', amount: '1200' },
+                        { particular: 'Cash A/c', type: 'Credit', amount: '1200' },
+                    ],
+                },
+                {
+                    id: 'je25',
+                    questionText: 'Goods sold to Suresh on credit Rs. 9,000.',
+                    type: 'journal_entry',
+                    expectedAnswer: [
+                        { particular: 'Suresh A/c', type: 'Debit', amount: '9000' },
+                        { particular: 'Sales A/c', type: 'Credit', amount: '9000' },
+                    ],
+                },
             ],
             'Ledger Posting': [
                 {
@@ -464,6 +509,51 @@
                     expectedAnswer: [
                         { account: 'Drawings A/c', side: 'Debit', particular: 'To Cash A/c', amount: '2000' },
                         { account: 'Cash A/c', side: 'Credit', particular: 'By Drawings A/c', amount: '2000' },
+                    ],
+                },
+                {
+                    id: 'lp21',
+                    questionText: 'Post the following Journal Entry to Ledger: Computer A/c Dr. 30,000, To Bank A/c 30,000',
+                    type: 'ledger_posting',
+                    expectedAnswer: [
+                        { account: 'Computer A/c', side: 'Debit', particular: 'To Bank A/c', amount: '30000' },
+                        { account: 'Bank A/c', side: 'Credit', particular: 'By Computer A/c', amount: '30000' },
+                    ],
+                },
+                {
+                    id: 'lp22',
+                    questionText: 'Post the following Journal Entry to Ledger: Advertisement Expenses A/c Dr. 2,500, To Cash A/c 2,500',
+                    type: 'ledger_posting',
+                    expectedAnswer: [
+                        { account: 'Advertisement Expenses A/c', side: 'Debit', particular: 'To Cash A/c', amount: '2500' },
+                        { account: 'Cash A/c', side: 'Credit', particular: 'By Advertisement Expenses A/c', amount: '2500' },
+                    ],
+                },
+                {
+                    id: 'lp23',
+                    questionText: 'Post the following Journal Entry to Ledger: Cash A/c Dr. 700, To Dividend Received A/c 700',
+                    type: 'ledger_posting',
+                    expectedAnswer: [
+                        { account: 'Cash A/c', side: 'Debit', particular: 'To Dividend Received A/c', amount: '700' },
+                        { account: 'Dividend Received A/c', side: 'Credit', particular: 'By Cash A/c', amount: '700' },
+                    ],
+                },
+                {
+                    id: 'lp24',
+                    questionText: 'Post the following Journal Entry to Ledger: Repairs A/c Dr. 1,200, To Cash A/c 1,200',
+                    type: 'ledger_posting',
+                    expectedAnswer: [
+                        { account: 'Repairs A/c', side: 'Debit', particular: 'To Cash A/c', amount: '1200' },
+                        { account: 'Cash A/c', side: 'Credit', particular: 'By Repairs A/c', amount: '1200' },
+                    ],
+                },
+                {
+                    id: 'lp25',
+                    questionText: 'Post the following Journal Entry to Ledger: Suresh A/c Dr. 9,000, To Sales A/c 9,000',
+                    type: 'ledger_posting',
+                    expectedAnswer: [
+                        { account: 'Suresh A/c', side: 'Debit', particular: 'To Sales A/c', amount: '9000' },
+                        { account: 'Sales A/c', side: 'Credit', particular: 'By Suresh A/c', amount: '9000' },
                     ],
                 },
             ],
@@ -667,6 +757,51 @@
                         { account: 'Bank Overdraft', debit: '', credit: '10000' },
                         { account: 'Bank Balance', debit: '5000', credit: '' },
                         { account: 'Cash', debit: '5000', credit: '' },
+                    ],
+                },
+                {
+                    id: 'tb21',
+                    questionText: 'Prepare a Trial Balance from the following ledger balances: Computer Dr. 30000, Bank Cr. 30000',
+                    type: 'trial_balance',
+                    expectedAnswer: [
+                        { account: 'Computer', debit: '30000', credit: '' },
+                        { account: 'Bank', debit: '', credit: '30000' },
+                    ],
+                },
+                {
+                    id: 'tb22',
+                    questionText: 'Prepare a Trial Balance from the following ledger balances: Advertisement Expenses Dr. 2500, Cash Cr. 2500',
+                    type: 'trial_balance',
+                    expectedAnswer: [
+                        { account: 'Advertisement Expenses', debit: '2500', credit: '' },
+                        { account: 'Cash', debit: '', credit: '2500' },
+                    ],
+                },
+                {
+                    id: 'tb23',
+                    questionText: 'Prepare a Trial Balance from the following ledger balances: Dividend Received Cr. 700, Cash Dr. 700',
+                    type: 'trial_balance',
+                    expectedAnswer: [
+                        { account: 'Dividend Received', debit: '', credit: '700' },
+                        { account: 'Cash', debit: '700', credit: '' },
+                    ],
+                },
+                {
+                    id: 'tb24',
+                    questionText: 'Prepare a Trial Balance from the following ledger balances: Repairs Dr. 1200, Cash Cr. 1200',
+                    type: 'trial_balance',
+                    expectedAnswer: [
+                        { account: 'Repairs', debit: '1200', credit: '' },
+                        { account: 'Cash', debit: '', credit: '1200' },
+                    ],
+                },
+                {
+                    id: 'tb25',
+                    questionText: 'Prepare a Trial Balance from the following ledger balances: Suresh Dr. 9000, Sales Cr. 9000',
+                    type: 'trial_balance',
+                    expectedAnswer: [
+                        { account: 'Suresh', debit: '9000', credit: '' },
+                        { account: 'Sales', debit: '', credit: '9000' },
                     ],
                 },
             ],
@@ -876,6 +1011,56 @@
                         { particular: 'Interest Paid', amount: '2500', type: 'Debit' },
                     ],
                 },
+                {
+                    id: 'pl21',
+                    questionText: 'Prepare a Profit & Loss Account (extract) from the following: Legal Fees 1800, Bank Charges 150, Interest Received 250',
+                    type: 'profit_loss',
+                    expectedAnswer: [
+                        { particular: 'Legal Fees', amount: '1800', type: 'Debit' },
+                        { particular: 'Bank Charges', amount: '150', type: 'Debit' },
+                        { particular: 'Interest Received', amount: '250', type: 'Credit' },
+                    ],
+                },
+                {
+                    id: 'pl22',
+                    questionText: 'Prepare a Profit & Loss Account (extract) from the following: Printing & Stationery 600, Postage 200, Commission Paid 300',
+                    type: 'profit_loss',
+                    expectedAnswer: [
+                        { particular: 'Printing & Stationery', amount: '600', type: 'Debit' },
+                        { particular: 'Postage', amount: '200', type: 'Debit' },
+                        { particular: 'Commission Paid', amount: '300', type: 'Debit' },
+                    ],
+                },
+                {
+                    id: 'pl23',
+                    questionText: 'Prepare a Profit & Loss Account (extract) from the following: Audit Fees 1000, Depreciation on Furniture 500, Rent Received 1200',
+                    type: 'profit_loss',
+                    expectedAnswer: [
+                        { particular: 'Audit Fees', amount: '1000', type: 'Debit' },
+                        { particular: 'Depreciation on Furniture', amount: '500', type: 'Debit' },
+                        { particular: 'Rent Received', amount: '1200', type: 'Credit' },
+                    ],
+                },
+                {
+                    id: 'pl24',
+                    questionText: 'Prepare a Profit & Loss Account (extract) from the following: Salaries 9000, Office Expenses 1500, Dividend Received 400',
+                    type: 'profit_loss',
+                    expectedAnswer: [
+                        { particular: 'Salaries', amount: '9000', type: 'Debit' },
+                        { particular: 'Office Expenses', amount: '1500', type: 'Debit' },
+                        { particular: 'Dividend Received', amount: '400', type: 'Credit' },
+                    ],
+                },
+                {
+                    id: 'pl25',
+                    questionText: 'Prepare a Profit & Loss Account (extract) from the following: Bad Debts 700, Discount Allowed 100, Interest on Loan 300',
+                    type: 'profit_loss',
+                    expectedAnswer: [
+                        { particular: 'Bad Debts', amount: '700', type: 'Debit' },
+                        { particular: 'Discount Allowed', amount: '100', type: 'Debit' },
+                        { particular: 'Interest on Loan', amount: '300', type: 'Debit' },
+                    ],
+                },
             ],
             'Balance Sheet': [
                 {
@@ -1080,6 +1265,58 @@
                         { particular: 'Bank Loan', amount: '60000', type: 'Liability' },
                         { particular: 'Cash in Hand', amount: '5000', type: 'Asset' },
                         { particular: 'Bank Balance', amount: '55000', type: 'Asset' },
+                    ],
+                },
+                {
+                    id: 'bs21',
+                    questionText: 'Prepare a Balance Sheet (extract) from the following: Computer 30000, Bank Loan 20000, Cash 10000',
+                    type: 'balance_sheet',
+                    expectedAnswer: [
+                        { particular: 'Computer', amount: '30000', type: 'Asset' },
+                        { particular: 'Bank Loan', amount: '20000', type: 'Liability' },
+                        { particular: 'Cash', amount: '10000', type: 'Asset' },
+                    ],
+                },
+                {
+                    id: 'bs22',
+                    questionText: 'Prepare a Balance Sheet (extract) from the following: Investment in Bonds 15000, Accrued Interest on Investment 500, Creditors 8000',
+                    type: 'balance_sheet',
+                    expectedAnswer: [
+                        { particular: 'Investment in Bonds', amount: '15000', type: 'Asset' },
+                        { particular: 'Accrued Interest on Investment', amount: '500', type: 'Asset' },
+                        { particular: 'Creditors', amount: '8000', type: 'Liability' },
+                    ],
+                },
+                {
+                    id: 'bs23',
+                    questionText: 'Prepare a Balance Sheet (extract) from the following: Prepaid Insurance 1000, Outstanding Salary 2000, Bank Balance 5000',
+                    type: 'balance_sheet',
+                    expectedAnswer: [
+                        { particular: 'Prepaid Insurance', amount: '1000', type: 'Asset' },
+                        { particular: 'Outstanding Salary', amount: '2000', type: 'Liability' },
+                        { particular: 'Bank Balance', amount: '5000', type: 'Asset' },
+                    ],
+                },
+                {
+                    id: 'bs24',
+                    questionText: 'Prepare a Balance Sheet (extract) from the following: Bills Receivable 3000, Bills Payable 1000, Cash in Hand 2000',
+                    type: 'balance_sheet',
+                    expectedAnswer: [
+                        { particular: 'Bills Receivable', amount: '3000', type: 'Asset' },
+                        { particular: 'Bills Payable', amount: '1000', type: 'Liability' },
+                        { particular: 'Cash in Hand', amount: '2000', type: 'Asset' },
+                    ],
+                },
+                {
+                    id: 'bs25',
+                    questionText: 'Prepare a Balance Sheet (extract) from the following: Fixed Assets 150000, Current Assets 50000, Long-term Liabilities 80000, Current Liabilities 20000, Capital 100000',
+                    type: 'balance_sheet',
+                    expectedAnswer: [
+                        { particular: 'Fixed Assets', amount: '150000', type: 'Asset' },
+                        { particular: 'Current Assets', amount: '50000', type: 'Asset' },
+                        { particular: 'Long-term Liabilities', amount: '80000', type: 'Liability' },
+                        { particular: 'Current Liabilities', amount: '20000', type: 'Liability' },
+                        { particular: 'Capital', amount: '100000', type: 'Liability' },
                     ],
                 },
             ],
@@ -1663,7 +1900,7 @@
             feedbackDiv.classList.remove('hidden');
             if (isCorrect) {
                 feedbackDiv.className = 'mt-4 p-3 rounded-md text-center font-medium bg-green-100 text-green-800';
-                feedbackDiv.textContent = 'Correct!';
+                feedbackDiv.textContent = 'Correct! 🎉';
                 score++;
             } else {
                 feedbackDiv.className = 'mt-4 p-3 rounded-md text-center font-medium bg-red-100 text-red-800';
@@ -1685,6 +1922,11 @@
             feedbackDiv.classList.remove('hidden', 'bg-red-100', 'bg-green-100');
             feedbackDiv.className = 'mt-4 p-3 rounded-md text-center font-medium bg-yellow-100 text-yellow-800';
             feedbackDiv.textContent = `Hint: ${hintsData[currentQuestion.type]}`;
+
+            // Re-enable check answer button after hint
+            document.getElementById('check-answer-btn').disabled = false;
+            // Keep inputs enabled
+            setInputsAndAddRowDisabled('current-question-content', false);
         };
 
         // Handle give answer request
