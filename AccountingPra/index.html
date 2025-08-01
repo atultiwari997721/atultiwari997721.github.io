@@ -1,0 +1,1779 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tally Practice Hub</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap');
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        /* Custom scrollbar for tables */
+        .overflow-x-auto::-webkit-scrollbar {
+            height: 8px;
+        }
+        .overflow-x-auto::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 10px;
+        }
+        .overflow-x-auto::-webkit-scrollbar-thumb {
+            background: #cbd5e1; /* Tailwind gray-300 */
+            border-radius: 10px;
+        }
+        .overflow-x-auto::-webkit-scrollbar-thumb:hover {
+            background: #94a3b8; /* Tailwind gray-400 */
+        }
+
+        /* Specific styles for better mobile table input/select visibility */
+        .table-input {
+            min-width: 80px; /* Ensure inputs have a minimum readable width */
+        }
+        .table-select {
+            min-width: 100px; /* Ensure selects have a minimum readable width */
+        }
+    </style>
+</head>
+<body class="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 font-sans text-gray-900 p-4 sm:p-6">
+
+    <header class="text-center mb-8">
+        <h1 class="text-4xl sm:text-5xl font-extrabold text-blue-800 mb-2">Tally Practice Hub</h1>
+        <p class="text-lg sm:text-xl text-indigo-600">Master Accounting Concepts for MS Excel & Tally</p>
+    </header>
+
+    <div id="app-container" class="max-w-4xl mx-auto">
+        <!-- Topic Selection Screen -->
+        <div id="topic-selection-screen" class="max-w-3xl mx-auto bg-white rounded-xl shadow-lg p-6 sm:p-8">
+            <h2 class="text-2xl font-bold mb-6 text-center text-gray-800">Select a Topic to Begin</h2>
+            <div id="topic-buttons" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <!-- Topic buttons will be injected here by JavaScript -->
+            </div>
+        </div>
+
+        <!-- Practice Screen (hidden initially) -->
+        <div id="practice-screen" class="hidden">
+            <div class="flex justify-between items-center bg-blue-700 text-white p-4 rounded-t-xl shadow-md">
+                <h2 id="current-topic-title" class="text-2xl font-bold"></h2>
+                <button id="change-topic-btn" class="bg-blue-800 hover:bg-blue-900 text-white font-semibold py-2 px-4 rounded-md shadow-sm transition duration-300 ease-in-out focus:outline-none focus:ring-2 focus:ring-blue-400">
+                    Change Topic
+                </button>
+            </div>
+            <div class="bg-white rounded-b-xl shadow-lg p-6 sm:p-8">
+                <div class="mb-4 text-lg text-gray-700">
+                    <p><span class="font-semibold">Question <span id="question-number">1</span> of <span id="total-questions"></span></span></p>
+                    <p>Score: <span id="score">0</span> / <span id="total-attempted">0</span></p>
+                </div>
+
+                <div id="question-container">
+                    <!-- Question components will be injected here by JavaScript -->
+                </div>
+
+                <div id="feedback" class="mt-4 p-3 rounded-md text-center font-medium hidden">
+                    <!-- Feedback message will appear here -->
+                </div>
+
+                <div class="flex flex-col sm:flex-row justify-center mt-6 space-y-4 sm:space-y-0 sm:space-x-4">
+                    <button id="give-hint-btn" class="bg-yellow-500 hover:bg-yellow-600 text-white font-bold py-2 px-6 rounded-md shadow-lg transition duration-300 ease-in-out transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-yellow-400">
+                        Give Hint
+                    </button>
+                    <button id="give-answer-btn" class="bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-6 rounded-md shadow-lg transition duration-300 ease-in-out transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-red-400">
+                        Give Answer
+                    </button>
+                    <button id="next-question-btn" class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2 px-6 rounded-md shadow-lg transition duration-300 ease-in-out transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-indigo-400">
+                        Next Question
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Define the questions for each topic
+        const questionsData = {
+            'Journal Entries': [
+                {
+                    id: 'je1',
+                    questionText: 'Started business with cash Rs. 50,000.',
+                    type: 'journal_entry',
+                    expectedAnswer: [
+                        { particular: 'Cash A/c', type: 'Debit', amount: '50000' },
+                        { particular: 'Capital A/c', type: 'Credit', amount: '50000' },
+                    ],
+                    example: {
+                        particular: 'Cash A/c',
+                        type: 'Debit',
+                        amount: '50000',
+                    },
+                },
+                {
+                    id: 'je2',
+                    questionText: 'Purchased goods for cash Rs. 10,000.',
+                    type: 'journal_entry',
+                    expectedAnswer: [
+                        { particular: 'Purchases A/c', type: 'Debit', amount: '10000' },
+                        { particular: 'Cash A/c', type: 'Credit', amount: '10000' },
+                    ],
+                },
+                {
+                    id: 'je3',
+                    questionText: 'Sold goods for cash Rs. 15,000.',
+                    type: 'journal_entry',
+                    expectedAnswer: [
+                        { particular: 'Cash A/c', type: 'Debit', amount: '15000' },
+                        { particular: 'Sales A/c', type: 'Credit', amount: '15000' },
+                    ],
+                },
+                {
+                    id: 'je4',
+                    questionText: 'Paid rent Rs. 2,000.',
+                    type: 'journal_entry',
+                    expectedAnswer: [
+                        { particular: 'Rent A/c', type: 'Debit', amount: '2000' },
+                        { particular: 'Cash A/c', type: 'Credit', amount: '2000' },
+                    ],
+                },
+                {
+                    id: 'je5',
+                    questionText: 'Received commission Rs. 1,000.',
+                    type: 'journal_entry',
+                    expectedAnswer: [
+                        { particular: 'Cash A/c', type: 'Debit', amount: '1000' },
+                        { particular: 'Commission Received A/c', type: 'Credit', amount: '1000' },
+                    ],
+                },
+                {
+                    id: 'je6',
+                    questionText: 'Purchased furniture for cash Rs. 5,000.',
+                    type: 'journal_entry',
+                    expectedAnswer: [
+                        { particular: 'Furniture A/c', type: 'Debit', amount: '5000' },
+                        { particular: 'Cash A/c', type: 'Credit', amount: '5000' },
+                    ],
+                },
+                {
+                    id: 'je7',
+                    questionText: 'Sold goods on credit to Rohan Rs. 7,000.',
+                    type: 'journal_entry',
+                    expectedAnswer: [
+                        { particular: 'Rohan A/c', type: 'Debit', amount: '7000' },
+                        { particular: 'Sales A/c', type: 'Credit', amount: '7000' },
+                    ],
+                },
+                {
+                    id: 'je8',
+                    questionText: 'Purchased goods on credit from Shyam Rs. 8,000.',
+                    type: 'journal_entry',
+                    expectedAnswer: [
+                        { particular: 'Purchases A/c', type: 'Debit', amount: '8000' },
+                        { particular: 'Shyam A/c', type: 'Credit', amount: '8000' },
+                    ],
+                },
+                {
+                    id: 'je9',
+                    questionText: 'Paid salary Rs. 3,000.',
+                    type: 'journal_entry',
+                    expectedAnswer: [
+                        { particular: 'Salary A/c', type: 'Debit', amount: '3000' },
+                        { particular: 'Cash A/c', type: 'Credit', amount: '3000' },
+                    ],
+                },
+                {
+                    id: 'je10',
+                    questionText: 'Deposited cash into bank Rs. 20,000.',
+                    type: 'journal_entry',
+                    expectedAnswer: [
+                        { particular: 'Bank A/c', type: 'Debit', amount: '20000' },
+                        { particular: 'Cash A/c', type: 'Credit', amount: '20000' },
+                    ],
+                },
+                {
+                    id: 'je11',
+                    questionText: 'Withdrew cash from bank for office use Rs. 5,000.',
+                    type: 'journal_entry',
+                    expectedAnswer: [
+                        { particular: 'Cash A/c', type: 'Debit', amount: '5000' },
+                        { particular: 'Bank A/c', type: 'Credit', amount: '5000' },
+                    ],
+                },
+                {
+                    id: 'je12',
+                    questionText: 'Paid electricity bill Rs. 1,500.',
+                    type: 'journal_entry',
+                    expectedAnswer: [
+                        { particular: 'Electricity Expenses A/c', type: 'Debit', amount: '1500' },
+                        { particular: 'Cash A/c', type: 'Credit', amount: '1500' },
+                    ],
+                },
+                {
+                    id: 'je13',
+                    questionText: 'Received cash from Rohan Rs. 7,000.',
+                    type: 'journal_entry',
+                    expectedAnswer: [
+                        { particular: 'Cash A/c', type: 'Debit', amount: '7000' },
+                        { particular: 'Rohan A/c', type: 'Credit', amount: '7000' },
+                    ],
+                },
+                {
+                    id: 'je14',
+                    questionText: 'Paid cash to Shyam Rs. 8,000.',
+                    type: 'journal_entry',
+                    expectedAnswer: [
+                        { particular: 'Shyam A/c', type: 'Debit', amount: '8000' },
+                        { particular: 'Cash A/c', type: 'Credit', amount: '8000' },
+                    ],
+                },
+                {
+                    id: 'je15',
+                    questionText: 'Purchased machinery for Rs. 25,000 by cheque.',
+                    type: 'journal_entry',
+                    expectedAnswer: [
+                        { particular: 'Machinery A/c', type: 'Debit', amount: '25000' },
+                        { particular: 'Bank A/c', type: 'Credit', amount: '25000' },
+                    ],
+                },
+                {
+                    id: 'je16',
+                    questionText: 'Sold old furniture for Rs. 1,000.',
+                    type: 'journal_entry',
+                    expectedAnswer: [
+                        { particular: 'Cash A/c', type: 'Debit', amount: '1000' },
+                        { particular: 'Furniture A/c', type: 'Credit', amount: '1000' },
+                    ],
+                },
+                {
+                    id: 'je17',
+                    questionText: 'Paid interest on loan Rs. 500.',
+                    type: 'journal_entry',
+                    expectedAnswer: [
+                        { particular: 'Interest on Loan A/c', type: 'Debit', amount: '500' },
+                        { particular: 'Cash A/c', type: 'Credit', amount: '500' },
+                    ],
+                },
+                {
+                    id: 'je18',
+                    questionText: 'Received interest Rs. 300.',
+                    type: 'journal_entry',
+                    expectedAnswer: [
+                        { particular: 'Cash A/c', type: 'Debit', amount: '300' },
+                        { particular: 'Interest Received A/c', type: 'Credit', amount: '300' },
+                    ],
+                },
+                {
+                    id: 'je19',
+                    questionText: 'Goods withdrawn for personal use Rs. 1,000.',
+                    type: 'journal_entry',
+                    expectedAnswer: [
+                        { particular: 'Drawings A/c', type: 'Debit', amount: '1000' },
+                        { particular: 'Purchases A/c', type: 'Credit', amount: '1000' },
+                    ],
+                },
+                {
+                    id: 'je20',
+                    questionText: 'Cash withdrawn for personal use Rs. 2,000.',
+                    type: 'journal_entry',
+                    expectedAnswer: [
+                        { particular: 'Drawings A/c', type: 'Debit', amount: '2000' },
+                        { particular: 'Cash A/c', type: 'Credit', amount: '2000' },
+                    ],
+                },
+            ],
+            'Ledger Posting': [
+                {
+                    id: 'lp1',
+                    questionText: 'Post the following Journal Entry to Ledger: Cash A/c Dr. 50,000, To Capital A/c 50,000',
+                    type: 'ledger_posting',
+                    expectedAnswer: [
+                        { account: 'Cash A/c', side: 'Debit', particular: 'To Capital A/c', amount: '50000' },
+                        { account: 'Capital A/c', side: 'Credit', particular: 'By Cash A/c', amount: '50000' },
+                    ],
+                    example: {
+                        account: 'Cash A/c',
+                        side: 'Debit',
+                        particular: 'To Capital A/c',
+                        amount: '50000',
+                    },
+                },
+                {
+                    id: 'lp2',
+                    questionText: 'Post the following Journal Entry to Ledger: Purchases A/c Dr. 10,000, To Cash A/c 10,000',
+                    type: 'ledger_posting',
+                    expectedAnswer: [
+                        { account: 'Purchases A/c', side: 'Debit', particular: 'To Cash A/c', amount: '10000' },
+                        { account: 'Cash A/c', side: 'Credit', particular: 'By Purchases A/c', amount: '10000' },
+                    ],
+                },
+                {
+                    id: 'lp3',
+                    questionText: 'Post the following Journal Entry to Ledger: Cash A/c Dr. 15,000, To Sales A/c 15,000',
+                    type: 'ledger_posting',
+                    expectedAnswer: [
+                        { account: 'Cash A/c', side: 'Debit', particular: 'To Sales A/c', amount: '15000' },
+                        { account: 'Sales A/c', side: 'Credit', particular: 'By Cash A/c', amount: '15000' },
+                    ],
+                },
+                {
+                    id: 'lp4',
+                    questionText: 'Post the following Journal Entry to Ledger: Rent A/c Dr. 2,000, To Cash A/c 2,000',
+                    type: 'ledger_posting',
+                    expectedAnswer: [
+                        { account: 'Rent A/c', side: 'Debit', particular: 'To Cash A/c', amount: '2000' },
+                        { account: 'Cash A/c', side: 'Credit', particular: 'By Rent A/c', amount: '2000' },
+                    ],
+                },
+                {
+                    id: 'lp5',
+                    questionText: 'Post the following Journal Entry to Ledger: Cash A/c Dr. 1,000, To Commission Received A/c 1,000',
+                    type: 'ledger_posting',
+                    expectedAnswer: [
+                        { account: 'Cash A/c', side: 'Debit', particular: 'To Commission Received A/c', amount: '1000' },
+                        { account: 'Commission Received A/c', side: 'Credit', particular: 'By Cash A/c', amount: '1000' },
+                    ],
+                },
+                {
+                    id: 'lp6',
+                    questionText: 'Post the following Journal Entry to Ledger: Furniture A/c Dr. 5,000, To Cash A/c 5,000',
+                    type: 'ledger_posting',
+                    expectedAnswer: [
+                        { account: 'Furniture A/c', side: 'Debit', particular: 'To Cash A/c', amount: '5000' },
+                        { account: 'Cash A/c', side: 'Credit', particular: 'By Furniture A/c', amount: '5000' },
+                    ],
+                },
+                {
+                    id: 'lp7',
+                    questionText: 'Post the following Journal Entry to Ledger: Rohan A/c Dr. 7,000, To Sales A/c 7,000',
+                    type: 'ledger_posting',
+                    expectedAnswer: [
+                        { account: 'Rohan A/c', side: 'Debit', particular: 'To Sales A/c', amount: '7000' },
+                        { account: 'Sales A/c', side: 'Credit', particular: 'By Rohan A/c', amount: '7000' },
+                    ],
+                },
+                {
+                    id: 'lp8',
+                    questionText: 'Post the following Journal Entry to Ledger: Purchases A/c Dr. 8,000, To Shyam A/c 8,000',
+                    type: 'ledger_posting',
+                    expectedAnswer: [
+                        { account: 'Purchases A/c', side: 'Debit', particular: 'To Shyam A/c', amount: '8000' },
+                        { account: 'Shyam A/c', side: 'Credit', particular: 'By Purchases A/c', amount: '8000' },
+                    ],
+                },
+                {
+                    id: 'lp9',
+                    questionText: 'Paid salary Rs. 3,000.',
+                    type: 'ledger_posting',
+                    expectedAnswer: [
+                        { account: 'Salary A/c', side: 'Debit', particular: 'To Cash A/c', amount: '3000' },
+                        { account: 'Cash A/c', side: 'Credit', particular: 'By Salary A/c', amount: '3000' },
+                    ],
+                },
+                {
+                    id: 'lp10',
+                    questionText: 'Deposited cash into bank Rs. 20,000.',
+                    type: 'ledger_posting',
+                    expectedAnswer: [
+                        { account: 'Bank A/c', side: 'Debit', particular: 'To Cash A/c', amount: '20000' },
+                        { account: 'Cash A/c', side: 'Credit', particular: 'By Bank A/c', amount: '20000' },
+                    ],
+                },
+                {
+                    id: 'lp11',
+                    questionText: 'Withdrew cash from bank for office use Rs. 5,000.',
+                    type: 'ledger_posting',
+                    expectedAnswer: [
+                        { account: 'Cash A/c', side: 'Debit', particular: 'To Bank A/c', amount: '5000' },
+                        { account: 'Bank A/c', side: 'Credit', particular: 'By Cash A/c', amount: '5000' },
+                    ],
+                },
+                {
+                    id: 'lp12',
+                    questionText: 'Paid electricity bill Rs. 1,500.',
+                    type: 'ledger_posting',
+                    expectedAnswer: [
+                        { account: 'Electricity Expenses A/c', side: 'Debit', particular: 'To Cash A/c', amount: '1500' },
+                        { account: 'Cash A/c', side: 'Credit', particular: 'By Electricity Expenses A/c', amount: '1500' },
+                    ],
+                },
+                {
+                    id: 'lp13',
+                    questionText: 'Received cash from Rohan Rs. 7,000.',
+                    type: 'ledger_posting',
+                    expectedAnswer: [
+                        { account: 'Cash A/c', side: 'Debit', particular: 'To Rohan A/c', amount: '7000' },
+                        { account: 'Rohan A/c', side: 'Credit', particular: 'By Cash A/c', amount: '7000' },
+                    ],
+                },
+                {
+                    id: 'lp14',
+                    questionText: 'Paid cash to Shyam Rs. 8,000.',
+                    type: 'ledger_posting',
+                    expectedAnswer: [
+                        { account: 'Shyam A/c', side: 'Debit', particular: 'To Cash A/c', amount: '8000' },
+                        { account: 'Cash A/c', side: 'Credit', particular: 'By Shyam A/c', amount: '8000' },
+                    ],
+                },
+                {
+                    id: 'lp15',
+                    questionText: 'Purchased machinery for Rs. 25,000 by cheque.',
+                    type: 'ledger_posting',
+                    expectedAnswer: [
+                        { account: 'Machinery A/c', side: 'Debit', particular: 'To Bank A/c', amount: '25000' },
+                        { account: 'Bank A/c', side: 'Credit', particular: 'By Machinery A/c', amount: '25000' },
+                    ],
+                },
+                {
+                    id: 'lp16',
+                    questionText: 'Sold old furniture for Rs. 1,000.',
+                    type: 'ledger_posting',
+                    expectedAnswer: [
+                        { account: 'Cash A/c', side: 'Debit', particular: 'To Furniture A/c', amount: '1000' },
+                        { account: 'Furniture A/c', side: 'Credit', particular: 'By Cash A/c', amount: '1000' },
+                    ],
+                },
+                {
+                    id: 'lp17',
+                    questionText: 'Paid interest on loan Rs. 500.',
+                    type: 'ledger_posting',
+                    expectedAnswer: [
+                        { account: 'Interest on Loan A/c', side: 'Debit', particular: 'To Cash A/c', amount: '500' },
+                        { account: 'Cash A/c', side: 'Credit', particular: 'By Interest on Loan A/c', amount: '500' },
+                    ],
+                },
+                {
+                    id: 'lp18',
+                    questionText: 'Received interest Rs. 300.',
+                    type: 'ledger_posting',
+                    expectedAnswer: [
+                        { account: 'Cash A/c', side: 'Debit', particular: 'To Interest Received A/c', amount: '300' },
+                        { account: 'Interest Received A/c', side: 'Credit', particular: 'By Cash A/c', amount: '300' },
+                    ],
+                },
+                {
+                    id: 'lp19',
+                    questionText: 'Goods withdrawn for personal use Rs. 1,000.',
+                    type: 'ledger_posting',
+                    expectedAnswer: [
+                        { account: 'Drawings A/c', side: 'Debit', particular: 'To Purchases A/c', amount: '1000' },
+                        { account: 'Purchases A/c', side: 'Credit', particular: 'By Drawings A/c', amount: '1000' },
+                    ],
+                },
+                {
+                    id: 'lp20',
+                    questionText: 'Cash withdrawn for personal use Rs. 2,000.',
+                    type: 'ledger_posting',
+                    expectedAnswer: [
+                        { account: 'Drawings A/c', side: 'Debit', particular: 'To Cash A/c', amount: '2000' },
+                        { account: 'Cash A/c', side: 'Credit', particular: 'By Drawings A/c', amount: '2000' },
+                    ],
+                },
+            ],
+            'Trial Balance': [
+                {
+                    id: 'tb1',
+                    questionText: 'Prepare a Trial Balance from the following ledger balances: Cash Dr. 5000, Capital Cr. 5000',
+                    type: 'trial_balance',
+                    expectedAnswer: [
+                        { account: 'Cash', debit: '5000', credit: '' },
+                        { account: 'Capital', debit: '', credit: '5000' },
+                    ],
+                    example: {
+                        account: 'Cash',
+                        debit: '5000',
+                        credit: '',
+                    },
+                },
+                {
+                    id: 'tb2',
+                    questionText: 'Prepare a Trial Balance from the following ledger balances: Purchases Dr. 10000, Sales Cr. 15000, Cash Dr. 5000 (after adjusting for sales/purchases)',
+                    type: 'trial_balance',
+                    expectedAnswer: [
+                        { account: 'Purchases', debit: '10000', credit: '' },
+                        { account: 'Sales', debit: '', credit: '15000' },
+                        { account: 'Cash', debit: '5000', credit: '' },
+                    ],
+                },
+                {
+                    id: 'tb3',
+                    questionText: 'Prepare a Trial Balance from the following ledger balances: Rent Dr. 2000, Salary Dr. 3000, Cash Cr. 5000',
+                    type: 'trial_balance',
+                    expectedAnswer: [
+                        { account: 'Rent', debit: '2000', credit: '' },
+                        { account: 'Salary', debit: '3000', credit: '' },
+                        { account: 'Cash', debit: '', credit: '5000' },
+                    ],
+                },
+                {
+                    id: 'tb4',
+                    questionText: 'Prepare a Trial Balance from the following ledger balances: Bank Dr. 20000, Cash Cr. 20000',
+                    type: 'trial_balance',
+                    expectedAnswer: [
+                        { account: 'Bank', debit: '20000', credit: '' },
+                        { account: 'Cash', debit: '', credit: '20000' },
+                    ],
+                },
+                {
+                    id: 'tb5',
+                    questionText: 'Prepare a Trial Balance from the following ledger balances: Furniture Dr. 5000, Machinery Dr. 25000, Cash Cr. 5000, Bank Cr. 25000',
+                    type: 'trial_balance',
+                    expectedAnswer: [
+                        { account: 'Furniture', debit: '5000', credit: '' },
+                        { account: 'Machinery', debit: '25000', credit: '' },
+                        { account: 'Cash', debit: '', credit: '5000' },
+                        { account: 'Bank', debit: '', credit: '25000' },
+                    ],
+                },
+                {
+                    id: 'tb6',
+                    questionText: 'Prepare a Trial Balance from the following ledger balances: Rohan Dr. 7000, Shyam Cr. 8000, Sales Cr. 7000, Purchases Dr. 8000',
+                    type: 'trial_balance',
+                    expectedAnswer: [
+                        { account: 'Rohan', debit: '7000', credit: '' },
+                        { account: 'Shyam', debit: '', credit: '8000' },
+                        { account: 'Sales', debit: '', credit: '7000' },
+                        { account: 'Purchases', debit: '8000', credit: '' },
+                    ],
+                },
+                {
+                    id: 'tb7',
+                    questionText: 'Prepare a Trial Balance from the following ledger balances: Drawings Dr. 1000, Purchases Cr. 1000',
+                    type: 'trial_balance',
+                    expectedAnswer: [
+                        { account: 'Drawings', debit: '1000', credit: '' },
+                        { account: 'Purchases', debit: '', credit: '1000' },
+                    ],
+                },
+                {
+                    id: 'tb8',
+                    questionText: 'Prepare a Trial Balance from the following ledger balances: Interest on Loan Dr. 500, Interest Received Cr. 300, Cash Cr. 200',
+                    type: 'trial_balance',
+                    expectedAnswer: [
+                        { account: 'Interest on Loan', debit: '500', credit: '' },
+                        { account: 'Interest Received', debit: '', credit: '300' },
+                        { account: 'Cash', debit: '', credit: '200' },
+                    ],
+                },
+                {
+                    id: 'tb9',
+                    questionText: 'Prepare a Trial Balance from the following ledger balances: Electricity Expenses Dr. 1500, Cash Cr. 1500',
+                    type: 'trial_balance',
+                    expectedAnswer: [
+                        { account: 'Electricity Expenses', debit: '1500', credit: '' },
+                        { account: 'Cash', debit: '', credit: '1500' },
+                    ],
+                },
+                {
+                    id: 'tb10',
+                    questionText: 'Prepare a Trial Balance from the following ledger balances: Commission Received Cr. 1000, Cash Dr. 1000',
+                    type: 'trial_balance',
+                    expectedAnswer: [
+                        { account: 'Commission Received', debit: '', credit: '1000' },
+                        { account: 'Cash', debit: '1000', credit: '' },
+                    ],
+                },
+                {
+                    id: 'tb11',
+                    questionText: 'Prepare a Trial Balance from the following ledger balances: Capital Cr. 100000, Cash Dr. 100000',
+                    type: 'trial_balance',
+                    expectedAnswer: [
+                        { account: 'Capital', debit: '', credit: '100000' },
+                        { account: 'Cash', debit: '100000', credit: '' },
+                    ],
+                },
+                {
+                    id: 'tb12',
+                    questionText: 'Prepare a Trial Balance from the following ledger balances: Loan from Bank Cr. 50000, Bank Dr. 50000',
+                    type: 'trial_balance',
+                    expectedAnswer: [
+                        { account: 'Loan from Bank', debit: '', credit: '50000' },
+                        { account: 'Bank', debit: '50000', credit: '' },
+                    ],
+                },
+                {
+                    id: 'tb13',
+                    questionText: 'Prepare a Trial Balance from the following ledger balances: Sundry Debtors Dr. 20000, Sundry Creditors Cr. 15000, Sales Cr. 20000, Purchases Dr. 15000',
+                    type: 'trial_balance',
+                    expectedAnswer: [
+                        { account: 'Sundry Debtors', debit: '20000', credit: '' },
+                        { account: 'Sundry Creditors', debit: '', credit: '15000' },
+                        { account: 'Sales', debit: '', credit: '20000' },
+                        { account: 'Purchases', debit: '15000', credit: '' },
+                    ],
+                },
+                {
+                    id: 'tb14',
+                    questionText: 'Prepare a Trial Balance from the following ledger balances: Building Dr. 100000, Depreciation Cr. 10000, Building (Net) Dr. 90000',
+                    type: 'trial_balance',
+                    expectedAnswer: [
+                        { account: 'Building', debit: '100000', credit: '' },
+                        { account: 'Depreciation', debit: '', credit: '10000' },
+                        { account: 'Building (Net)', debit: '90000', credit: '' },
+                    ],
+                },
+                {
+                    id: 'tb15',
+                    questionText: 'Prepare a Trial Balance from the following ledger balances: Opening Stock Dr. 20000, Closing Stock Cr. 25000',
+                    type: 'trial_balance',
+                    expectedAnswer: [
+                        { account: 'Opening Stock', debit: '20000', credit: '' },
+                        { account: 'Closing Stock', debit: '', credit: '25000' },
+                    ],
+                },
+                {
+                    id: 'tb16',
+                    questionText: 'Prepare a Trial Balance from the following ledger balances: Wages Dr. 5000, Carriage Inwards Dr. 1000, Factory Expenses Dr. 2000, Cash Cr. 8000',
+                    type: 'trial_balance',
+                    expectedAnswer: [
+                        { account: 'Wages', debit: '5000', credit: '' },
+                        { account: 'Carriage Inwards', debit: '1000', credit: '' },
+                        { account: 'Factory Expenses', debit: '2000', credit: '' },
+                        { account: 'Cash', debit: '', credit: '8000' },
+                    ],
+                },
+                {
+                    id: 'tb17',
+                    questionText: 'Prepare a Trial Balance from the following ledger balances: Bad Debts Dr. 1000, Provision for Bad Debts Cr. 500, Debtors Dr. 500',
+                    type: 'trial_balance',
+                    expectedAnswer: [
+                        { account: 'Bad Debts', debit: '1000', credit: '' },
+                        { account: 'Provision for Bad Debts', debit: '', credit: '500' },
+                        { account: 'Debtors', debit: '500', credit: '' },
+                    ],
+                },
+                {
+                    id: 'tb18',
+                    questionText: 'Prepare a Trial Balance from the following ledger balances: Discount Allowed Dr. 200, Discount Received Cr. 150, Cash Cr. 50',
+                    type: 'trial_balance',
+                    expectedAnswer: [
+                        { account: 'Discount Allowed', debit: '200', credit: '' },
+                        { account: 'Discount Received', debit: '', credit: '150' },
+                        { account: 'Cash', debit: '', credit: '50' },
+                    ],
+                },
+                {
+                    id: 'tb19',
+                    questionText: 'Prepare a Trial Balance from the following ledger balances: Commission Paid Dr. 700, Commission Received Cr. 900, Cash Cr. 200',
+                    type: 'trial_balance',
+                    expectedAnswer: [
+                        { account: 'Commission Paid', debit: '700', credit: '' },
+                        { account: 'Commission Received', debit: '', credit: '900' },
+                        { account: 'Cash', debit: '', credit: '200' },
+                    ],
+                },
+                {
+                    id: 'tb20',
+                    questionText: 'Prepare a Trial Balance from the following ledger balances: Bank Overdraft Cr. 10000, Bank Balance Dr. 5000, Cash Dr. 5000',
+                    type: 'trial_balance',
+                    expectedAnswer: [
+                        { account: 'Bank Overdraft', debit: '', credit: '10000' },
+                        { account: 'Bank Balance', debit: '5000', credit: '' },
+                        { account: 'Cash', debit: '5000', credit: '' },
+                    ],
+                },
+            ],
+            'Profit & Loss Account': [
+                {
+                    id: 'pl1',
+                    questionText: 'Prepare a Profit & Loss Account (extract) from the following: Sales 100000, Purchases 60000, Gross Profit 40000',
+                    type: 'profit_loss',
+                    expectedAnswer: [
+                        { particular: 'Sales', amount: '100000', type: 'Credit' },
+                        { particular: 'Purchases', amount: '60000', type: 'Debit' },
+                        { particular: 'Gross Profit', amount: '40000', type: 'Credit' },
+                    ],
+                    example: {
+                        particular: 'Sales',
+                        amount: '100000',
+                        type: 'Credit',
+                    },
+                },
+                {
+                    id: 'pl2',
+                    questionText: 'Prepare a Profit & Loss Account (extract) from the following: Rent Paid 5000, Salary Paid 10000, Commission Received 2000',
+                    type: 'profit_loss',
+                    expectedAnswer: [
+                        { particular: 'Rent Paid', amount: '5000', type: 'Debit' },
+                        { particular: 'Salary Paid', amount: '10000', type: 'Debit' },
+                        { particular: 'Commission Received', amount: '2000', type: 'Credit' },
+                    ],
+                },
+                {
+                    id: 'pl3',
+                    questionText: 'Prepare a Profit & Loss Account (extract) from the following: Interest Paid 1000, Discount Received 500, Net Profit 1500',
+                    type: 'profit_loss',
+                    expectedAnswer: [
+                        { particular: 'Interest Paid', amount: '1000', type: 'Debit' },
+                        { particular: 'Discount Received', amount: '500', type: 'Credit' },
+                        { particular: 'Net Profit', amount: '1500', type: 'Credit' },
+                    ],
+                },
+                {
+                    id: 'pl4',
+                    questionText: 'Prepare a Profit & Loss Account (extract) from the following: Advertising Expenses 3000, Bad Debts 500, Interest on Investments 800',
+                    type: 'profit_loss',
+                    expectedAnswer: [
+                        { particular: 'Advertising Expenses', amount: '3000', type: 'Debit' },
+                        { particular: 'Bad Debts', amount: '500', type: 'Debit' },
+                        { particular: 'Interest on Investments', amount: '800', type: 'Credit' },
+                    ],
+                },
+                {
+                    id: 'pl5',
+                    questionText: 'Prepare a Profit & Loss Account (extract) from the following: Depreciation 2000, Loss on Sale of Asset 1000, Gain on Sale of Asset 1500',
+                    type: 'profit_loss',
+                    expectedAnswer: [
+                        { particular: 'Depreciation', amount: '2000', type: 'Debit' },
+                        { particular: 'Loss on Sale of Asset', amount: '1000', type: 'Debit' },
+                        { particular: 'Gain on Sale of Asset', amount: '1500', type: 'Credit' },
+                    ],
+                },
+                {
+                    id: 'pl6',
+                    questionText: 'Prepare a Profit & Loss Account (extract) from the following: Office Expenses 4000, Legal Charges 1000, Audit Fees 1500',
+                    type: 'profit_loss',
+                    expectedAnswer: [
+                        { particular: 'Office Expenses', amount: '4000', type: 'Debit' },
+                        { particular: 'Legal Charges', amount: '1000', type: 'Debit' },
+                        { particular: 'Audit Fees', amount: '1500', type: 'Debit' },
+                    ],
+                },
+                {
+                    id: 'pl7',
+                    questionText: 'Prepare a Profit & Loss Account (extract) from the following: Carriage Outwards 800, Selling Expenses 1200, Miscellaneous Income 300',
+                    type: 'profit_loss',
+                    expectedAnswer: [
+                        { particular: 'Carriage Outwards', amount: '800', type: 'Debit' },
+                        { particular: 'Selling Expenses', amount: '1200', type: 'Debit' },
+                        { particular: 'Miscellaneous Income', amount: '300', type: 'Credit' },
+                    ],
+                },
+                {
+                    id: 'pl8',
+                    questionText: 'Prepare a Profit & Loss Account (extract) from the following: Interest on Loan 700, Bank Charges 200, Dividend Received 600',
+                    type: 'profit_loss',
+                    expectedAnswer: [
+                        { particular: 'Interest on Loan', amount: '700', type: 'Debit' },
+                        { particular: 'Bank Charges', amount: '200', type: 'Debit' },
+                        { particular: 'Dividend Received', amount: '600', type: 'Credit' },
+                    ],
+                },
+                {
+                    id: 'pl9',
+                    questionText: 'Prepare a Profit & Loss Account (extract) from the following: Repairs & Maintenance 900, Printing & Stationery 600, Rent Received 1100',
+                    type: 'profit_loss',
+                    expectedAnswer: [
+                        { particular: 'Repairs & Maintenance', amount: '900', type: 'Debit' },
+                        { particular: 'Printing & Stationery', amount: '600', type: 'Debit' },
+                        { particular: 'Rent Received', amount: '1100', type: 'Credit' },
+                    ],
+                },
+                {
+                    id: 'pl10',
+                    questionText: 'Prepare a Profit & Loss Account (extract) from the following: Commission Paid 400, Discount Allowed 300, Bad Debts Recovered 200',
+                    type: 'profit_loss',
+                    expectedAnswer: [
+                        { particular: 'Commission Paid', amount: '400', type: 'Debit' },
+                        { particular: 'Discount Allowed', amount: '300', type: 'Debit' },
+                        { particular: 'Bad Debts Recovered', amount: '200', type: 'Credit' },
+                    ],
+                },
+                {
+                    id: 'pl11',
+                    questionText: 'Prepare a Profit & Loss Account (extract) from the following: Travelling Expenses 1500, Postage & Telegrams 200, Sundry Income 100',
+                    type: 'profit_loss',
+                    expectedAnswer: [
+                        { particular: 'Travelling Expenses', amount: '1500', type: 'Debit' },
+                        { particular: 'Postage & Telegrams', amount: '200', type: 'Debit' },
+                        { particular: 'Sundry Income', amount: '100', type: 'Credit' },
+                    ],
+                },
+                {
+                    id: 'pl12',
+                    questionText: 'Prepare a Profit & Loss Account (extract) from the following: Legal Expenses 1200, Entertainment Expenses 800, Interest on Drawings 300',
+                    type: 'profit_loss',
+                    expectedAnswer: [
+                        { particular: 'Legal Expenses', amount: '1200', type: 'Debit' },
+                        { particular: 'Entertainment Expenses', amount: '800', type: 'Debit' },
+                        { particular: 'Interest on Drawings', amount: '300', type: 'Credit' },
+                    ],
+                },
+                {
+                    id: 'pl13',
+                    questionText: 'Prepare a Profit & Loss Account (extract) from the following: Insurance Premium 1000, Audit Fees 1500, Rent Received 2000',
+                    type: 'profit_loss',
+                    expectedAnswer: [
+                        { particular: 'Insurance Premium', amount: '1000', type: 'Debit' },
+                        { particular: 'Audit Fees', amount: '1500', type: 'Debit' },
+                        { particular: 'Rent Received', amount: '2000', type: 'Credit' },
+                    ],
+                },
+                {
+                    id: 'pl14',
+                    questionText: 'Prepare a Profit & Loss Account (extract) from the following: General Expenses 2500, Donation Paid 500, Dividend Received 700',
+                    type: 'profit_loss',
+                    expectedAnswer: [
+                        { particular: 'General Expenses', amount: '2500', type: 'Debit' },
+                        { particular: 'Donation Paid', amount: '500', type: 'Debit' },
+                        { particular: 'Dividend Received', amount: '700', type: 'Credit' },
+                    ],
+                },
+                {
+                    id: 'pl15',
+                    questionText: 'Prepare a Profit & Loss Account (extract) from the following: Selling & Distribution Expenses 3000, Office Rent 2000, Interest on Fixed Deposit 400',
+                    type: 'profit_loss',
+                    expectedAnswer: [
+                        { particular: 'Selling & Distribution Expenses', amount: '3000', type: 'Debit' },
+                        { particular: 'Office Rent', amount: '2000', type: 'Debit' },
+                        { particular: 'Interest on Fixed Deposit', amount: '400', type: 'Credit' },
+                    ],
+                },
+                {
+                    id: 'pl16',
+                    questionText: 'Prepare a Profit & Loss Account (extract) from the following: Advertisement 1000, Legal Expenses 500, Bad Debts Recovered 100',
+                    type: 'profit_loss',
+                    expectedAnswer: [
+                        { particular: 'Advertisement', amount: '1000', type: 'Debit' },
+                        { particular: 'Legal Expenses', amount: '500', type: 'Debit' },
+                        { particular: 'Bad Debts Recovered', amount: '100', type: 'Credit' },
+                    ],
+                },
+                {
+                    id: 'pl17',
+                    questionText: 'Prepare a Profit & Loss Account (extract) from the following: Bank Charges 300, Printing & Stationery 400, Commission Received 500',
+                    type: 'profit_loss',
+                    expectedAnswer: [
+                        { particular: 'Bank Charges', amount: '300', type: 'Debit' },
+                        { particular: 'Printing & Stationery', amount: '400', type: 'Debit' },
+                        { particular: 'Commission Received', amount: '500', type: 'Credit' },
+                    ],
+                },
+                {
+                    id: 'pl18',
+                    questionText: 'Prepare a Profit & Loss Account (extract) from the following: Interest Paid on Loan 600, Discount Allowed 200, Rent Received 900',
+                    type: 'profit_loss',
+                    expectedAnswer: [
+                        { particular: 'Interest Paid on Loan', amount: '600', type: 'Debit' },
+                        { particular: 'Discount Allowed', amount: '200', type: 'Debit' },
+                        { particular: 'Rent Received', amount: '900', type: 'Credit' },
+                    ],
+                },
+                {
+                    id: 'pl19',
+                    questionText: 'Prepare a Profit & Loss Account (extract) from the following: Salaries 7000, Wages 3000, Gross Profit 15000',
+                    type: 'profit_loss',
+                    expectedAnswer: [
+                        { particular: 'Salaries', amount: '7000', type: 'Debit' },
+                        { particular: 'Wages', amount: '3000', type: 'Debit' },
+                        { particular: 'Gross Profit', amount: '15000', type: 'Credit' },
+                    ],
+                },
+                {
+                    id: 'pl20',
+                    questionText: 'Prepare a Profit & Loss Account (extract) from the following: Net Loss 2000, Rent Received 500, Interest Paid 2500',
+                    type: 'profit_loss',
+                    expectedAnswer: [
+                        { particular: 'Net Loss', amount: '2000', type: 'Debit' },
+                        { particular: 'Rent Received', amount: '500', type: 'Credit' },
+                        { particular: 'Interest Paid', amount: '2500', type: 'Debit' },
+                    ],
+                },
+            ],
+            'Balance Sheet': [
+                {
+                    id: 'bs1',
+                    questionText: 'Prepare a Balance Sheet (extract) from the following: Capital 100000, Cash 50000, Bank 50000',
+                    type: 'balance_sheet',
+                    expectedAnswer: [
+                        { particular: 'Capital', amount: '100000', type: 'Liability' },
+                        { particular: 'Cash', amount: '50000', type: 'Asset' },
+                        { particular: 'Bank', amount: '50000', type: 'Asset' },
+                    ],
+                    example: {
+                        particular: 'Capital',
+                        amount: '100000',
+                        type: 'Liability',
+                    },
+                },
+                {
+                    id: 'bs2',
+                    questionText: 'Prepare a Balance Sheet (extract) from the following: Machinery 25000, Furniture 5000, Sundry Creditors 8000',
+                    type: 'balance_sheet',
+                    expectedAnswer: [
+                        { particular: 'Machinery', amount: '25000', type: 'Asset' },
+                        { particular: 'Furniture', amount: '5000', type: 'Asset' },
+                        { particular: 'Sundry Creditors', amount: '8000', type: 'Liability' },
+                    ],
+                },
+                {
+                    id: 'bs3',
+                    questionText: 'Prepare a Balance Sheet (extract) from the following: Sundry Debtors 7000, Bills Payable 3000, Bills Receivable 2000',
+                    type: 'balance_sheet',
+                    expectedAnswer: [
+                        { particular: 'Sundry Debtors', amount: '7000', type: 'Asset' },
+                        { particular: 'Bills Payable', amount: '3000', type: 'Liability' },
+                        { particular: 'Bills Receivable', amount: '2000', type: 'Asset' },
+                    ],
+                },
+                {
+                    id: 'bs4',
+                    questionText: 'Prepare a Balance Sheet (extract) from the following: Loan from Bank 50000, Stock 20000, Prepaid Expenses 1000',
+                    type: 'balance_sheet',
+                    expectedAnswer: [
+                        { particular: 'Loan from Bank', amount: '50000', type: 'Liability' },
+                        { particular: 'Stock', amount: '20000', type: 'Asset' },
+                        { particular: 'Prepaid Expenses', amount: '1000', type: 'Asset' },
+                    ],
+                },
+                {
+                    id: 'bs5',
+                    questionText: 'Prepare a Balance Sheet (extract) from the following: Outstanding Expenses 500, Accrued Income 800, Investments 15000',
+                    type: 'balance_sheet',
+                    expectedAnswer: [
+                        { particular: 'Outstanding Expenses', amount: '500', type: 'Liability' },
+                        { particular: 'Accrued Income', amount: '800', type: 'Asset' },
+                        { particular: 'Investments', amount: '15000', type: 'Asset' },
+                    ],
+                },
+                {
+                    id: 'bs6',
+                    questionText: 'Prepare a Balance Sheet (extract) from the following: Drawings 2000, Net Profit 5000, Capital 100000 (after adjustments)',
+                    type: 'balance_sheet',
+                    expectedAnswer: [
+                        { particular: 'Capital', amount: '103000', type: 'Liability' }, // 100000 + 5000 - 2000
+                    ],
+                },
+                {
+                    id: 'bs7',
+                    questionText: 'Prepare a Balance Sheet (extract) from the following: Land & Building 120000, Plant & Machinery 80000, Bank Overdraft 10000',
+                    type: 'balance_sheet',
+                    expectedAnswer: [
+                        { particular: 'Land & Building', amount: '120000', type: 'Asset' },
+                        { particular: 'Plant & Machinery', amount: '80000', type: 'Asset' },
+                        { particular: 'Bank Overdraft', amount: '10000', type: 'Liability' },
+                    ],
+                },
+                {
+                    id: 'bs8',
+                    questionText: 'Prepare a Balance Sheet (extract) from the following: Goodwill 50000, Patents 20000, Long-term Loan 70000',
+                    type: 'balance_sheet',
+                    expectedAnswer: [
+                        { particular: 'Goodwill', amount: '50000', type: 'Asset' },
+                        { particular: 'Patents', amount: '20000', type: 'Asset' },
+                        { particular: 'Long-term Loan', amount: '70000', type: 'Liability' },
+                    ],
+                },
+                {
+                    id: 'bs9',
+                    questionText: 'Prepare a Balance Sheet (extract) from the following: Short-term Loan 15000, Cash in Hand 2000, Bank Balance 8000',
+                    type: 'balance_sheet',
+                    expectedAnswer: [
+                        { particular: 'Short-term Loan', amount: '15000', type: 'Liability' },
+                        { particular: 'Cash in Hand', amount: '2000', type: 'Asset' },
+                        { particular: 'Bank Balance', amount: '8000', type: 'Asset' },
+                    ],
+                },
+                {
+                    id: 'bs10',
+                    questionText: 'Prepare a Balance Sheet (extract) from the following: Fixed Deposits 30000, Sundry Debtors 12000, Provision for Doubtful Debts 1000',
+                    type: 'balance_sheet',
+                    expectedAnswer: [
+                        { particular: 'Fixed Deposits', amount: '30000', type: 'Asset' },
+                        { particular: 'Sundry Debtors (Net)', amount: '11000', type: 'Asset' }, // 12000 - 1000
+                    ],
+                },
+                {
+                    id: 'bs11',
+                    questionText: 'Prepare a Balance Sheet (extract) from the following: Creditors 20000, Bills Payable 5000, Cash 10000, Bank 15000',
+                    type: 'balance_sheet',
+                    expectedAnswer: [
+                        { particular: 'Creditors', amount: '20000', type: 'Liability' },
+                        { particular: 'Bills Payable', amount: '5000', type: 'Liability' },
+                        { particular: 'Cash', amount: '10000', type: 'Asset' },
+                        { particular: 'Bank', amount: '15000', type: 'Asset' },
+                    ],
+                },
+                {
+                    id: 'bs12',
+                    questionText: 'Prepare a Balance Sheet (extract) from the following: Share Capital 200000, Reserves & Surplus 50000, Fixed Assets 180000, Current Assets 70000',
+                    type: 'balance_sheet',
+                    expectedAnswer: [
+                        { particular: 'Share Capital', amount: '200000', type: 'Liability' },
+                        { particular: 'Reserves & Surplus', amount: '50000', type: 'Liability' },
+                        { particular: 'Fixed Assets', amount: '180000', type: 'Asset' },
+                        { particular: 'Current Assets', amount: '70000', type: 'Asset' },
+                    ],
+                },
+                {
+                    id: 'bs13',
+                    questionText: 'Prepare a Balance Sheet (extract) from the following: Prepaid Expenses 1500, Outstanding Income 800, Accrued Expenses 700',
+                    type: 'balance_sheet',
+                    expectedAnswer: [
+                        { particular: 'Prepaid Expenses', amount: '1500', type: 'Asset' },
+                        { particular: 'Outstanding Income', amount: '800', type: 'Asset' },
+                        { particular: 'Accrued Expenses', amount: '700', type: 'Liability' },
+                    ],
+                },
+                {
+                    id: 'bs14',
+                    questionText: 'Prepare a Balance Sheet (extract) from the following: Stock in Trade 30000, Loose Tools 2000, Bank Overdraft 5000',
+                    type: 'balance_sheet',
+                    expectedAnswer: [
+                        { particular: 'Stock in Trade', amount: '30000', type: 'Asset' },
+                        { particular: 'Loose Tools', amount: '2000', type: 'Asset' },
+                        { particular: 'Bank Overdraft', amount: '5000', type: 'Liability' },
+                    ],
+                },
+                {
+                    id: 'bs15',
+                    questionText: 'Prepare a Balance Sheet (extract) from the following: Patents 10000, Copyrights 5000, Deferred Revenue Expenditure 2000',
+                    type: 'balance_sheet',
+                    expectedAnswer: [
+                        { particular: 'Patents', amount: '10000', type: 'Asset' },
+                        { particular: 'Copyrights', amount: '5000', type: 'Asset' },
+                        { particular: 'Deferred Revenue Expenditure', amount: '2000', type: 'Asset' },
+                    ],
+                },
+                {
+                    id: 'bs16',
+                    questionText: 'Prepare a Balance Sheet (extract) from the following: Provision for Taxation 8000, Proposed Dividend 3000, Cash 11000',
+                    type: 'balance_sheet',
+                    expectedAnswer: [
+                        { particular: 'Provision for Taxation', amount: '8000', type: 'Liability' },
+                        { particular: 'Proposed Dividend', amount: '3000', type: 'Liability' },
+                        { particular: 'Cash', amount: '11000', type: 'Asset' },
+                    ],
+                },
+                {
+                    id: 'bs17',
+                    questionText: 'Prepare a Balance Sheet (extract) from the following: Debentures 50000, Sundry Debtors 25000, Bank Balance 25000',
+                    type: 'balance_sheet',
+                    expectedAnswer: [
+                        { particular: 'Debentures', amount: '50000', type: 'Liability' },
+                        { particular: 'Sundry Debtors', amount: '25000', type: 'Asset' },
+                        { particular: 'Bank Balance', amount: '25000', type: 'Asset' },
+                    ],
+                },
+                {
+                    id: 'bs18',
+                    questionText: 'Prepare a Balance Sheet (extract) from the following: Land 70000, Building 50000, Mortgage Loan 120000',
+                    type: 'balance_sheet',
+                    expectedAnswer: [
+                        { particular: 'Land', amount: '70000', type: 'Asset' },
+                        { particular: 'Building', amount: '50000', type: 'Asset' },
+                        { particular: 'Mortgage Loan', amount: '120000', type: 'Liability' },
+                    ],
+                },
+                {
+                    id: 'bs19',
+                    questionText: 'Prepare a Balance Sheet (extract) from the following: Investment in Shares 40000, Creditors 15000, Bills Receivable 25000',
+                    type: 'balance_sheet',
+                    expectedAnswer: [
+                        { particular: 'Investment in Shares', amount: '40000', type: 'Asset' },
+                        { particular: 'Creditors', amount: '15000', type: 'Liability' },
+                        { particular: 'Bills Receivable', amount: '25000', type: 'Asset' },
+                    ],
+                },
+                {
+                    id: 'bs20',
+                    questionText: 'Cash withdrawn for personal use Rs. 2,000.',
+                    type: 'balance_sheet',
+                    expectedAnswer: [
+                        { particular: 'Bank Loan', amount: '60000', type: 'Liability' },
+                        { particular: 'Cash in Hand', amount: '5000', type: 'Asset' },
+                        { particular: 'Bank Balance', amount: '55000', type: 'Asset' },
+                    ],
+                },
+            ],
+        };
+
+        const hintsData = {
+            'journal_entry': 'Remember the Golden Rules of Accounting: Debit the receiver, Credit the giver; Debit what comes in, Credit what goes out; Debit all expenses and losses, Credit all incomes and gains.',
+            'ledger_posting': 'Ensure you post to the correct side of the respective ledger accounts, using the contra account as the particular.',
+            'trial_balance': 'The total of all debits must equal the total of all credits. Assets and Expenses have Debit balances, Liabilities, Capital, and Incomes have Credit balances.',
+            'profit_loss': 'Expenses and losses are debited, while incomes and gains are credited. The balance represents Net Profit or Net Loss.',
+            'balance_sheet': 'Assets are on one side, and Liabilities and Capital are on the other. The Balance Sheet must always balance: Assets = Liabilities + Capital.',
+        };
+
+        let selectedTopic = null;
+        let currentQuestionIndex = 0;
+        let score = 0;
+        let totalQuestionsAttempted = 0;
+        let userEntries = []; // To store user's current input for the active question
+
+        const topicSelectionScreen = document.getElementById('topic-selection-screen');
+        const practiceScreen = document.getElementById('practice-screen');
+        const topicButtonsContainer = document.getElementById('topic-buttons');
+        const currentTopicTitle = document.getElementById('current-topic-title');
+        const questionNumberSpan = document.getElementById('question-number');
+        const totalQuestionsSpan = document.getElementById('total-questions');
+        const scoreSpan = document.getElementById('score');
+        const totalAttemptedSpan = document.getElementById('total-attempted');
+        const questionContainer = document.getElementById('question-container');
+        const feedbackDiv = document.getElementById('feedback');
+        const nextQuestionBtn = document.getElementById('next-question-btn');
+        const changeTopicBtn = document.getElementById('change-topic-btn');
+        const giveHintBtn = document.getElementById('give-hint-btn');
+        const giveAnswerBtn = document.getElementById('give-answer-btn');
+
+        // Helper function to compare answers
+        const areAnswersEqual = (userAns, expectedAns, type) => {
+            if (userAns.length !== expectedAns.length) {
+                return false;
+            }
+
+            // Create deep copies to avoid modifying original arrays during sort
+            const sortedUser = JSON.parse(JSON.stringify(userAns)).sort((a, b) => {
+                const aKey = a.particular || a.account;
+                const bKey = b.particular || b.account;
+                return String(aKey || '').localeCompare(String(bKey || ''));
+            });
+            const sortedExpected = JSON.parse(JSON.stringify(expectedAns)).sort((a, b) => {
+                const aKey = a.particular || a.account;
+                const bKey = b.particular || b.account;
+                return String(aKey || '').localeCompare(String(bKey || ''));
+            });
+
+            for (let i = 0; i < sortedExpected.length; i++) {
+                for (const key in sortedExpected[i]) {
+                    const userValue = String(sortedUser[i][key] || '').trim().toLowerCase();
+                    const expectedValue = String(sortedExpected[i][key] || '').trim().toLowerCase();
+
+                    if (userValue !== expectedValue) {
+                        return false;
+                    }
+                }
+            }
+            return true;
+        };
+
+        // Function to get headers for different question types
+        const getHeadersForQuestionType = (type) => {
+            if (type === 'journal_entry') {
+                return ['Particulars', 'Type (Dr/Cr)', 'Amount (Rs.)'];
+            } else if (type === 'ledger_posting') {
+                return ['Account', 'Side (Dr/Cr)', 'Particulars', 'Amount (Rs.)'];
+            } else if (type === 'trial_balance') {
+                return ['Account', 'Debit (Rs.)', 'Credit (Rs.)'];
+            } else if (type === 'profit_loss') {
+                return ['Particulars', 'Amount (Rs.)', 'Type (Debit/Credit)'];
+            } else if (type === 'balance_sheet') {
+                return ['Particulars', 'Amount (Rs.)', 'Type (Asset/Liability)'];
+            }
+            return [];
+        };
+
+        // Helper function to disable/enable inputs and 'Add Row' button
+        const setInputsAndAddRowDisabled = (containerId, disabled) => {
+            const container = document.getElementById(containerId);
+            if (container) {
+                container.querySelectorAll('input, select').forEach(input => {
+                    input.disabled = disabled;
+                });
+                const addRowBtn = container.querySelector('#add-row-btn');
+                if (addRowBtn) {
+                    addRowBtn.disabled = disabled;
+                }
+            }
+        };
+
+        // Render Journal Entry practice component
+        const renderJournalEntryPractice = (question) => {
+            userEntries = [{ particular: '', type: '', amount: '' }]; // Reset for new question
+
+            const exampleHtml = question.example ? `
+                <div class="mb-4 p-3 bg-blue-50 rounded-md border border-blue-200 text-blue-800">
+                    <p class="font-medium mb-1">Example Format:</p>
+                    <div class="overflow-x-auto">
+                        <table class="min-w-full bg-white border border-gray-300 rounded-md">
+                            <thead>
+                                <tr class="bg-blue-100 text-blue-700">
+                                    <th class="py-2 px-3 border-b text-left">Particulars</th>
+                                    <th class="py-2 px-3 border-b text-left">Type (Dr/Cr)</th>
+                                    <th class="py-2 px-3 border-b text-right">Amount (Rs.)</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr class="hover:bg-gray-50">
+                                    <td class="py-2 px-3 border-b text-left">${question.example.particular}</td>
+                                    <td class="py-2 px-3 border-b text-left">${question.example.type}</td>
+                                    <td class="py-2 px-3 border-b text-right">${question.example.amount}</td>
+                                </tr>
+                                <tr class="hover:bg-gray-50">
+                                    <td class="py-2 px-3 border-b text-left">...</td>
+                                    <td class="py-2 px-3 border-b text-left">...</td>
+                                    <td class="py-2 px-3 border-b text-right">...</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            ` : '';
+
+            questionContainer.innerHTML = `
+                <div id="current-question-content" class="p-4 bg-white rounded-lg shadow-md mb-4">
+                    <h3 class="text-xl font-semibold mb-2 text-gray-800">Journal Entry</h3>
+                    <p class="mb-4 text-gray-700">${question.questionText}</p>
+                    ${exampleHtml}
+                    <div class="overflow-x-auto mb-4">
+                        <table class="min-w-full bg-white border border-gray-300 rounded-md">
+                            <thead>
+                                <tr class="bg-gray-100 text-gray-600">
+                                    <th class="py-2 px-3 border-b text-left">Particulars</th>
+                                    <th class="py-2 px-3 border-b text-left">Type (Dr/Cr)</th>
+                                    <th class="py-2 px-3 border-b text-right">Amount (Rs.)</th>
+                                    <th class="py-2 px-3 border-b"></th>
+                                </tr>
+                            </thead>
+                            <tbody id="journal-entries-tbody">
+                                <!-- Rows will be added here by JS -->
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="flex justify-between items-center">
+                        <button id="add-row-btn" class="bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-4 rounded-md shadow-md transition duration-300 ease-in-out focus:outline-none focus:ring-2 focus:ring-green-400">
+                            Add Row
+                        </button>
+                        <button id="check-answer-btn" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-6 rounded-md shadow-md transition duration-300 ease-in-out focus:outline-none focus:ring-2 focus:ring-blue-400">
+                            Check Answer
+                        </button>
+                    </div>
+                </div>
+            `;
+            renderJournalEntryRows(); // Initial render of one row
+
+            document.getElementById('add-row-btn').onclick = addJournalEntryRow;
+            document.getElementById('check-answer-btn').onclick = () => handleAnswerSubmit(userEntries);
+        };
+
+        const renderJournalEntryRows = (disabled = false) => {
+            const tbody = document.getElementById('journal-entries-tbody');
+            tbody.innerHTML = ''; // Clear existing rows
+            userEntries.forEach((entry, index) => {
+                const tr = document.createElement('tr');
+                tr.className = 'hover:bg-gray-50';
+                tr.innerHTML = `
+                    <td class="py-2 px-3 border-b">
+                        <input type="text" value="${entry.particular}" data-index="${index}" data-field="particular" ${disabled ? 'disabled' : ''}
+                            class="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 table-input"
+                            placeholder="e.g., Cash A/c" />
+                    </td>
+                    <td class="py-2 px-3 border-b">
+                        <select value="${entry.type}" data-index="${index}" data-field="type" ${disabled ? 'disabled' : ''}
+                            class="w-full p-2 border border-gray-300 rounded-md bg-white focus:outline-none focus:ring-2 focus:ring-blue-500 table-select">
+                            <option value="">Select</option>
+                            <option value="Debit" ${entry.type === 'Debit' ? 'selected' : ''}>Debit</option>
+                            <option value="Credit" ${entry.type === 'Credit' ? 'selected' : ''}>Credit</option>
+                        </select>
+                    </td>
+                    <td class="py-2 px-3 border-b">
+                        <input type="number" value="${entry.amount}" data-index="${index}" data-field="amount" ${disabled ? 'disabled' : ''}
+                            class="w-full p-2 border border-gray-300 rounded-md text-right focus:outline-none focus:ring-2 focus:ring-blue-500 table-input"
+                            placeholder="e.g., 50000" />
+                    </td>
+                    <td class="py-2 px-3 border-b">
+                        ${userEntries.length > 1 && !disabled ? `
+                        <button data-index="${index}" class="remove-row-btn text-red-500 hover:text-red-700 p-1 rounded-full focus:outline-none focus:ring-2 focus:ring-red-300" aria-label="Remove row">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                                <path fillRule="evenodd" d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm6 0a1 1 0 012 0v6a1 1 0 11-2 0V8z" clipRule="evenodd" />
+                            </svg>
+                        </button>
+                        ` : ''}
+                    </td>
+                `;
+                tbody.appendChild(tr);
+            });
+
+            // Attach event listeners to newly created inputs and selects
+            if (!disabled) {
+                tbody.querySelectorAll('input, select').forEach(input => {
+                    input.oninput = (e) => {
+                        const index = parseInt(e.target.dataset.index);
+                        const field = e.target.dataset.field;
+                        userEntries[index][field] = e.target.value;
+                    };
+                });
+                tbody.querySelectorAll('.remove-row-btn').forEach(button => {
+                    button.onclick = (e) => {
+                        const index = parseInt(e.currentTarget.dataset.index);
+                        removeJournalEntryRow(index);
+                    };
+                });
+            }
+        };
+
+        const addJournalEntryRow = () => {
+            userEntries.push({ particular: '', type: '', amount: '' });
+            renderJournalEntryRows();
+        };
+
+        const removeJournalEntryRow = (index) => {
+            userEntries.splice(index, 1);
+            renderJournalEntryRows();
+        };
+
+        // Render Ledger Posting practice component
+        const renderLedgerPostingPractice = (question) => {
+            userEntries = [{ account: '', side: '', particular: '', amount: '' }]; // Reset for new question
+
+            const exampleHtml = question.example ? `
+                <div class="mb-4 p-3 bg-blue-50 rounded-md border border-blue-200 text-blue-800">
+                    <p class="font-medium mb-1">Example Format:</p>
+                    <div class="overflow-x-auto">
+                        <table class="min-w-full bg-white border border-gray-300 rounded-md">
+                            <thead>
+                                <tr class="bg-blue-100 text-blue-700">
+                                    <th class="py-2 px-3 border-b text-left">Account</th>
+                                    <th class="py-2 px-3 border-b text-left">Side (Dr/Cr)</th>
+                                    <th class="py-2 px-3 border-b text-left">Particulars</th>
+                                    <th class="py-2 px-3 border-b text-right">Amount (Rs.)</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr class="hover:bg-gray-50">
+                                    <td class="py-2 px-3 border-b text-left">${question.example.account}</td>
+                                    <td class="py-2 px-3 border-b text-left">${question.example.side}</td>
+                                    <td class="py-2 px-3 border-b text-left">${question.example.particular}</td>
+                                    <td class="py-2 px-3 border-b text-right">${question.example.amount}</td>
+                                </tr>
+                                <tr class="hover:bg-gray-50">
+                                    <td class="py-2 px-3 border-b text-left">...</td>
+                                    <td class="py-2 px-3 border-b text-left">...</td>
+                                    <td class="py-2 px-3 border-b text-left">...</td>
+                                    <td class="py-2 px-3 border-b text-right">...</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            ` : '';
+
+            questionContainer.innerHTML = `
+                <div id="current-question-content" class="p-4 bg-white rounded-lg shadow-md mb-4">
+                    <h3 class="text-xl font-semibold mb-2 text-gray-800">Ledger Posting</h3>
+                    <p class="mb-4 text-gray-700">${question.questionText}</p>
+                    ${exampleHtml}
+                    <div class="overflow-x-auto mb-4">
+                        <table class="min-w-full bg-white border border-gray-300 rounded-md">
+                            <thead>
+                                <tr class="bg-gray-100 text-gray-600">
+                                    <th class="py-2 px-3 border-b text-left">Account</th>
+                                    <th class="py-2 px-3 border-b text-left">Side (Dr/Cr)</th>
+                                    <th class="py-2 px-3 border-b text-left">Particulars</th>
+                                    <th class="py-2 px-3 border-b text-right">Amount (Rs.)</th>
+                                    <th class="py-2 px-3 border-b"></th>
+                                </tr>
+                            </thead>
+                            <tbody id="ledger-entries-tbody">
+                                <!-- Rows will be added here by JS -->
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="flex justify-between items-center">
+                        <button id="add-row-btn" class="bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-4 rounded-md shadow-md transition duration-300 ease-in-out focus:outline-none focus:ring-2 focus:ring-green-400">
+                            Add Row
+                        </button>
+                        <button id="check-answer-btn" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-6 rounded-md shadow-md transition duration-300 ease-in-out focus:outline-none focus:ring-2 focus:ring-blue-400">
+                            Check Answer
+                        </button>
+                    </div>
+                </div>
+            `;
+            renderLedgerPostingRows(); // Initial render of one row
+
+            document.getElementById('add-row-btn').onclick = addLedgerPostingRow;
+            document.getElementById('check-answer-btn').onclick = () => handleAnswerSubmit(userEntries);
+        };
+
+        const renderLedgerPostingRows = (disabled = false) => {
+            const tbody = document.getElementById('ledger-entries-tbody');
+            tbody.innerHTML = ''; // Clear existing rows
+            userEntries.forEach((entry, index) => {
+                const tr = document.createElement('tr');
+                tr.className = 'hover:bg-gray-50';
+                tr.innerHTML = `
+                    <td class="py-2 px-3 border-b">
+                        <input type="text" value="${entry.account}" data-index="${index}" data-field="account" ${disabled ? 'disabled' : ''}
+                            class="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 table-input"
+                            placeholder="e.g., Cash A/c" />
+                    </td>
+                    <td class="py-2 px-3 border-b">
+                        <select value="${entry.side}" data-index="${index}" data-field="side" ${disabled ? 'disabled' : ''}
+                            class="w-full p-2 border border-gray-300 rounded-md bg-white focus:outline-none focus:ring-2 focus:ring-blue-500 table-select">
+                            <option value="">Select</option>
+                            <option value="Debit" ${entry.side === 'Debit' ? 'selected' : ''}>Debit</option>
+                            <option value="Credit" ${entry.side === 'Credit' ? 'selected' : ''}>Credit</option>
+                        </select>
+                    </td>
+                    <td class="py-2 px-3 border-b">
+                        <input type="text" value="${entry.particular}" data-index="${index}" data-field="particular" ${disabled ? 'disabled' : ''}
+                            class="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 table-input"
+                            placeholder="e.g., To Capital A/c" />
+                    </td>
+                    <td class="py-2 px-3 border-b">
+                        <input type="number" value="${entry.amount}" data-index="${index}" data-field="amount" ${disabled ? 'disabled' : ''}
+                            class="w-full p-2 border border-gray-300 rounded-md text-right focus:outline-none focus:ring-2 focus:ring-blue-500 table-input"
+                            placeholder="e.g., 50000" />
+                    </td>
+                    <td class="py-2 px-3 border-b">
+                        ${userEntries.length > 1 && !disabled ? `
+                        <button data-index="${index}" class="remove-row-btn text-red-500 hover:text-red-700 p-1 rounded-full focus:outline-none focus:ring-2 focus:ring-red-300" aria-label="Remove row">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                                <path fillRule="evenodd" d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm6 0a1 1 0 012 0v6a1 1 0 11-2 0V8z" clipRule="evenodd" />
+                            </svg>
+                        </button>
+                        ` : ''}
+                    </td>
+                `;
+                tbody.appendChild(tr);
+            });
+
+            // Attach event listeners to newly created inputs and selects
+            if (!disabled) {
+                tbody.querySelectorAll('input, select').forEach(input => {
+                    input.oninput = (e) => {
+                        const index = parseInt(e.target.dataset.index);
+                        const field = e.target.dataset.field;
+                        userEntries[index][field] = e.target.value;
+                    };
+                });
+                tbody.querySelectorAll('.remove-row-btn').forEach(button => {
+                    button.onclick = (e) => {
+                        const index = parseInt(e.currentTarget.dataset.index);
+                        removeLedgerPostingRow(index);
+                    };
+                });
+            }
+        };
+
+        const addLedgerPostingRow = () => {
+            userEntries.push({ account: '', side: '', particular: '', amount: '' });
+            renderLedgerPostingRows();
+        };
+
+        const removeLedgerPostingRow = (index) => {
+            userEntries.splice(index, 1);
+            renderLedgerPostingRows();
+        };
+
+        // Render Financial Statement practice component (Trial Balance, P&L, Balance Sheet)
+        const renderFinancialStatementPractice = (question) => {
+            // Initialize userEntries with empty strings but correct number of rows based on expectedAnswer
+            userEntries = question.expectedAnswer.map(() => {
+                if (question.type === 'trial_balance') {
+                    return { account: '', debit: '', credit: '' };
+                } else if (question.type === 'profit_loss' || question.type === 'balance_sheet') {
+                    return { particular: '', amount: '', type: '' };
+                }
+                return {};
+            });
+
+            const headers = getHeadersForQuestionType(question.type);
+            const headerHtml = headers.map(header => `
+                <th class="py-2 px-3 border-b ${header.includes('Amount') || header.includes('Debit') || header.includes('Credit') ? 'text-right' : 'text-left'}">
+                    ${header}
+                </th>
+            `).join('');
+
+            let exampleBodyHtml = '';
+            if (question.example) {
+                if (question.type === 'trial_balance') {
+                    exampleBodyHtml = `
+                        <tr class="hover:bg-gray-50">
+                            <td class="py-2 px-3 border-b text-left">${question.example.account}</td>
+                            <td class="py-2 px-3 border-b text-right">${question.example.debit}</td>
+                            <td class="py-2 px-3 border-b text-right">${question.example.credit}</td>
+                        </tr>
+                    `;
+                } else if (question.type === 'profit_loss' || question.type === 'balance_sheet') {
+                    exampleBodyHtml = `
+                        <tr class="hover:bg-gray-50">
+                            <td class="py-2 px-3 border-b text-left">${question.example.particular}</td>
+                            <td class="py-2 px-3 border-b text-right">${question.example.amount}</td>
+                            <td class="py-2 px-3 border-b text-left">${question.example.type}</td>
+                        </tr>
+                    `;
+                }
+            }
+
+            const exampleHtml = question.example ? `
+                <div class="mb-4 p-3 bg-blue-50 rounded-md border border-blue-200 text-blue-800">
+                    <p class="font-medium mb-1">Example Format:</p>
+                    <div class="overflow-x-auto">
+                        <table class="min-w-full bg-white border border-gray-300 rounded-md">
+                            <thead>
+                                <tr class="bg-blue-100 text-blue-700">
+                                    ${headerHtml}
+                                </tr>
+                            </thead>
+                            <tbody>
+                                ${exampleBodyHtml}
+                                <tr class="hover:bg-gray-50">
+                                    <td class="py-2 px-3 border-b text-left">...</td>
+                                    <td class="py-2 px-3 border-b text-right">...</td>
+                                    <td class="py-2 px-3 border-b text-left">...</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            ` : '';
+
+            questionContainer.innerHTML = `
+                <div id="current-question-content" class="p-4 bg-white rounded-lg shadow-md mb-4">
+                    <h3 class="text-xl font-semibold mb-2 text-gray-800">
+                        ${question.type === 'trial_balance' ? 'Trial Balance' : ''}
+                        ${question.type === 'profit_loss' ? 'Profit & Loss Account' : ''}
+                        ${question.type === 'balance_sheet' ? 'Balance Sheet' : ''}
+                    </h3>
+                    <p class="mb-4 text-gray-700">${question.questionText}</p>
+                    ${exampleHtml}
+                    <div class="overflow-x-auto mb-4">
+                        <table class="min-w-full bg-white border border-gray-300 rounded-md">
+                            <thead>
+                                <tr class="bg-gray-100 text-gray-600">
+                                    ${headerHtml}
+                                </tr>
+                            </thead>
+                            <tbody id="financial-statement-tbody">
+                                <!-- Rows will be added here by JS -->
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="flex justify-end">
+                        <button id="check-answer-btn" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-6 rounded-md shadow-md transition duration-300 ease-in-out focus:outline-none focus:ring-2 focus:ring-blue-400">
+                            Check Answer
+                        </button>
+                    </div>
+                </div>
+            `;
+            renderFinancialStatementRows(); // Initial render of rows
+
+            document.getElementById('check-answer-btn').onclick = () => handleAnswerSubmit(userEntries);
+        };
+
+        const renderFinancialStatementRows = (disabled = false) => {
+            const tbody = document.getElementById('financial-statement-tbody');
+            tbody.innerHTML = ''; // Clear existing rows
+
+            const question = questionsData[selectedTopic][currentQuestionIndex];
+
+            let tableBodyHtml = '';
+            if (question.type === 'trial_balance') {
+                tableBodyHtml = userEntries.map((entry, index) => `
+                    <tr class="hover:bg-gray-50">
+                        <td class="py-2 px-3 border-b">
+                            <input type="text" value="${entry.account}" data-index="${index}" data-field="account" ${disabled ? 'disabled' : ''}
+                                class="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 table-input"
+                                placeholder="Account Name" />
+                        </td>
+                        <td class="py-2 px-3 border-b">
+                            <input type="number" value="${entry.debit}" data-index="${index}" data-field="debit" ${disabled ? 'disabled' : ''}
+                                class="w-full p-2 border border-gray-300 rounded-md text-right focus:outline-none focus:ring-2 focus:ring-blue-500 table-input"
+                                placeholder="Debit Amount" />
+                        </td>
+                        <td class="py-2 px-3 border-b">
+                            <input type="number" value="${entry.credit}" data-index="${index}" data-field="credit" ${disabled ? 'disabled' : ''}
+                                class="w-full p-2 border border-gray-300 rounded-md text-right focus:outline-none focus:ring-2 focus:ring-blue-500 table-input"
+                                placeholder="Credit Amount" />
+                        </td>
+                    </tr>
+                `).join('');
+            } else if (question.type === 'profit_loss' || question.type === 'balance_sheet') {
+                tableBodyHtml = userEntries.map((entry, index) => `
+                    <tr class="hover:bg-gray-50">
+                        <td class="py-2 px-3 border-b">
+                            <input type="text" value="${entry.particular}" data-index="${index}" data-field="particular" ${disabled ? 'disabled' : ''}
+                                class="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 table-input"
+                                placeholder="Particulars" />
+                        </td>
+                        <td class="py-2 px-3 border-b">
+                            <input type="number" value="${entry.amount}" data-index="${index}" data-field="amount" ${disabled ? 'disabled' : ''}
+                                class="w-full p-2 border border-gray-300 rounded-md text-right focus:outline-none focus:ring-2 focus:ring-blue-500 table-input"
+                                placeholder="Amount" />
+                        </td>
+                        <td class="py-2 px-3 border-b">
+                            <select data-index="${index}" data-field="type" ${disabled ? 'disabled' : ''}
+                                class="w-full p-2 border border-gray-300 rounded-md bg-white focus:outline-none focus:ring-2 focus:ring-blue-500 table-select">
+                                <option value="">Select</option>
+                                ${question.type === 'profit_loss' ? `
+                                    <option value="Debit" ${entry.type === 'Debit' ? 'selected' : ''}>Debit (Expenses/Losses)</option>
+                                    <option value="Credit" ${entry.type === 'Credit' ? 'selected' : ''}>Credit (Incomes/Gains)</option>
+                                ` : ''}
+                                ${question.type === 'balance_sheet' ? `
+                                    <option value="Asset" ${entry.type === 'Asset' ? 'selected' : ''}>Asset</option>
+                                    <option value="Liability" ${entry.type === 'Liability' ? 'selected' : ''}>Liability</option>
+                                ` : ''}
+                            </select>
+                        </td>
+                    </tr>
+                `).join('');
+            }
+            tbody.innerHTML = tableBodyHtml;
+
+            // Attach event listeners to newly created inputs and selects
+            if (!disabled) {
+                tbody.querySelectorAll('input, select').forEach(input => {
+                    input.oninput = (e) => {
+                        const index = parseInt(e.target.dataset.index);
+                        const field = e.target.dataset.field;
+                        userEntries[index][field] = e.target.value;
+                    };
+                });
+            }
+        };
+
+
+        // Function to update the UI with current question details
+        const updateQuestionUI = () => {
+            const currentQuestion = questionsData[selectedTopic][currentQuestionIndex];
+            questionNumberSpan.textContent = currentQuestionIndex + 1;
+            totalQuestionsSpan.textContent = questionsData[selectedTopic].length;
+            scoreSpan.textContent = score;
+            totalAttemptedSpan.textContent = totalQuestionsAttempted;
+            feedbackDiv.classList.add('hidden'); // Hide feedback on new question
+
+            if (currentQuestion.type === 'journal_entry') {
+                renderJournalEntryPractice(currentQuestion);
+            } else if (currentQuestion.type === 'ledger_posting') {
+                renderLedgerPostingPractice(currentQuestion);
+            } else if (
+                currentQuestion.type === 'trial_balance' ||
+                currentQuestion.type === 'profit_loss' ||
+                currentQuestion.type === 'balance_sheet'
+            ) {
+                renderFinancialStatementPractice(currentQuestion);
+            }
+
+            // Enable all action buttons for a new question
+            document.getElementById('check-answer-btn').disabled = false;
+            giveHintBtn.disabled = false;
+            giveAnswerBtn.disabled = false;
+            nextQuestionBtn.disabled = false; // Always enable next question for navigation
+
+            setInputsAndAddRowDisabled('current-question-content', false); // Enable inputs for new question
+
+            nextQuestionBtn.textContent = currentQuestionIndex < questionsData[selectedTopic].length - 1 ? 'Next Question' : 'Finish Topic';
+        };
+
+        // Handle answer submission
+        const handleAnswerSubmit = (userAnswer) => {
+            totalQuestionsAttempted++;
+            const currentQuestion = questionsData[selectedTopic][currentQuestionIndex];
+            const isCorrect = areAnswersEqual(userAnswer, currentQuestion.expectedAnswer, currentQuestion.type);
+
+            feedbackDiv.classList.remove('hidden');
+            if (isCorrect) {
+                feedbackDiv.className = 'mt-4 p-3 rounded-md text-center font-medium bg-green-100 text-green-800';
+                feedbackDiv.textContent = 'Correct!';
+                score++;
+            } else {
+                feedbackDiv.className = 'mt-4 p-3 rounded-md text-center font-medium bg-red-100 text-red-800';
+                feedbackDiv.textContent = 'Incorrect. Try again or move to the next question.';
+            }
+            scoreSpan.textContent = score;
+            totalAttemptedSpan.textContent = totalQuestionsAttempted;
+
+            // Disable check/hint/answer buttons after submission, enable next
+            document.getElementById('check-answer-btn').disabled = true;
+            giveHintBtn.disabled = true;
+            giveAnswerBtn.disabled = true;
+            setInputsAndAddRowDisabled('current-question-content', true); // Disable inputs after submission
+        };
+
+        // Handle hint request
+        const handleGiveHint = () => {
+            const currentQuestion = questionsData[selectedTopic][currentQuestionIndex];
+            feedbackDiv.classList.remove('hidden', 'bg-red-100', 'bg-green-100');
+            feedbackDiv.className = 'mt-4 p-3 rounded-md text-center font-medium bg-yellow-100 text-yellow-800';
+            feedbackDiv.textContent = `Hint: ${hintsData[currentQuestion.type]}`;
+        };
+
+        // Handle give answer request
+        const handleGiveAnswer = () => {
+            const currentQuestion = questionsData[selectedTopic][currentQuestionIndex];
+            userEntries = JSON.parse(JSON.stringify(currentQuestion.expectedAnswer)); // Deep copy expected answer
+
+            if (currentQuestion.type === 'journal_entry') {
+                renderJournalEntryRows(true);
+            } else if (currentQuestion.type === 'ledger_posting') {
+                renderLedgerPostingRows(true);
+            } else if (
+                currentQuestion.type === 'trial_balance' ||
+                currentQuestion.type === 'profit_loss' ||
+                currentQuestion.type === 'balance_sheet'
+            ) {
+                renderFinancialStatementRows(true);
+            }
+
+            feedbackDiv.classList.remove('hidden', 'bg-red-100', 'bg-green-100');
+            feedbackDiv.className = 'mt-4 p-3 rounded-md text-center font-medium bg-blue-100 text-blue-800';
+            feedbackDiv.textContent = 'Here is the correct answer!';
+
+            // Disable check/hint/answer buttons, enable next
+            document.getElementById('check-answer-btn').disabled = true;
+            giveHintBtn.disabled = true;
+            giveAnswerBtn.disabled = true;
+            nextQuestionBtn.disabled = false;
+        };
+
+
+        // Handle next question
+        const handleNextQuestion = () => {
+            feedbackDiv.classList.add('hidden');
+            if (selectedTopic && currentQuestionIndex < questionsData[selectedTopic].length - 1) {
+                currentQuestionIndex++;
+                updateQuestionUI();
+            } else {
+                feedbackDiv.classList.remove('hidden', 'bg-red-100', 'bg-green-100', 'bg-yellow-100');
+                feedbackDiv.className = 'mt-4 p-3 rounded-md text-center font-medium bg-blue-100 text-blue-800';
+                feedbackDiv.textContent = 'You have completed all questions for this topic!';
+                nextQuestionBtn.textContent = 'Restart Topic'; // Change button text
+                nextQuestionBtn.onclick = () => {
+                    currentQuestionIndex = 0;
+                    score = 0;
+                    totalQuestionsAttempted = 0;
+                    updateQuestionUI();
+                };
+            }
+        };
+
+        // Handle topic selection
+        const handleTopicSelect = (topic) => {
+            selectedTopic = topic;
+            currentQuestionIndex = 0;
+            score = 0;
+            totalQuestionsAttempted = 0;
+            topicSelectionScreen.classList.add('hidden');
+            practiceScreen.classList.remove('hidden');
+            currentTopicTitle.textContent = topic + ' Practice';
+            updateQuestionUI();
+        };
+
+        // Initialize topic buttons
+        const renderTopicButtons = () => {
+            topicButtonsContainer.innerHTML = ''; // Clear existing buttons
+            Object.keys(questionsData).forEach(topic => {
+                const button = document.createElement('button');
+                button.textContent = topic;
+                button.className = 'bg-blue-500 hover:bg-blue-600 text-white font-semibold py-3 px-6 rounded-lg shadow-md transition duration-300 ease-in-out transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-opacity-75';
+                button.onclick = () => handleTopicSelect(topic);
+                topicButtonsContainer.appendChild(button);
+            });
+        };
+
+        // Event listeners
+        nextQuestionBtn.onclick = handleNextQuestion;
+        changeTopicBtn.onclick = () => {
+            selectedTopic = null;
+            practiceScreen.classList.add('hidden');
+            topicSelectionScreen.classList.remove('hidden');
+            renderTopicButtons(); // Re-render topics in case they change
+        };
+        giveHintBtn.onclick = handleGiveHint;
+        giveAnswerBtn.onclick = handleGiveAnswer;
+
+        // Initial render
+        document.addEventListener('DOMContentLoaded', renderTopicButtons);
+
+    </script>
+</body>
+</html>
