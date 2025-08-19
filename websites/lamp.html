@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interactive Lamp Dimmer</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* Custom CSS to override Tailwind for specific elements and add animations */
+        body {
+            font-family: 'Inter', sans-serif;
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            /* Initial background color, will be changed by JS */
+            background: linear-gradient(135deg, hsl(250, 60%, 5%) 0%, hsl(280, 70%, 15%) 100%);
+            transition: background-color 0.5s ease; /* Smooth transition for background change */
+            overflow: hidden; /* Hide potential scrollbars */
+        }
+
+        .lamp-container {
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding-bottom: 50px; /* Space for the slider */
+        }
+
+        .lamp-shade {
+            width: 200px;
+            height: 70px;
+            background-color: #6a0dad; /* Darker purple */
+            border-radius: 50% / 100% 100% 0 0; /* Creates an elliptical top */
+            position: relative;
+            z-index: 2;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+            border: 2px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .lamp-pole {
+            width: 15px;
+            height: 150px;
+            background-color: #a0a0a0; /* Grey for pole */
+            border-radius: 5px;
+            z-index: 1;
+            margin-top: -10px; /* Overlap with shade slightly */
+            box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.2);
+            position: relative;
+        }
+
+        .lamp-base {
+            width: 150px;
+            height: 30px;
+            background-color: #808080; /* Darker grey for base */
+            border-radius: 50%;
+            z-index: 3;
+            margin-top: -10px; /* Overlap with pole slightly */
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.4);
+            border: 2px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .lamp-light {
+            position: absolute;
+            width: 180px; /* Increased width to spread light more */
+            height: 180px; /* Increased height */
+            /* Adjusted radial gradient to push light downwards */
+            background: radial-gradient(ellipse at top, rgba(255, 255, 0, 0.5) 0%, rgba(255, 255, 0, 0) 80%);
+            border-radius: 50%;
+            top: 50px; /* Adjusted to be just below the shade's opening */
+            z-index: 0; /* Behind other lamp parts */
+            transform-origin: center top; /* Make transform originate from the top center */
+            transform: translateY(0%) scaleX(0.5) scaleY(0.2); /* Start small and flat, below shade */
+            opacity: 0; /* Hidden when off */
+            filter: blur(5px); /* Soft glow */
+            transition: opacity 0.5s ease, transform 0.5s ease, filter 0.5s ease; /* Added filter to transition */
+        }
+
+        .dimmer-slider {
+            width: 250px;
+            margin-top: 50px;
+            -webkit-appearance: none;
+            appearance: none;
+            height: 10px;
+            background: #d3d3d3;
+            outline: none;
+            opacity: 0.7;
+            -webkit-transition: .2s;
+            transition: opacity .2s;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+        }
+
+        .dimmer-slider:hover {
+            opacity: 1;
+        }
+
+        .dimmer-slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 25px;
+            height: 25px;
+            background: #6a0dad;
+            cursor: pointer;
+            border-radius: 50%;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+            border: 2px solid white;
+        }
+
+        .dimmer-slider::-moz-range-thumb {
+            width: 25px;
+            height: 25px;
+            background: #6a0dad;
+            cursor: pointer;
+            border-radius: 50%;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+            border: 2px solid white;
+        }
+    </style>
+</head>
+<body>
+    <div class="lamp-container">
+        <div class="lamp-light" id="lampLight"></div>
+        <div class="lamp-shade"></div>
+        <div class="lamp-pole"></div>
+        <div class="lamp-base"></div>
+        <input type="range" min="0" max="100" value="0" class="dimmer-slider" id="dimmerSlider">
+    </div>
+
+    <script>
+        const dimmerSlider = document.getElementById('dimmerSlider');
+        const body = document.body;
+        const lampLight = document.getElementById('lampLight');
+
+        dimmerSlider.addEventListener('input', (event) => {
+            const sliderValue = parseInt(event.target.value);
+            // Map slider value (0-100) to background lightness (e.g., 5% to 50%)
+            // When slider is 0, lightness is 5%. When slider is 100, lightness is 50%.
+            const backgroundLightness = 5 + (sliderValue * 0.45); // 0.45 = (50 - 5) / 100
+
+            // Update body background color
+            body.style.background = `linear-gradient(135deg, hsl(250, 60%, ${backgroundLightness}%) 0%, hsl(280, 70%, ${backgroundLightness + 10}%) 100%)`;
+
+            // Adjust lamp light opacity, position, size, and blur
+            lampLight.style.opacity = sliderValue / 100;
+
+            // Scale the light for a "coming out" effect, focused downwards
+            const scaleXFactor = 0.5 + (sliderValue * 0.005); // Scales width from 0.5 to 1.0
+            const scaleYFactor = 0.2 + (sliderValue * 0.008); // Scales height from 0.2 to 1.0
+            const translateYAmount = sliderValue * 0.2; // Moves down slightly as it expands
+            lampLight.style.transform = `scaleX(${scaleXFactor}) scaleY(${scaleYFactor}) translateY(${translateYAmount}px)`;
+
+
+            // Adjust blur for a more dynamic glow
+            const blurAmount = 5 + (sliderValue * 0.25); // Blurs from 5px to 30px (at 100%)
+            lampLight.style.filter = `blur(${blurAmount}px)`;
+        });
+
+        // Initialize background on load based on initial slider value
+        document.addEventListener('DOMContentLoaded', () => {
+            const initialSliderValue = parseInt(dimmerSlider.value);
+            const initialBackgroundLightness = 5 + (initialSliderValue * 0.45);
+            body.style.background = `linear-gradient(135deg, hsl(250, 60%, ${initialBackgroundLightness}%) 0%, hsl(280, 70%, ${initialBackgroundLightness + 10}%) 100%)`;
+
+            // Apply initial light styles
+            lampLight.style.opacity = initialSliderValue / 100;
+            const initialScaleXFactor = 0.5 + (initialSliderValue * 0.005);
+            const initialScaleYFactor = 0.2 + (initialSliderValue * 0.008);
+            const initialTranslateYAmount = initialSliderValue * 0.2;
+            lampLight.style.transform = `scaleX(${initialScaleXFactor}) scaleY(${initialScaleYFactor}) translateY(${initialTranslateYAmount}px)`;
+            const initialBlurAmount = 5 + (initialSliderValue * 0.25);
+            lampLight.style.filter = `blur(${initialBlurAmount}px)`;
+        });
+    </script>
+</body>
+</html>
