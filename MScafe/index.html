@@ -1,0 +1,745 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MS Cafe | Royal Black and Gold</title>
+    
+    <!-- Load Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Load Three.js (3D Rendering) -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+
+    <!-- Load qrcode.js (For Admin UPI QR Code Generation) -->
+    <script src="https://cdn.jsdelivr.net/gh/davidshimjs/qrcodejs/qrcode.min.js"></script>
+
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+
+    <style>
+        /* Define Colors and Fonts */
+        :root {
+            --gold: #FFD700;
+            --black: #000000;
+            --charcoal: #1A1A1A;
+            --font-serif: 'Playfair Display', serif;
+            --font-sans: 'Poppins', sans-serif;
+        }
+
+        /* Apply Global Styles and Scrollbar */
+        body {
+            background-color: var(--charcoal);
+            font-family: var(--font-sans);
+            color: #f0f0f0;
+            overflow-x: hidden;
+        }
+
+        h1, h2, h3 {
+            font-family: var(--font-serif);
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: var(--charcoal); }
+        ::-webkit-scrollbar-thumb {
+            background-color: var(--gold);
+            border-radius: 10px;
+            border: 2px solid var(--charcoal);
+        }
+
+        #hero {
+            background: linear-gradient(180deg, var(--charcoal) 0%, var(--black) 100%);
+        }
+        
+        /* Ensure the canvas covers the whole hero section */
+        #three-canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+        }
+    </style>
+</head>
+
+<body class="min-h-screen">
+    
+    <!-- 1. HERO SECTION (3D Canvas Container) -->
+    <section id="hero" class="h-screen flex flex-col justify-center items-center relative overflow-hidden p-0">
+        <!-- Three.js Canvas will be injected here -->
+        <canvas id="three-canvas" class="absolute inset-0 z-0"></canvas>
+        
+        <div class="relative z-10 text-center p-5">
+            <!-- Title with inline cup layout -->
+            <div class="flex items-center justify-center mb-2" style="transform: translateX(10px);"> 
+                <!-- Added small translateX offset for visual centering of the whole block -->
+
+                <h1 id="title-ms" class="text-6xl md:text-8xl lg:text-9xl uppercase tracking-widest" 
+                    style="color: var(--gold); text-shadow: 0 0 10px rgba(255, 215, 0, 0.7); font-family: var(--font-serif); margin-right: -10px;">
+                    MS
+                </h1>
+                <!-- Cup takes up the central space (Three.js will render the cup here) -->
+                <!-- FIX: Reduced width for tighter alignment -->
+                <div class="w-8 md:w-12 lg:w-16 h-0"></div> 
+                <h1 id="title-cafe" class="text-6xl md:text-8xl lg:text-9xl uppercase tracking-widest" 
+                    style="color: var(--gold); text-shadow: 0 0 10px rgba(255, 215, 0, 0.7); font-family: var(--font-serif); margin-left: -10px;">
+                    Cafe
+                </h1>
+            </div>
+
+            <p class="text-xl md:text-2xl italic font-light mt-[-1rem] md:mt-[-1.5rem]" style="color: var(--gold); font-family: var(--font-sans);">
+                Experience The Royal Taste of Coffee
+            </p>
+            <a href="#menu" class="mt-8 inline-block px-8 py-3 rounded-lg text-lg font-semibold uppercase transition duration-300"
+                style="background-color: var(--gold); color: var(--black);"
+                onmouseover="this.style.backgroundColor='#FFC700'; this.style.transform='translateY(-2px)'"
+                onmouseout="this.style.backgroundColor='var(--gold)'; this.style.transform='none'">
+                View Menu
+            </a>
+        </div>
+    </section>
+
+    <!-- 2. MENU SECTION -->
+    <section id="menu" class="min-h-[80vh] py-20 px-5 md:px-10 lg:px-20" style="background-color: var(--black);">
+        <h2 class="text-4xl md:text-5xl font-extrabold mb-8 text-center" style="color: var(--gold); font-family: var(--font-serif);">
+            Our Exclusive Menu
+        </h2>
+        <div id="menu-grid" class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8 mt-8">
+            <!-- Product Cards will be injected here by JavaScript -->
+        </div>
+    </section>
+
+    <!-- 3. BUTTONS (Cart & Admin) -->
+    <div id="app-buttons">
+        <!-- Admin Button -->
+        <button id="admin-btn" 
+            class="fixed bottom-4 left-4 z-50 rounded-lg w-16 h-16 text-2xl p-0 transition-all duration-200 hover:scale-110"
+            style="background-color: var(--charcoal); color: var(--gold); border: 1px solid var(--gold); box-shadow: 0 0 10px rgba(255, 215, 0, 0.4);"
+            title="Admin Panel"
+            onclick="openAdminModal()">
+            <span role="img" aria-label="settings">⚙️</span>
+            <span class="absolute bottom-[-20px] left-0 right-0 text-xs font-semibold" style="color: var(--gold);">Admin</span>
+        </button>
+
+        <!-- Cart Button -->
+        <button id="cart-btn" 
+            class="fixed bottom-4 right-4 z-50 rounded-full w-16 h-16 text-2xl p-0 font-bold shadow-xl transition-all duration-200 hover:scale-110"
+            style="background-color: var(--gold); color: var(--black); box-shadow: 0 0 15px rgba(255, 215, 0, 0.7);"
+            title="View Cart"
+            onclick="openCartModal()">
+            <span role="img" aria-label="cart">🛒</span>
+            <span id="cart-count" class="absolute top-[-5px] right-[-5px] bg-red-600 text-white rounded-full text-xs px-2 py-0.5 leading-none opacity-0 transition duration-200">
+                0
+            </span>
+        </button>
+    </div>
+
+    <!-- 4. MODALS (Cart & Admin) -->
+    
+    <!-- Cart Modal Container -->
+    <div id="cart-modal-container" class="hidden fixed inset-0 bg-black/70 flex justify-center items-center z-[1000]">
+        <!-- Content will be injected here -->
+    </div>
+
+    <!-- Admin Modal Container -->
+    <div id="admin-modal-container" class="hidden fixed inset-0 bg-black/70 flex justify-center items-center z-[1000]">
+        <!-- Content will be injected here -->
+    </div>
+
+
+<script>
+    // ====================================================================
+    // 1. GLOBAL DATA AND STATE
+    // ====================================================================
+
+    const MENU_ITEMS = [
+        { id: 1, name: "Gold Standard Espresso", price: 250, description: "A rich, potent blend with a golden crema.", category: "Coffee" },
+        { id: 2, name: "Black Velvet Latte", price: 320, description: "Silky smooth latte with activated charcoal and vanilla.", category: "Coffee" },
+        { id: 3, name: "Imperial Cappuccino", price: 300, description: "Classic cappuccino with a dusting of gold flakes.", category: "Coffee" },
+        { id: 4, name: "Royal Mocha Fudge", price: 350, description: "Decadent mocha blended with dark fudge and chocolate.", category: "Specialty" },
+        { id: 5, name: "The Crown Croissant", price: 180, description: "Flaky butter croissant baked to golden perfection.", category: "Pastry" },
+        { id: 6, name: "MS Signature Cake", price: 490, description: "Our exclusive gold and black layered dark chocolate cake.", category: "Pastry" },
+    ];
+    
+    // State
+    let cart = [];
+    let isAuthenticated = false;
+
+    // Admin Credentials
+    const ADMIN_ID = "cafeMS";
+    const ADMIN_PASS = "atul9977";
+    const UPI_ID = "atultiwari997721-1@oksbi"; 
+    const CAFE_PHONE = '91997799770'; 
+    const DEFAULT_PAYMENT_AMOUNT = 1.00; // Amount for default QR when total is 0
+    let manualAmount = null; // State for manual amount input
+
+    // ====================================================================
+    // 2. CORE UTILITY FUNCTIONS (CART & UI)
+    // ====================================================================
+
+    /** Renders the cart item count on the button */
+    function updateCartUI() {
+        const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
+        const cartCountEl = document.getElementById('cart-count');
+        
+        cartCountEl.textContent = totalItems;
+        if (totalItems > 0) {
+            cartCountEl.classList.remove('opacity-0');
+        } else {
+            cartCountEl.classList.add('opacity-0');
+        }
+    }
+
+    /** Adds product to cart or increments quantity */
+    function addToCart(productId) {
+        const product = MENU_ITEMS.find(item => item.id === productId);
+        if (!product) return;
+
+        const existingItem = cart.find(item => item.id === productId);
+
+        if (existingItem) {
+            existingItem.quantity += 1;
+        } else {
+            cart.push({ ...product, quantity: 1 });
+        }
+        
+        updateCartUI();
+        renderCartModalContent();
+    }
+    
+    // ====================================================================
+    // 3. MENU RENDERING
+    // ====================================================================
+
+    function renderMenu() {
+        const menuGrid = document.getElementById('menu-grid');
+        menuGrid.innerHTML = MENU_ITEMS.map(product => `
+            <div class="p-5 rounded-lg text-center transition-all duration-300 transform hover:translate-y-[-5px] shadow-2xl"
+                style="background-color: var(--black); border: 1px solid var(--charcoal); box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5); border-radius: 8px;"
+                onmouseover="this.style.borderColor='var(--gold)'; this.style.boxShadow='0 8px 20px rgba(255, 215, 0, 0.3)'"
+                onmouseout="this.style.borderColor='var(--charcoal)'; this.style.boxShadow='0 4px 15px rgba(0, 0, 0, 0.5)'">
+                
+                <h3 class="text-xl font-bold mb-2" style="color: var(--gold); font-family: var(--font-serif);">
+                    ${product.name}
+                </h3>
+                <p class="text-sm mb-4 text-gray-400 h-10 overflow-hidden line-clamp-2">
+                    ${product.description}
+                </p>
+                <div class="text-3xl font-extrabold text-white mb-4">
+                    ₹${product.price.toFixed(2)}
+                </div>
+                <button 
+                    class="w-full py-2.5 px-4 font-semibold uppercase rounded transition duration-300 hover:bg-[#FFC700] hover:shadow-lg"
+                    style="background-color: var(--gold); color: var(--black);"
+                    onclick="addToCart(${product.id})">
+                    Add to Cart
+                </button>
+            </div>
+        `).join('');
+    }
+
+    // ====================================================================
+    // 4. CART MODAL LOGIC
+    // ====================================================================
+
+    function updateQuantity(id, change) {
+        const itemIndex = cart.findIndex(item => item.id === id);
+        if (itemIndex > -1) {
+            cart[itemIndex].quantity += change;
+            if (cart[itemIndex].quantity <= 0) {
+                cart.splice(itemIndex, 1); // Remove item
+            }
+        }
+        updateCartUI();
+        renderCartModalContent(); // Re-render modal content
+    }
+
+    function handleWhatsAppOrder() {
+        if (cart.length === 0) return;
+
+        const totalAmount = cart.reduce((sum, item) => sum + item.price * item.quantity, 0);
+
+        let orderDetails = '';
+        cart.forEach(item => {
+            orderDetails += `*${item.name}* x ${item.quantity} (₹${(item.price * item.quantity).toFixed(2)})\n`;
+        });
+
+        orderDetails += `\n*TOTAL AMOUNT: ₹${totalAmount.toFixed(2)}*`;
+        orderDetails += `\n\n--- Customer Details ---\nName: [YOUR NAME]\nAddress: [YOUR ADDRESS]`;
+
+        const encodedText = encodeURIComponent(`MS Cafe Order:\n\n${orderDetails}`);
+        const whatsappURL = `https://wa.me/${CAFE_PHONE}?text=${encodedText}`;
+
+        window.open(whatsappURL, '_blank');
+        closeCartModal();
+    }
+
+    function renderCartModalContent() {
+        const totalAmount = cart.reduce((sum, item) => sum + item.price * item.quantity, 0);
+        const modalContainer = document.getElementById('cart-modal-container');
+
+        let contentHTML = '';
+        if (cart.length === 0) {
+            contentHTML = `<p class="text-center py-4" style="color: var(--gold);">Your cart is empty.</p>`;
+        } else {
+            const itemsHTML = cart.map(item => `
+                <div class="flex justify-between items-center py-2 border-b border-black">
+                    <div>
+                        <span class="text-white">${item.name}</span>
+                        <span class="ml-2 text-sm" style="color: var(--gold);">(₹${item.price.toFixed(2)})</span>
+                    </div>
+                    <div class="flex items-center space-x-2">
+                        <button class="py-1 px-2.5 text-lg rounded" style="background-color: var(--black); color: var(--gold);"
+                            onclick="updateQuantity(${item.id}, -1)">
+                            -
+                        </button>
+                        <span class="font-bold w-5 text-center text-white">${item.quantity}</span>
+                        <button class="py-1 px-2.5 text-lg rounded" style="background-color: var(--black); color: var(--gold);"
+                            onclick="updateQuantity(${item.id}, 1)">
+                            +
+                        </button>
+                    </div>
+                </div>
+            `).join('');
+
+            contentHTML = `
+                ${itemsHTML}
+                <div class="mt-5 text-xl font-bold text-white">Total: ₹${totalAmount.toFixed(2)}</div>
+                <div class="flex justify-between mt-8 gap-3 flex-wrap">
+                    <button onclick="closeCartModal()" 
+                        class="py-2 px-4 rounded font-semibold transition" 
+                        style="background-color: var(--charcoal); color: var(--gold); border: 1px solid var(--gold);">
+                        Continue Shopping
+                    </button>
+                    <button onclick="handleWhatsAppOrder()"
+                        class="py-2 px-4 rounded font-semibold transition"
+                        style="background-color: var(--gold); color: var(--black);">
+                        Order via WhatsApp
+                    </button>
+                </div>
+            `;
+        }
+
+        modalContainer.innerHTML = `
+            <div class="bg-[#1A1A1A] p-8 rounded-lg w-11/12 max-w-lg max-h-[80vh] overflow-y-auto border-2 shadow-2xl" 
+                style="border-color: var(--gold); box-shadow: 0 0 30px rgba(255, 215, 0, 0.5);"
+                onclick="event.stopPropagation()">
+                <h2 class="text-2xl font-bold pb-2 mb-5 text-left border-b" style="color: var(--gold); border-color: var(--gold); font-family: var(--font-serif);">
+                    Your Order (Cart)
+                </h2>
+                ${contentHTML}
+            </div>
+        `;
+    }
+
+    function openCartModal() {
+        document.getElementById('cart-modal-container').classList.remove('hidden');
+        renderCartModalContent();
+    }
+
+    function closeCartModal() {
+        document.getElementById('cart-modal-container').classList.add('hidden');
+    }
+
+    // Add close logic on backdrop click
+    document.getElementById('cart-modal-container').addEventListener('click', closeCartModal);
+
+    // ====================================================================
+    // 5. ADMIN MODAL LOGIC (Authentication & QR Calculator)
+    // ====================================================================
+
+    let selectedAdminProducts = {};
+    let adminModalMessage = '';
+
+    function handleAdminLogin() {
+        const inputID = document.getElementById('admin-id-input').value;
+        const inputPass = document.getElementById('admin-pass-input').value;
+
+        if (inputID === ADMIN_ID && inputPass === ADMIN_PASS) {
+            isAuthenticated = true;
+            adminModalMessage = 'Login Successful.';
+            // Reset manual amount state on successful login
+            manualAmount = null; 
+        } else {
+            adminModalMessage = 'Invalid User ID or Password. Access Denied.';
+            setTimeout(() => { adminModalMessage = ''; renderAdminModalContent(); }, 3000); 
+        }
+        renderAdminModalContent();
+    }
+
+    function handleManualAmountChange(inputEl) {
+        const amount = parseFloat(inputEl.value) || null;
+        manualAmount = amount;
+        updateAdminUIAndQRCode();
+    }
+
+    function handleAdminProductChange(id, inputEl) {
+        // Clear manual amount when product selection changes
+        const manualInput = document.getElementById('manual-amount-input');
+        if (manualInput) manualInput.value = '';
+        manualAmount = null;
+
+        const qty = parseInt(inputEl.value) || 0;
+        
+        if (qty > 0) {
+            selectedAdminProducts[id] = qty;
+        } else {
+            delete selectedAdminProducts[id];
+        }
+        updateAdminUIAndQRCode();
+    }
+    
+    function calculateAdminTotal() {
+        return Object.entries(selectedAdminProducts).reduce((sum, [id, qty]) => {
+            const product = MENU_ITEMS.find(item => item.id === parseInt(id));
+            return sum + (product ? product.price * qty : 0);
+        }, 0);
+    }
+    
+    function updateAdminUIAndQRCode() {
+        // Determine the amount to use: Manual amount overrides all, then calculated, then default.
+        let finalAmount = manualAmount !== null ? manualAmount : calculateAdminTotal();
+
+        // If amount is 0 or less (no products/manual amount), use the default amount for the QR to be scannable
+        if (finalAmount <= 0) {
+            finalAmount = DEFAULT_PAYMENT_AMOUNT;
+        }
+
+        // 2. Update the total display
+        const totalDisplayEl = document.getElementById('admin-total-display');
+        if (totalDisplayEl) {
+            totalDisplayEl.textContent = `₹${finalAmount.toFixed(2)}`;
+        }
+
+        // 3. Update QR Code area
+        const qrPlaceholder = document.getElementById('qr-code-placeholder');
+        if (qrPlaceholder) {
+            // Clear the placeholder content only, then generate QR
+            qrPlaceholder.innerHTML = ''; 
+            generateQRCode(finalAmount);
+        }
+    }
+
+    function generateQRCode(amount) {
+        // Ensure amount is positive for UPI link validity
+        const finalAmount = amount > 0 ? amount : DEFAULT_PAYMENT_AMOUNT;
+
+        const upiLink = `upi://pay?pa=${UPI_ID}&pn=MS%20Cafe%20Payment&am=${finalAmount.toFixed(2)}&cu=INR`;
+        const qrPlaceholder = document.getElementById('qr-code-placeholder');
+        
+        if (!qrPlaceholder) return;
+
+        // Check if qrcode is available (from the CDN)
+        if (typeof qrcode !== 'undefined') {
+            
+            // 1. Create the container for the QR code image
+            // We use a clean wrapper for the QR code element itself to ensure no text interferes
+            const qrTarget = document.createElement('div');
+            qrTarget.style.backgroundColor = '#FFFFFF';
+            qrTarget.style.padding = '5px'; 
+            qrTarget.style.margin = 'auto'; // Center the QR code block
+
+            // 2. Clear the placeholder and append the target
+            qrPlaceholder.innerHTML = '';
+            qrPlaceholder.appendChild(qrTarget);
+
+            // 3. Generate the QR code
+            new qrcode(qrTarget, {
+                text: upiLink,
+                width: 128,
+                height: 128,
+                colorDark: '#000000', 
+                colorLight: '#FFFFFF', 
+                correctLevel: qrcode.CorrectLevel.H
+            });
+            
+            // 4. Add custom text overlay outside the QR code target
+            qrPlaceholder.innerHTML += `
+                <p class="mt-2 text-sm font-bold absolute top-3 right-3" style="color: var(--gold);">Amount: ₹${finalAmount.toFixed(2)}</p>
+                <p class="absolute bottom-2 text-xs" style="color: #999;">
+                    (UPI ID: ${UPI_ID})
+                </p>
+            `;
+            
+            // 5. Re-center the content, as qrcode.js replaces its target content
+            qrPlaceholder.classList.add('flex', 'flex-col', 'justify-center', 'items-center');
+
+        } else {
+            // Fallback message if qrcode.js didn't load
+             qrPlaceholder.innerHTML = `
+                <p class="text-lg font-bold" style="color: var(--gold);">QR Code Failed to Load (Library missing).</p>
+                <p class="absolute bottom-2 text-xs" style="color: #999;">
+                    Link: <a href="${upiLink}" target="_blank" rel="noopener noreferrer" class="underline" style="color: var(--gold);">Click to Pay ₹${finalAmount.toFixed(2)}</a>
+                </p>
+            `;
+        }
+    }
+
+
+    function renderAdminModalContent() {
+        const modalContainer = document.getElementById('admin-modal-container');
+        let modalContentHTML = '';
+
+        const modalStyle = "background-color: var(--charcoal); border-color: var(--gold); box-shadow: 0 0 30px rgba(255, 215, 0, 0.5);";
+
+        if (!isAuthenticated) {
+            // Login View
+            modalContentHTML = `
+                <div class="p-8 rounded-lg w-11/12 max-w-md border-2" style="${modalStyle}" onclick="event.stopPropagation()">
+                    <h2 class="text-3xl font-bold text-center mb-6" style="color: var(--gold);">Admin Login</h2>
+                    <input id="admin-id-input" type="text" placeholder="User ID" 
+                        class="w-full p-3 mb-4 rounded border"
+                        style="background-color: var(--black); color: white; border-color: var(--gold);" 
+                        value="${ADMIN_ID}" />
+                    <input id="admin-pass-input" type="password" placeholder="Password" 
+                        class="w-full p-3 mb-4 rounded border"
+                        style="background-color: var(--black); color: white; border-color: var(--gold);" 
+                        value="${ADMIN_PASS}" />
+                    
+                    <p id="admin-message" class="text-center mb-4 ${adminModalMessage.includes('Invalid') ? 'text-red-500' : 'text-green-400'}">
+                        ${adminModalMessage}
+                    </p>
+                    
+                    <div class="flex justify-end gap-3">
+                         <button onclick="closeAdminModal()" class="py-2 px-4 rounded font-semibold transition" style="background: var(--charcoal); color: var(--gold); border: 1px solid var(--gold);">Cancel</button>
+                         <button onclick="handleAdminLogin()" class="py-2 px-4 rounded font-semibold transition" style="background: var(--gold); color: var(--black);">Login</button>
+                    </div>
+                   
+                    <p class="mt-4 text-center text-xs text-gray-600">
+                        User ID: ${ADMIN_ID} | Password: ${ADMIN_PASS}
+                    </p>
+                </div>
+            `;
+            modalContainer.innerHTML = modalContentHTML; // Render login content immediately
+        } else {
+            // Authenticated Calculator View
+            const calculatedTotal = calculateAdminTotal();
+            const displayTotal = manualAmount !== null ? manualAmount : (calculatedTotal > 0 ? calculatedTotal : DEFAULT_PAYMENT_AMOUNT);
+
+            const productListHTML = MENU_ITEMS.map(product => `
+                <div class="flex justify-between items-center mb-2 pb-1 border-b border-black">
+                    <span class="flex-grow text-white">${product.name} (₹${product.price.toFixed(2)})</span>
+                    <input
+                        type="number"
+                        min="0"
+                        placeholder="Qty"
+                        class="w-16 p-1 text-center rounded border"
+                        style="background-color: var(--black); color: white; border-color: var(--charcoal);"
+                        value="${selectedAdminProducts[product.id] || ''}"
+                        oninput="handleAdminProductChange(${product.id}, this)"
+                    />
+                </div>
+            `).join('');
+
+            modalContentHTML = `
+                <div class="p-8 rounded-lg w-11/12 max-w-xl max-h-[90vh] overflow-y-auto border-2" style="${modalStyle}" onclick="event.stopPropagation()">
+                    <h2 class="text-3xl font-bold text-center mb-6" style="color: var(--gold);">MS Cafe Admin Panel</h2>
+                    
+                    <h3 class="text-xl font-semibold mb-4 text-center" style="color: var(--gold);">Special Payment Calculator</h3>
+                    <p class="text-sm mb-4 text-center" style="color: var(--gold);">UPI ID: ${UPI_ID}</p>
+                    
+                    <!-- Product List -->
+                    <div class="p-4 rounded mb-5" style="border: 1px solid var(--charcoal); max-height: 250px; overflow-y: auto;">
+                        <p class="text-sm font-semibold mb-2 text-white">Select Products (Calculated Total: ₹${calculatedTotal.toFixed(2)}):</p>
+                        ${productListHTML}
+                    </div>
+
+                    <!-- Manual Amount Input -->
+                    <div class="mb-4">
+                        <label for="manual-amount-input" class="text-sm font-semibold text-white block mb-1">Override/Set Custom Amount:</label>
+                        <input
+                            type="number"
+                            id="manual-amount-input"
+                            min="1"
+                            placeholder="Enter Custom Amount"
+                            class="w-full p-2 rounded border"
+                            style="background-color: var(--black); color: white; border-color: var(--gold);"
+                            value="${manualAmount !== null ? manualAmount.toFixed(2) : ''}"
+                            oninput="handleManualAmountChange(this)"
+                        />
+                    </div>
+
+
+                    <!-- Total Summary -->
+                    <div class="p-4 rounded mb-6" style="background-color: var(--black); border: 2px solid var(--gold); text-align: center;">
+                        <p class="text-lg text-white">Final Payment Amount:</p>
+                        <h3 id="admin-total-display" class="text-4xl font-extrabold m-0" style="color: var(--gold);">
+                            ₹${displayTotal.toFixed(2)}
+                        </h3>
+                    </div>
+
+                    <!-- QR Code Placeholder -->
+                    <div class="p-4">
+                        <p class="text-center text-gray-300 mb-3">Scan QR Code for Direct Payment</p>
+                        <div id="qr-code-placeholder"
+                            class="h-40 flex flex-col justify-center items-center border border-dashed text-gray-400 relative"
+                            style="border-color: var(--gold);">
+                            <p class="text-lg font-bold" style="color: var(--gold);">Generating QR...</p>
+                        </div>
+                    </div>
+                    
+                    <div class="flex justify-end mt-6">
+                        <button onclick="closeAdminModal()" class="py-2 px-4 rounded font-semibold transition" style="background: var(--gold); color: var(--black);">
+                            Close Panel
+                        </button>
+                    </div>
+                </div>
+            `;
+            
+            // 1. Render the HTML content
+            modalContainer.innerHTML = modalContentHTML;
+
+            // 2. Generate QR code only AFTER the placeholder exists in the DOM
+            // This now calls generateQRCode with the calculated/manual amount
+            setTimeout(() => updateAdminUIAndQRCode(), 100);
+        }
+    }
+
+
+    function openAdminModal() {
+        document.getElementById('admin-modal-container').classList.remove('hidden');
+        renderAdminModalContent();
+    }
+
+    function closeAdminModal() {
+        document.getElementById('admin-modal-container').classList.add('hidden');
+    }
+
+    // Add close logic on backdrop click
+    document.getElementById('admin-modal-container').addEventListener('click', closeAdminModal);
+
+
+    // ====================================================================
+    // 6. THREE.JS 3D LOGIC (Floating Cup)
+    // ====================================================================
+
+    let scene, camera, renderer, cupGroup;
+
+    function initThreeJS() {
+        const container = document.getElementById('three-canvas');
+        
+        // 1. Scene
+        scene = new THREE.Scene();
+
+        // 2. Camera (Perspective)
+        camera = new THREE.PerspectiveCamera(75, container.clientWidth / container.clientHeight, 0.1, 1000);
+        camera.position.z = 4; 
+        
+        // FIX: Adjust camera position to visually center the cup between the HTML text elements.
+        camera.position.x = -0.05; 
+        
+        // 3. Renderer
+        renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true, canvas: container });
+        renderer.setSize(container.clientWidth, container.clientHeight);
+        renderer.setPixelRatio(window.devicePixelRatio);
+        
+        // 4. Lights
+        const ambientLight = new THREE.AmbientLight(0x404040, 5); // soft white light
+        scene.add(ambientLight);
+
+        const pointLight = new THREE.PointLight(0xFFD700, 10, 100); // Gold light
+        pointLight.position.set(5, 5, 5);
+        scene.add(pointLight);
+
+        const pointLight2 = new THREE.PointLight(0xAAAAAA, 10, 100); // White back light
+        pointLight2.position.set(-5, -5, -5);
+        scene.add(pointLight2);
+        
+        // 5. Create the Stylized Cup (as a Group)
+        cupGroup = new THREE.Group();
+
+        const goldMaterial = new THREE.MeshStandardMaterial({ color: 0xFFD700, metalness: 0.8, roughness: 0.3 });
+        // FIX: New white material for the cup body
+        const whiteBodyMaterial = new THREE.MeshStandardMaterial({ color: 0xFFFFFF, metalness: 0.3, roughness: 0.5 });
+        const coffeeMaterial = new THREE.MeshStandardMaterial({ color: 0x4B371C });
+        
+        // A. Cup Body (Cylinder)
+        // CHANGED: From black material to white material
+        const cupBody = new THREE.Mesh(new THREE.CylinderGeometry(1, 0.8, 2, 32), whiteBodyMaterial);
+        cupGroup.add(cupBody);
+
+        // B. Coffee (Inner Cylinder)
+        const coffee = new THREE.Mesh(new THREE.CylinderGeometry(0.95, 0.75, 0.1, 32), coffeeMaterial);
+        coffee.position.y = 0.95;
+        cupGroup.add(coffee);
+
+        // C. Handle (Torus) - Made from Gold
+        const handle = new THREE.Mesh(new THREE.TorusGeometry(0.5, 0.1, 16, 100), goldMaterial);
+        handle.position.set(1.1, 0, 0);
+        handle.rotation.z = Math.PI / 2; 
+        cupGroup.add(handle);
+
+        // D. Eyes (Two small gold spheres)
+        const eyeGeometry = new THREE.SphereGeometry(0.1, 16, 16);
+        const eyeLeft = new THREE.Mesh(eyeGeometry, goldMaterial);
+        eyeLeft.position.set(0.4, 0.7, 0.8);
+        
+        const eyeRight = new THREE.Mesh(eyeGeometry, goldMaterial);
+        eyeRight.position.set(-0.4, 0.7, 0.8);
+        
+        cupGroup.add(eyeLeft);
+        cupGroup.add(eyeRight);
+
+        // E. Smile (A concave gold ring segment at the front)
+        const smileGeometry = new THREE.TorusGeometry(0.3, 0.05, 16, 100, Math.PI); // Half torus
+        const smile = new THREE.Mesh(smileGeometry, goldMaterial);
+        smile.rotation.x = Math.PI * 0.5; // Rotate to face forward
+        smile.position.set(0, 0.4, 0.9); // Position lower and forward
+        cupGroup.add(smile);
+
+        // FIX: Adjust position to center the cup in the reduced gap
+        cupGroup.position.x = 0.3; 
+        cupGroup.rotation.x = -0.5;
+        cupGroup.rotation.y = Math.PI / 6; 
+        cupGroup.scale.set(1.2, 1.2, 1.2); 
+        scene.add(cupGroup);
+
+
+        // 6. Handle Resize
+        window.addEventListener('resize', onWindowResize, false);
+
+        // 7. Start Animation
+        animate();
+    }
+
+    function onWindowResize() {
+        const container = document.getElementById('three-canvas');
+        camera.aspect = container.clientWidth / container.clientHeight;
+        camera.updateProjectionMatrix();
+        renderer.setSize(container.clientWidth, container.clientHeight);
+    }
+
+    function animate(time) {
+        requestAnimationFrame(animate);
+
+        if (cupGroup) {
+            // Gentle rotation
+            cupGroup.rotation.y += 0.005;
+
+            // Sinusoidal floating (up and down)
+            const floatSpeed = 0.001;
+            const floatHeight = 0.1;
+            cupGroup.position.y = Math.sin(time * floatSpeed) * floatHeight;
+        }
+
+        renderer.render(scene, camera);
+    }
+
+    // ====================================================================
+    // 7. INITIALIZATION
+    // ====================================================================
+    
+    window.onload = function() {
+        // Render all UI elements
+        renderMenu();
+        updateCartUI(); 
+        
+        // Initialize the 3D scene
+        initThreeJS();
+    };
+
+</script>
+</body>
+</html>
