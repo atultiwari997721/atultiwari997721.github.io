@@ -10,12 +10,12 @@
     
     <!-- Load Three.js (3D Rendering) -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-
+    
     <!-- Load qrcode.js (For Admin UPI QR Code Generation) -->
     <script src="https://cdn.jsdelivr.net/gh/davidshimjs/qrcodejs/qrcode.min.js"></script>
 
     <!-- Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
 
     <style>
         /* Define Colors and Fonts */
@@ -61,6 +61,37 @@
             height: 100%;
             z-index: 0;
         }
+        /* Dedicated style for the QR code target */
+        #qr-code-target {
+            background-color: white; 
+            padding: 4px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 136px; /* 128px QR + 8px padding */
+            height: 136px;
+        }
+
+        /* --- FIX: Smaller Mobile Button (Guaranteed Single Line) --- */
+        .product-card-button {
+            padding-top: 0.25rem; /* py-1 */
+            padding-bottom: 0.25rem; /* py-1 */
+            padding-left: 0.25rem; /* px-1 (Reduced horizontal padding) */
+            padding-right: 0.25rem; /* px-1 (Reduced horizontal padding) */
+            font-size: 0.875rem; /* text-sm */
+            white-space: nowrap; /* Prevent wrapping */
+        }
+        /* Override default Tailwind for larger screens */
+        @media (min-width: 640px) {
+             .product-card-button {
+                padding-top: 0.625rem; /* py-2.5 */
+                padding-bottom: 0.625rem; /* py-2.5 */
+                padding-left: 1rem; /* px-4 */
+                padding-right: 1rem; /* px-4 */
+                font-size: 1rem; /* text-base */
+                white-space: normal; /* Allow normal wrapping on desktop */
+            }
+        }
     </style>
 </head>
 
@@ -71,27 +102,15 @@
         <!-- Three.js Canvas will be injected here -->
         <canvas id="three-canvas" class="absolute inset-0 z-0"></canvas>
         
-        <div class="relative z-10 text-center p-5">
-            <!-- Title with inline cup layout -->
-            <div class="flex items-center justify-center mb-2" style="transform: translateX(10px);"> 
-                <!-- Added small translateX offset for visual centering of the whole block -->
-
-                <h1 id="title-ms" class="text-6xl md:text-8xl lg:text-9xl uppercase tracking-widest" 
-                    style="color: var(--gold); text-shadow: 0 0 10px rgba(255, 215, 0, 0.7); font-family: var(--font-serif); margin-right: -10px;">
-                    MS
-                </h1>
-                <!-- Cup takes up the central space (Three.js will render the cup here) -->
-                <!-- FIX: Reduced width for tighter alignment -->
-                <div class="w-8 md:w-12 lg:w-16 h-0"></div> 
-                <h1 id="title-cafe" class="text-6xl md:text-8xl lg:text-9xl uppercase tracking-widest" 
-                    style="color: var(--gold); text-shadow: 0 0 10px rgba(255, 215, 0, 0.7); font-family: var(--font-serif); margin-left: -10px;">
-                    Cafe
-                </h1>
+        <div class="relative z-10 flex flex-col items-center justify-center h-full pt-10 pb-20"> 
+            
+            <!-- This div is now the visual container for the 3D logo area -->
+            <div class="flex items-center justify-center mb-2">
+                 <!-- The 3D Cup is now the main logo element -->
             </div>
-
-            <p class="text-xl md:text-2xl italic font-light mt-[-1rem] md:mt-[-1.5rem]" style="color: var(--gold); font-family: var(--font-sans);">
-                Experience The Royal Taste of Coffee
-            </p>
+            
+            <!-- Tagline removed -->
+            
             <a href="#menu" class="mt-8 inline-block px-8 py-3 rounded-lg text-lg font-semibold uppercase transition duration-300"
                 style="background-color: var(--gold); color: var(--black);"
                 onmouseover="this.style.backgroundColor='#FFC700'; this.style.transform='translateY(-2px)'"
@@ -231,7 +250,7 @@
                     ₹${product.price.toFixed(2)}
                 </div>
                 <button 
-                    class="w-full py-2.5 px-4 font-semibold uppercase rounded transition duration-300 hover:bg-[#FFC700] hover:shadow-lg"
+                    class="w-full font-semibold uppercase rounded transition duration-300 hover:bg-[#FFC700] hover:shadow-lg product-card-button"
                     style="background-color: var(--gold); color: var(--black);"
                     onclick="addToCart(${product.id})">
                     Add to Cart
@@ -414,38 +433,44 @@
         }
 
         // 3. Update QR Code area
-        const qrPlaceholder = document.getElementById('qr-code-placeholder');
-        if (qrPlaceholder) {
-            // Clear the placeholder content only, then generate QR
-            qrPlaceholder.innerHTML = ''; 
+        const qrTarget = document.getElementById('qr-code-target');
+        
+        // This is the core fix: generate QR immediately if the target exists
+        if (qrTarget) {
             generateQRCode(finalAmount);
+        }
+        
+        // 4. Update dynamic text overlay and link
+        const amountDisplayEl = document.getElementById('qr-amount-display');
+        const linkEl = document.getElementById('qr-link-pay');
+        
+        // *** FIX: Ensure UPI Link is correctly formed and encoded ***
+        const upiLink = `upi://pay?pa=${UPI_ID}&pn=${encodeURIComponent('MS Cafe Payment')}&am=${finalAmount.toFixed(2)}&cu=INR`;
+
+        if (amountDisplayEl) {
+            amountDisplayEl.textContent = `Amount: ₹${finalAmount.toFixed(2)}`;
+        }
+
+        if (linkEl) {
+            linkEl.href = upiLink;
+            linkEl.textContent = `Click to Pay ₹${finalAmount.toFixed(2)}`;
         }
     }
 
     function generateQRCode(amount) {
-        // Ensure amount is positive for UPI link validity
         const finalAmount = amount > 0 ? amount : DEFAULT_PAYMENT_AMOUNT;
-
-        const upiLink = `upi://pay?pa=${UPI_ID}&pn=MS%20Cafe%20Payment&am=${finalAmount.toFixed(2)}&cu=INR`;
-        const qrPlaceholder = document.getElementById('qr-code-placeholder');
+        // *** FIX: Ensure UPI Link is correctly formed and encoded here too ***
+        const upiLink = `upi://pay?pa=${UPI_ID}&pn=${encodeURIComponent('MS Cafe Payment')}&am=${finalAmount.toFixed(2)}&cu=INR`;
+        const qrTarget = document.getElementById('qr-code-target');
         
-        if (!qrPlaceholder) return;
+        if (!qrTarget) return;
 
-        // Check if qrcode is available (from the CDN)
+        // Clear previous content
+        qrTarget.innerHTML = '';
+
         if (typeof qrcode !== 'undefined') {
             
-            // 1. Create the container for the QR code image
-            // We use a clean wrapper for the QR code element itself to ensure no text interferes
-            const qrTarget = document.createElement('div');
-            qrTarget.style.backgroundColor = '#FFFFFF';
-            qrTarget.style.padding = '5px'; 
-            qrTarget.style.margin = 'auto'; // Center the QR code block
-
-            // 2. Clear the placeholder and append the target
-            qrPlaceholder.innerHTML = '';
-            qrPlaceholder.appendChild(qrTarget);
-
-            // 3. Generate the QR code
+            // Generate the QR code directly into the target div
             new qrcode(qrTarget, {
                 text: upiLink,
                 width: 128,
@@ -455,25 +480,14 @@
                 correctLevel: qrcode.CorrectLevel.H
             });
             
-            // 4. Add custom text overlay outside the QR code target
-            qrPlaceholder.innerHTML += `
-                <p class="mt-2 text-sm font-bold absolute top-3 right-3" style="color: var(--gold);">Amount: ₹${finalAmount.toFixed(2)}</p>
-                <p class="absolute bottom-2 text-xs" style="color: #999;">
-                    (UPI ID: ${UPI_ID})
-                </p>
-            `;
-            
-            // 5. Re-center the content, as qrcode.js replaces its target content
-            qrPlaceholder.classList.add('flex', 'flex-col', 'justify-center', 'items-center');
+            // Center the generated QR code canvas/table within the target
+            qrTarget.style.display = 'flex';
+            qrTarget.style.justifyContent = 'center';
+            qrTarget.style.alignItems = 'center';
 
         } else {
-            // Fallback message if qrcode.js didn't load
-             qrPlaceholder.innerHTML = `
-                <p class="text-lg font-bold" style="color: var(--gold);">QR Code Failed to Load (Library missing).</p>
-                <p class="absolute bottom-2 text-xs" style="color: #999;">
-                    Link: <a href="${upiLink}" target="_blank" rel="noopener noreferrer" class="underline" style="color: var(--gold);">Click to Pay ₹${finalAmount.toFixed(2)}</a>
-                </p>
-            `;
+            // Fallback message if qrcode.js didn't load (shouldn't happen with CDN)
+             qrTarget.innerHTML = `<p style="color: var(--gold);">QR Library not loaded.</p>`;
         }
     }
 
@@ -485,7 +499,7 @@
         const modalStyle = "background-color: var(--charcoal); border-color: var(--gold); box-shadow: 0 0 30px rgba(255, 215, 0, 0.5);";
 
         if (!isAuthenticated) {
-            // Login View
+            // Login View (Same as before)
             modalContentHTML = `
                 <div class="p-8 rounded-lg w-11/12 max-w-md border-2" style="${modalStyle}" onclick="event.stopPropagation()">
                     <h2 class="text-3xl font-bold text-center mb-6" style="color: var(--gold);">Admin Login</h2>
@@ -512,7 +526,8 @@
                     </p>
                 </div>
             `;
-            modalContainer.innerHTML = modalContentHTML; // Render login content immediately
+            modalContainer.innerHTML = modalContentHTML; 
+
         } else {
             // Authenticated Calculator View
             const calculatedTotal = calculateAdminTotal();
@@ -573,10 +588,22 @@
                     <!-- QR Code Placeholder -->
                     <div class="p-4">
                         <p class="text-center text-gray-300 mb-3">Scan QR Code for Direct Payment</p>
-                        <div id="qr-code-placeholder"
+                        <div id="qr-code-placeholder-wrapper"
                             class="h-40 flex flex-col justify-center items-center border border-dashed text-gray-400 relative"
                             style="border-color: var(--gold);">
-                            <p class="text-lg font-bold" style="color: var(--gold);">Generating QR...</p>
+                            
+                            <!-- TARGET DIV FOR QR CODE GENERATION -->
+                            <div id="qr-code-target"></div> 
+
+                            <!-- DYNAMIC TEXT OVERLAY -->
+                            <p id="qr-amount-display" class="mt-2 text-sm font-bold absolute top-3 right-3" style="color: var(--gold);"></p>
+                            <p class="absolute bottom-2 text-xs" style="color: #999;">
+                                Link: <a id="qr-link-pay" target="_blank" rel="noopener noreferrer" class="underline" style="color: var(--gold);"></a>
+                            </p>
+                            <p class="absolute bottom-[-10px] text-xs" style="color: #999;">
+                                (UPI ID: ${UPI_ID})
+                            </p>
+
                         </div>
                     </div>
                     
@@ -591,9 +618,9 @@
             // 1. Render the HTML content
             modalContainer.innerHTML = modalContentHTML;
 
-            // 2. Generate QR code only AFTER the placeholder exists in the DOM
-            // This now calls generateQRCode with the calculated/manual amount
-            setTimeout(() => updateAdminUIAndQRCode(), 100);
+            // 2. Generate QR code immediately after rendering the content
+            // The call to updateAdminUIAndQRCode now generates the QR code without a timeout.
+            updateAdminUIAndQRCode();
         }
     }
 
@@ -627,8 +654,9 @@
         camera = new THREE.PerspectiveCamera(75, container.clientWidth / container.clientHeight, 0.1, 1000);
         camera.position.z = 4; 
         
-        // FIX: Adjust camera position to visually center the cup between the HTML text elements.
-        camera.position.x = -0.05; 
+        // Adjusted camera position to move the whole cup down slightly
+        camera.position.x = 0; // Centered
+        camera.position.y = -0.5;
         
         // 3. Renderer
         renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true, canvas: container });
@@ -650,50 +678,20 @@
         // 5. Create the Stylized Cup (as a Group)
         cupGroup = new THREE.Group();
 
-        const goldMaterial = new THREE.MeshStandardMaterial({ color: 0xFFD700, metalness: 0.8, roughness: 0.3 });
-        // FIX: New white material for the cup body
-        const whiteBodyMaterial = new THREE.MeshStandardMaterial({ color: 0xFFFFFF, metalness: 0.3, roughness: 0.5 });
-        const coffeeMaterial = new THREE.MeshStandardMaterial({ color: 0x4B371C });
+        createCupBaseAndContents(); // Combined base and texture creation
+
+        // FIX FOR MOBILE: Reduce overall scale to fit viewport better on smaller screens
+        const scaleFactor = 1.0; 
         
-        // A. Cup Body (Cylinder)
-        // CHANGED: From black material to white material
-        const cupBody = new THREE.Mesh(new THREE.CylinderGeometry(1, 0.8, 2, 32), whiteBodyMaterial);
-        cupGroup.add(cupBody);
-
-        // B. Coffee (Inner Cylinder)
-        const coffee = new THREE.Mesh(new THREE.CylinderGeometry(0.95, 0.75, 0.1, 32), coffeeMaterial);
-        coffee.position.y = 0.95;
-        cupGroup.add(coffee);
-
-        // C. Handle (Torus) - Made from Gold
-        const handle = new THREE.Mesh(new THREE.TorusGeometry(0.5, 0.1, 16, 100), goldMaterial);
-        handle.position.set(1.1, 0, 0);
-        handle.rotation.z = Math.PI / 2; 
-        cupGroup.add(handle);
-
-        // D. Eyes (Two small gold spheres)
-        const eyeGeometry = new THREE.SphereGeometry(0.1, 16, 16);
-        const eyeLeft = new THREE.Mesh(eyeGeometry, goldMaterial);
-        eyeLeft.position.set(0.4, 0.7, 0.8);
-        
-        const eyeRight = new THREE.Mesh(eyeGeometry, goldMaterial);
-        eyeRight.position.set(-0.4, 0.7, 0.8);
-        
-        cupGroup.add(eyeLeft);
-        cupGroup.add(eyeRight);
-
-        // E. Smile (A concave gold ring segment at the front)
-        const smileGeometry = new THREE.TorusGeometry(0.3, 0.05, 16, 100, Math.PI); // Half torus
-        const smile = new THREE.Mesh(smileGeometry, goldMaterial);
-        smile.rotation.x = Math.PI * 0.5; // Rotate to face forward
-        smile.position.set(0, 0.4, 0.9); // Position lower and forward
-        cupGroup.add(smile);
-
-        // FIX: Adjust position to center the cup in the reduced gap
-        cupGroup.position.x = 0.3; 
+        cupGroup.position.x = 0; 
         cupGroup.rotation.x = -0.5;
-        cupGroup.rotation.y = Math.PI / 6; 
-        cupGroup.scale.set(1.2, 1.2, 1.2); 
+        // Initial Y rotation to make the cup face more to the side (approx 40 degrees)
+        cupGroup.rotation.y = Math.PI / 4.5; 
+        cupGroup.scale.set(scaleFactor, scaleFactor, scaleFactor); // Reduced scale
+        
+        // FINAL CAMERA ADJUSTMENT: Pull back slightly more to accommodate the reduced scale cleanly
+        camera.position.z = 4.5; 
+        
         scene.add(cupGroup);
 
 
@@ -703,6 +701,91 @@
         // 7. Start Animation
         animate();
     }
+    
+    function createTextTexture() {
+        const canvas = document.createElement('canvas');
+        const context = canvas.getContext('2d');
+        const textureWidth = 512;
+        const textureHeight = 256;
+        canvas.width = textureWidth;
+        canvas.height = textureHeight;
+        
+        // Fill background with transparent color (or white, matching the cup)
+        context.fillStyle = '#FFFFFF';
+        context.fillRect(0, 0, textureWidth, textureHeight);
+
+        // Increased font size and used '900' weight from Playfair Display for boldness
+        context.font = '900 80px Playfair Display'; // Bolder and Larger font
+        // Text color is Black
+        context.fillStyle = '#000000'; // Black color
+        context.textAlign = 'center';
+        
+        // Draw the text
+        const text = "MS CAFE";
+        context.fillText(text, textureWidth / 2, textureHeight / 2 + 25); // Adjusted Y position for better centering
+
+        // Create the texture
+        const texture = new THREE.CanvasTexture(canvas);
+        return texture;
+    }
+
+    function createCupBaseAndContents() {
+        // NEW COLOR DEFINITIONS (White, Gray, Blue/Green)
+        const silverAccentMaterial = new THREE.MeshStandardMaterial({ color: 0xAAAAAA, metalness: 0.7, roughness: 0.2 }); // Gray/Silver
+        const whiteBodyMaterial = new THREE.MeshStandardMaterial({ color: 0xFFFFFF, metalness: 0.3, roughness: 0.5 }); // White
+        const coffeeMaterial = new THREE.MeshStandardMaterial({ color: 0x4B371C }); // Brown
+        const greenRingMaterial = new THREE.MeshStandardMaterial({ color: 0x4CAF50 }); // Green accent
+
+        // ------------------ 3D Texturing for Logo ------------------
+        const logoTexture = createTextTexture();
+        
+        // Duplicate the White Body material and apply the logo texture to its map property
+        const cupMaterialWithLogo = whiteBodyMaterial.clone();
+        cupMaterialWithLogo.map = logoTexture;
+        
+        // A. Cup Body (Cylinder) - White with Logo
+        const cupBodyGeometry = new THREE.CylinderGeometry(1, 0.8, 2, 32, 1, false, 0, Math.PI * 2);
+
+        // Create a material array: [Sides, Top, Bottom]
+        const materials = [
+            cupMaterialWithLogo, // Side (index 0) - This is where we need the logo
+            whiteBodyMaterial,   // Top (index 1)
+            whiteBodyMaterial,   // Bottom (index 2)
+        ];
+
+        const cupBody = new THREE.Mesh(cupBodyGeometry, materials);
+        
+        // Adjust UVs for texture alignment on the front face (Cylindrical Mapping)
+        const uvs = cupBody.geometry.attributes.uv.array;
+        
+        // We need to ensure the texture (which is square/rectangular) maps nicely onto the front 
+        // cylinder face. Since the base UV mapping covers the entire 360 degrees horizontally, 
+        // we'll leave it as is, but ensure the texture aspect ratio is accounted for.
+        // The texture size (512x256) helps here.
+        
+        cupGroup.add(cupBody);
+        
+        // B. Coffee (Inner Cylinder)
+        const coffee = new THREE.Mesh(new THREE.CylinderGeometry(0.95, 0.75, 0.1, 32), coffeeMaterial);
+        coffee.position.y = 0.95;
+        cupGroup.add(coffee);
+        
+        // C. Green/Blue Stripe Ring
+        const ringGeometry = new THREE.CylinderGeometry(1.01, 1.01, 0.2, 64);
+        const ring = new THREE.Mesh(ringGeometry, greenRingMaterial);
+        ring.position.y = 0.8; // Just below the coffee surface
+        cupGroup.add(ring);
+
+
+        // D. Handle (Torus) - Gray/Silver Accent
+        const handle = new THREE.Mesh(new THREE.TorusGeometry(0.5, 0.1, 16, 100), silverAccentMaterial);
+        // Move handle to the back/side by rotating it 90 degrees around the Y axis and offsetting slightly.
+        handle.position.set(0, 0, 1.1); // Move handle along the Z-axis (back)
+        handle.rotation.z = Math.PI / 2; // Keep vertical 
+        handle.rotation.y = Math.PI / 2; // Rotate it to the side 
+        cupGroup.add(handle);
+    }
+
 
     function onWindowResize() {
         const container = document.getElementById('three-canvas');
@@ -715,8 +798,8 @@
         requestAnimationFrame(animate);
 
         if (cupGroup) {
-            // Gentle rotation
-            cupGroup.rotation.y += 0.005;
+            // Gentle rotation: Anti-clockwise rotation
+            cupGroup.rotation.y -= 0.005;
 
             // Sinusoidal floating (up and down)
             const floatSpeed = 0.001;
