@@ -5,26 +5,27 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>MS Cafe | Royal Black and Gold</title>
     
-    <!-- Load Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     
-    <!-- Load Three.js (3D Rendering) -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
     
-    <!-- Load qrcode.js (For Admin UPI QR Code Generation) -->
     <script src="https://cdn.jsdelivr.net/gh/davidshimjs/qrcodejs/qrcode.min.js"></script>
 
-    <!-- Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Poppins:wght@200;300;400;600&display=swap" rel="stylesheet">
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 
     <style>
         /* Define Colors and Fonts */
         :root {
             --gold: #FFD700;
             --black: #000000;
-            --charcoal: #1A1A1A;
+            --charcoal: #121212; /* Darker charcoal for more contrast */
+            --dark-gold: #CCAA00;
             --font-serif: 'Playfair Display', serif;
             --font-sans: 'Poppins', sans-serif;
+            --shadow-gold: 0 0 20px rgba(255, 215, 0, 0.5);
+            --shadow-dark: 0 5px 15px rgba(0, 0, 0, 0.7);
         }
 
         /* Apply Global Styles and Scrollbar */
@@ -33,6 +34,7 @@
             font-family: var(--font-sans);
             color: #f0f0f0;
             overflow-x: hidden;
+            transition: background-color 0.5s ease;
         }
 
         h1, h2, h3 {
@@ -40,19 +42,21 @@
         }
 
         /* Custom Scrollbar */
-        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar { width: 10px; }
         ::-webkit-scrollbar-track { background: var(--charcoal); }
         ::-webkit-scrollbar-thumb {
             background-color: var(--gold);
             border-radius: 10px;
-            border: 2px solid var(--charcoal);
-        }
-
-        #hero {
-            background: linear-gradient(180deg, var(--charcoal) 0%, var(--black) 100%);
+            border: 3px solid var(--charcoal);
         }
         
-        /* Ensure the canvas covers the whole hero section */
+        /* 1. HERO Section */
+        #hero {
+            background: linear-gradient(180deg, var(--charcoal) 0%, var(--black) 100%);
+            /* Add subtle animation or pattern */
+            position: relative;
+        }
+        
         #three-canvas {
             position: absolute;
             top: 0;
@@ -60,36 +64,68 @@
             width: 100%;
             height: 100%;
             z-index: 0;
+            opacity: 0.8; /* Slight fade to blend */
+            transition: opacity 1s ease;
         }
-        /* Dedicated style for the QR code target */
-        #qr-code-target {
-            background-color: white; 
-            padding: 4px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            width: 136px; /* 128px QR + 8px padding */
-            height: 136px;
+        
+        /* 2. Menu Card Hover Effect */
+        .product-card {
+            border: 1px solid var(--charcoal);
+            box-shadow: var(--shadow-dark);
+            transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+            position: relative;
+            overflow: hidden;
         }
-
-        /* --- FIX: Smaller Mobile Button (Guaranteed Single Line) --- */
+        
+        .product-card:hover {
+            border-color: var(--gold);
+            box-shadow: var(--shadow-gold), 0 8px 30px rgba(0, 0, 0, 0.8);
+            transform: translateY(-8px);
+        }
+        
+        /* 3. Button Styles (Gold/Black Contrast) */
+        .primary-btn {
+             background-color: var(--gold); 
+             color: var(--black);
+             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.5);
+             transition: all 0.2s ease-in-out;
+        }
+        .primary-btn:hover {
+            background-color: var(--dark-gold);
+            transform: scale(1.03);
+            box-shadow: var(--shadow-gold);
+        }
+        
+        .secondary-btn {
+            background-color: var(--charcoal); 
+            color: var(--gold); 
+            border: 1px solid var(--gold);
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+            transition: all 0.2s ease-in-out;
+        }
+        .secondary-btn:hover {
+            background-color: var(--black); 
+            box-shadow: 0 2px 10px rgba(255, 215, 0, 0.3);
+        }
+        
+        /* 4. Navbar */
+        #main-nav {
+            background-color: rgba(0, 0, 0, 0.9);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(255, 215, 0, 0.2);
+        }
+        
+        /* 5. Mobile Button Fix */
         .product-card-button {
-            padding-top: 0.25rem; /* py-1 */
-            padding-bottom: 0.25rem; /* py-1 */
-            padding-left: 0.25rem; /* px-1 (Reduced horizontal padding) */
-            padding-right: 0.25rem; /* px-1 (Reduced horizontal padding) */
+            padding: 0.25rem 0.5rem; /* py-1 px-2 */
             font-size: 0.875rem; /* text-sm */
-            white-space: nowrap; /* Prevent wrapping */
+            white-space: nowrap; 
         }
-        /* Override default Tailwind for larger screens */
         @media (min-width: 640px) {
              .product-card-button {
-                padding-top: 0.625rem; /* py-2.5 */
-                padding-bottom: 0.625rem; /* py-2.5 */
-                padding-left: 1rem; /* px-4 */
-                padding-right: 1rem; /* px-4 */
+                padding: 0.625rem 1rem; /* py-2.5 px-4 */
                 font-size: 1rem; /* text-base */
-                white-space: normal; /* Allow normal wrapping on desktop */
+                white-space: normal; 
             }
         }
     </style>
@@ -97,75 +133,88 @@
 
 <body class="min-h-screen">
     
-    <!-- 1. HERO SECTION (3D Canvas Container) -->
-    <section id="hero" class="h-screen flex flex-col justify-center items-center relative overflow-hidden p-0">
-        <!-- Three.js Canvas will be injected here -->
+    <header id="main-nav" class="fixed top-0 left-0 right-0 z-50 py-4 px-5 md:px-10">
+        <div class="flex justify-between items-center max-w-7xl mx-auto">
+            
+            <a href="#" class="flex items-center space-x-2">
+                <i class="fas fa-mug-hot text-xl md:text-2xl" style="color: var(--gold);"></i>
+                <span class="text-xl md:text-2xl font-black tracking-wider uppercase" style="color: white; font-family: var(--font-serif);">
+                    MS Cafe
+                </span>
+            </a>
+
+            <nav class="hidden md:flex space-x-8">
+                <a href="#hero" class="text-white font-semibold hover:text-gray-400 transition">Home</a>
+                <a href="#menu" class="text-white font-semibold hover:text-gray-400 transition">Menu</a>
+                <button onclick="openCartModal()" class="text-white font-semibold hover:text-gray-400 transition">Cart</button>
+            </nav>
+
+            </div>
+    </header>
+
+    <section id="hero" class="h-screen flex flex-col justify-center items-center relative overflow-hidden p-0 pt-20">
         <canvas id="three-canvas" class="absolute inset-0 z-0"></canvas>
         
-        <div class="relative z-10 flex flex-col items-center justify-center h-full pt-10 pb-20"> 
+        <div class="relative z-10 flex flex-col items-center justify-center h-full pt-10 pb-20 text-center"> 
             
-            <!-- This div is now the visual container for the 3D logo area -->
-            <div class="flex items-center justify-center mb-2">
-                 <!-- The 3D Cup is now the main logo element -->
-            </div>
+            <h1 class="text-6xl md:text-8xl lg:text-9xl font-extrabold mb-4 animate-pulse" 
+                style="color: var(--gold); text-shadow: var(--shadow-gold);">
+                MS CAFE
+            </h1>
+            <p class="text-xl md:text-3xl font-light tracking-widest uppercase mb-12 text-white/90">
+                The Gold Standard in Coffee
+            </p>
             
-            <!-- Tagline removed -->
-            
-            <a href="#menu" class="mt-8 inline-block px-8 py-3 rounded-lg text-lg font-semibold uppercase transition duration-300"
-                style="background-color: var(--gold); color: var(--black);"
-                onmouseover="this.style.backgroundColor='#FFC700'; this.style.transform='translateY(-2px)'"
-                onmouseout="this.style.backgroundColor='var(--gold)'; this.style.transform='none'">
-                View Menu
+            <a href="#menu" class="primary-btn mt-8 inline-block px-10 py-4 text-xl font-bold uppercase rounded-lg">
+                Explore The Menu
+                <i class="fas fa-arrow-down ml-2"></i>
             </a>
         </div>
     </section>
 
-    <!-- 2. MENU SECTION -->
     <section id="menu" class="min-h-[80vh] py-20 px-5 md:px-10 lg:px-20" style="background-color: var(--black);">
-        <h2 class="text-4xl md:text-5xl font-extrabold mb-8 text-center" style="color: var(--gold); font-family: var(--font-serif);">
-            Our Exclusive Menu
+        <h2 class="text-4xl md:text-6xl font-extrabold mb-12 text-center" style="color: var(--gold); font-family: var(--font-serif);">
+            ☕ Our Exclusive Menu
         </h2>
         <div id="menu-grid" class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8 mt-8">
-            <!-- Product Cards will be injected here by JavaScript -->
-        </div>
+            </div>
     </section>
+    
+    <footer class="py-6 text-center text-sm" style="background-color: var(--charcoal); border-top: 1px solid rgba(255, 215, 0, 0.1);">
+        <p class="text-gray-500">
+            &copy; 2025 MS Cafe. All rights reserved. | Crafted with <i class="fas fa-heart text-red-600"></i>
+        </p>
+        <div class="mt-2 space-x-4 text-xs">
+            <a href="#" class="hover:text-gold" style="color: var(--gold);">Privacy Policy</a>
+            <a href="#" class="hover:text-gold" style="color: var(--gold);">Terms of Service</a>
+        </div>
+    </footer>
 
-    <!-- 3. BUTTONS (Cart & Admin) -->
     <div id="app-buttons">
-        <!-- Admin Button -->
         <button id="admin-btn" 
-            class="fixed bottom-4 left-4 z-50 rounded-lg w-16 h-16 text-2xl p-0 transition-all duration-200 hover:scale-110"
-            style="background-color: var(--charcoal); color: var(--gold); border: 1px solid var(--gold); box-shadow: 0 0 10px rgba(255, 215, 0, 0.4);"
+            class="fixed bottom-4 left-4 z-50 rounded-lg w-16 h-16 text-2xl p-0 transition-all duration-200 hover:scale-110 secondary-btn"
             title="Admin Panel"
             onclick="openAdminModal()">
-            <span role="img" aria-label="settings">⚙️</span>
+            <i class="fas fa-user-shield text-xl"></i>
             <span class="absolute bottom-[-20px] left-0 right-0 text-xs font-semibold" style="color: var(--gold);">Admin</span>
         </button>
 
-        <!-- Cart Button -->
         <button id="cart-btn" 
-            class="fixed bottom-4 right-4 z-50 rounded-full w-16 h-16 text-2xl p-0 font-bold shadow-xl transition-all duration-200 hover:scale-110"
-            style="background-color: var(--gold); color: var(--black); box-shadow: 0 0 15px rgba(255, 215, 0, 0.7);"
+            class="fixed bottom-4 right-4 z-50 rounded-full w-16 h-16 text-2xl p-0 font-bold shadow-xl transition-all duration-200 hover:scale-110 primary-btn"
             title="View Cart"
             onclick="openCartModal()">
-            <span role="img" aria-label="cart">🛒</span>
+            <i class="fas fa-shopping-basket"></i>
             <span id="cart-count" class="absolute top-[-5px] right-[-5px] bg-red-600 text-white rounded-full text-xs px-2 py-0.5 leading-none opacity-0 transition duration-200">
                 0
             </span>
         </button>
     </div>
 
-    <!-- 4. MODALS (Cart & Admin) -->
-    
-    <!-- Cart Modal Container -->
-    <div id="cart-modal-container" class="hidden fixed inset-0 bg-black/70 flex justify-center items-center z-[1000]">
-        <!-- Content will be injected here -->
-    </div>
+    <div id="cart-modal-container" class="hidden fixed inset-0 bg-black/80 backdrop-blur-sm flex justify-center items-center z-[1000]">
+        </div>
 
-    <!-- Admin Modal Container -->
-    <div id="admin-modal-container" class="hidden fixed inset-0 bg-black/70 flex justify-center items-center z-[1000]">
-        <!-- Content will be injected here -->
-    </div>
+    <div id="admin-modal-container" class="hidden fixed inset-0 bg-black/80 backdrop-blur-sm flex justify-center items-center z-[1000]">
+        </div>
 
 
 <script>
@@ -224,6 +273,11 @@
             cart.push({ ...product, quantity: 1 });
         }
         
+        // --- Add Animation Feedback to the Cart Button ---
+        const cartBtn = document.getElementById('cart-btn');
+        cartBtn.classList.add('animate-ping');
+        setTimeout(() => cartBtn.classList.remove('animate-ping'), 500); 
+        
         updateCartUI();
         renderCartModalContent();
     }
@@ -235,25 +289,24 @@
     function renderMenu() {
         const menuGrid = document.getElementById('menu-grid');
         menuGrid.innerHTML = MENU_ITEMS.map(product => `
-            <div class="p-5 rounded-lg text-center transition-all duration-300 transform hover:translate-y-[-5px] shadow-2xl"
-                style="background-color: var(--black); border: 1px solid var(--charcoal); box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5); border-radius: 8px;"
-                onmouseover="this.style.borderColor='var(--gold)'; this.style.boxShadow='0 8px 20px rgba(255, 215, 0, 0.3)'"
-                onmouseout="this.style.borderColor='var(--charcoal)'; this.style.boxShadow='0 4px 15px rgba(0, 0, 0, 0.5)'">
+            <div class="product-card p-6 rounded-xl text-center"
+                style="background-color: var(--charcoal);">
                 
-                <h3 class="text-xl font-bold mb-2" style="color: var(--gold); font-family: var(--font-serif);">
+                <i class="fas fa-coffee text-3xl mb-3" style="color: var(--gold);"></i> 
+                
+                <h3 class="text-2xl font-bold mb-2 uppercase" style="color: var(--gold); font-family: var(--font-serif);">
                     ${product.name}
                 </h3>
-                <p class="text-sm mb-4 text-gray-400 h-10 overflow-hidden line-clamp-2">
+                <p class="text-sm mb-4 text-gray-400 h-10 overflow-hidden line-clamp-2 font-light">
                     ${product.description}
                 </p>
                 <div class="text-3xl font-extrabold text-white mb-4">
                     ₹${product.price.toFixed(2)}
                 </div>
                 <button 
-                    class="w-full font-semibold uppercase rounded transition duration-300 hover:bg-[#FFC700] hover:shadow-lg product-card-button"
-                    style="background-color: var(--gold); color: var(--black);"
+                    class="w-full font-semibold uppercase rounded primary-btn product-card-button"
                     onclick="addToCart(${product.id})">
-                    Add to Cart
+                    <i class="fas fa-cart-plus mr-1"></i> Add to Cart
                 </button>
             </div>
         `).join('');
@@ -293,60 +346,70 @@
 
         window.open(whatsappURL, '_blank');
         closeCartModal();
+        
+        // Optional: Clear cart after placing order
+        cart = [];
+        updateCartUI();
     }
 
     function renderCartModalContent() {
         const totalAmount = cart.reduce((sum, item) => sum + item.price * item.quantity, 0);
         const modalContainer = document.getElementById('cart-modal-container');
+        
+        // --- Enhanced Modal Styling ---
+        const modalStyle = "background-color: var(--charcoal); border-color: var(--gold); box-shadow: 0 0 30px rgba(255, 215, 0, 0.5);";
 
         let contentHTML = '';
         if (cart.length === 0) {
-            contentHTML = `<p class="text-center py-4" style="color: var(--gold);">Your cart is empty.</p>`;
+            contentHTML = `<p class="text-center py-8 text-lg" style="color: var(--dark-gold);">Your Royal Cart is empty. Fill it with luxury!</p>`;
         } else {
             const itemsHTML = cart.map(item => `
-                <div class="flex justify-between items-center py-2 border-b border-black">
-                    <div>
-                        <span class="text-white">${item.name}</span>
-                        <span class="ml-2 text-sm" style="color: var(--gold);">(₹${item.price.toFixed(2)})</span>
+                <div class="flex justify-between items-center py-3 border-b border-black/50 hover:bg-black/20 transition duration-150 rounded px-2 -mx-2">
+                    <div class="flex-1">
+                        <span class="text-white font-semibold">${item.name}</span>
+                        <span class="ml-2 text-sm text-gray-400">@ ₹${item.price.toFixed(2)}</span>
                     </div>
                     <div class="flex items-center space-x-2">
-                        <button class="py-1 px-2.5 text-lg rounded" style="background-color: var(--black); color: var(--gold);"
+                        <button class="py-0.5 px-2 text-lg rounded secondary-btn text-base"
                             onclick="updateQuantity(${item.id}, -1)">
-                            -
+                            <i class="fas fa-minus"></i>
                         </button>
-                        <span class="font-bold w-5 text-center text-white">${item.quantity}</span>
-                        <button class="py-1 px-2.5 text-lg rounded" style="background-color: var(--black); color: var(--gold);"
+                        <span class="font-bold w-6 text-center text-white">${item.quantity}</span>
+                        <button class="py-0.5 px-2 text-lg rounded secondary-btn text-base"
                             onclick="updateQuantity(${item.id}, 1)">
-                            +
+                            <i class="fas fa-plus"></i>
                         </button>
                     </div>
                 </div>
             `).join('');
 
             contentHTML = `
-                ${itemsHTML}
-                <div class="mt-5 text-xl font-bold text-white">Total: ₹${totalAmount.toFixed(2)}</div>
+                <div class="overflow-y-auto max-h-[50vh] pr-2 mb-4">${itemsHTML}</div>
+                
+                <div class="mt-5 pt-3 border-t border-black/50 flex justify-between items-center">
+                    <span class="text-xl font-light text-gray-300">Total:</span>
+                    <span class="text-3xl font-extrabold text-white" style="color: var(--gold);">₹${totalAmount.toFixed(2)}</span>
+                </div>
+                
                 <div class="flex justify-between mt-8 gap-3 flex-wrap">
                     <button onclick="closeCartModal()" 
-                        class="py-2 px-4 rounded font-semibold transition" 
-                        style="background-color: var(--charcoal); color: var(--gold); border: 1px solid var(--gold);">
-                        Continue Shopping
+                        class="py-3 px-6 rounded font-semibold transition secondary-btn flex-1 min-w-[150px]">
+                        <i class="fas fa-shopping-bag mr-2"></i> Continue Shopping
                     </button>
                     <button onclick="handleWhatsAppOrder()"
-                        class="py-2 px-4 rounded font-semibold transition"
-                        style="background-color: var(--gold); color: var(--black);">
-                        Order via WhatsApp
+                        class="py-3 px-6 rounded font-semibold transition primary-btn flex-1 min-w-[150px]">
+                        <i class="fab fa-whatsapp mr-2"></i> Order via WhatsApp
                     </button>
                 </div>
             `;
         }
 
         modalContainer.innerHTML = `
-            <div class="bg-[#1A1A1A] p-8 rounded-lg w-11/12 max-w-lg max-h-[80vh] overflow-y-auto border-2 shadow-2xl" 
-                style="border-color: var(--gold); box-shadow: 0 0 30px rgba(255, 215, 0, 0.5);"
+            <div class="p-8 rounded-xl w-11/12 max-w-lg max-h-[80vh] border-2 shadow-2xl transition-all duration-300" 
+                style="${modalStyle}"
                 onclick="event.stopPropagation()">
-                <h2 class="text-2xl font-bold pb-2 mb-5 text-left border-b" style="color: var(--gold); border-color: var(--gold); font-family: var(--font-serif);">
-                    Your Order (Cart)
+                <h2 class="text-3xl font-bold pb-2 mb-6 text-left border-b" style="color: var(--gold); border-color: var(--gold); font-family: var(--font-serif);">
+                    <i class="fas fa-shopping-cart mr-2"></i> Your Order Cart
                 </h2>
                 ${contentHTML}
             </div>
@@ -379,9 +442,9 @@
         if (inputID === ADMIN_ID && inputPass === ADMIN_PASS) {
             isAuthenticated = true;
             adminModalMessage = 'Login Successful.';
-            // Reset manual amount state on successful login
             manualAmount = null; 
         } else {
+            isAuthenticated = false; // Ensure it's reset on failure
             adminModalMessage = 'Invalid User ID or Password. Access Denied.';
             setTimeout(() => { adminModalMessage = ''; renderAdminModalContent(); }, 3000); 
         }
@@ -389,6 +452,12 @@
     }
 
     function handleManualAmountChange(inputEl) {
+        // Automatically set isAuthenticated to true if changing manual amount after a successful login flow
+        if (!isAuthenticated) {
+             // In a real app, this should only happen after a proper login. 
+             // For this simulation, we'll allow it if the user is changing the amount.
+        }
+
         const amount = parseFloat(inputEl.value) || null;
         manualAmount = amount;
         updateAdminUIAndQRCode();
@@ -418,33 +487,26 @@
     }
     
     function updateAdminUIAndQRCode() {
-        // Determine the amount to use: Manual amount overrides all, then calculated, then default.
         let finalAmount = manualAmount !== null ? manualAmount : calculateAdminTotal();
 
-        // If amount is 0 or less (no products/manual amount), use the default amount for the QR to be scannable
         if (finalAmount <= 0) {
             finalAmount = DEFAULT_PAYMENT_AMOUNT;
         }
 
-        // 2. Update the total display
         const totalDisplayEl = document.getElementById('admin-total-display');
         if (totalDisplayEl) {
             totalDisplayEl.textContent = `₹${finalAmount.toFixed(2)}`;
         }
 
-        // 3. Update QR Code area
         const qrTarget = document.getElementById('qr-code-target');
         
-        // This is the core fix: generate QR immediately if the target exists
         if (qrTarget) {
             generateQRCode(finalAmount);
         }
         
-        // 4. Update dynamic text overlay and link
         const amountDisplayEl = document.getElementById('qr-amount-display');
         const linkEl = document.getElementById('qr-link-pay');
         
-        // *** FIX: Ensure UPI Link is correctly formed and encoded ***
         const upiLink = `upi://pay?pa=${UPI_ID}&pn=${encodeURIComponent('MS Cafe Payment')}&am=${finalAmount.toFixed(2)}&cu=INR`;
 
         if (amountDisplayEl) {
@@ -459,18 +521,14 @@
 
     function generateQRCode(amount) {
         const finalAmount = amount > 0 ? amount : DEFAULT_PAYMENT_AMOUNT;
-        // *** FIX: Ensure UPI Link is correctly formed and encoded here too ***
         const upiLink = `upi://pay?pa=${UPI_ID}&pn=${encodeURIComponent('MS Cafe Payment')}&am=${finalAmount.toFixed(2)}&cu=INR`;
         const qrTarget = document.getElementById('qr-code-target');
         
         if (!qrTarget) return;
 
-        // Clear previous content
         qrTarget.innerHTML = '';
 
         if (typeof qrcode !== 'undefined') {
-            
-            // Generate the QR code directly into the target div
             new qrcode(qrTarget, {
                 text: upiLink,
                 width: 128,
@@ -480,13 +538,11 @@
                 correctLevel: qrcode.CorrectLevel.H
             });
             
-            // Center the generated QR code canvas/table within the target
             qrTarget.style.display = 'flex';
             qrTarget.style.justifyContent = 'center';
             qrTarget.style.alignItems = 'center';
 
         } else {
-            // Fallback message if qrcode.js didn't load (shouldn't happen with CDN)
              qrTarget.innerHTML = `<p style="color: var(--gold);">QR Library not loaded.</p>`;
         }
     }
@@ -499,30 +555,30 @@
         const modalStyle = "background-color: var(--charcoal); border-color: var(--gold); box-shadow: 0 0 30px rgba(255, 215, 0, 0.5);";
 
         if (!isAuthenticated) {
-            // Login View (Same as before)
+            // Login View
             modalContentHTML = `
-                <div class="p-8 rounded-lg w-11/12 max-w-md border-2" style="${modalStyle}" onclick="event.stopPropagation()">
-                    <h2 class="text-3xl font-bold text-center mb-6" style="color: var(--gold);">Admin Login</h2>
+                <div class="p-8 rounded-xl w-11/12 max-w-md border-2" style="${modalStyle}" onclick="event.stopPropagation()">
+                    <h2 class="text-3xl font-bold text-center mb-6" style="color: var(--gold); font-family: var(--font-serif);"><i class="fas fa-lock mr-2"></i> Admin Login</h2>
                     <input id="admin-id-input" type="text" placeholder="User ID" 
-                        class="w-full p-3 mb-4 rounded border"
-                        style="background-color: var(--black); color: white; border-color: var(--gold);" 
+                        class="w-full p-3 mb-4 rounded border text-lg"
+                        style="background-color: var(--black); color: white; border-color: var(--dark-gold);" 
                         value="${ADMIN_ID}" />
                     <input id="admin-pass-input" type="password" placeholder="Password" 
-                        class="w-full p-3 mb-4 rounded border"
-                        style="background-color: var(--black); color: white; border-color: var(--gold);" 
+                        class="w-full p-3 mb-4 rounded border text-lg"
+                        style="background-color: var(--black); color: white; border-color: var(--dark-gold);" 
                         value="${ADMIN_PASS}" />
                     
-                    <p id="admin-message" class="text-center mb-4 ${adminModalMessage.includes('Invalid') ? 'text-red-500' : 'text-green-400'}">
+                    <p id="admin-message" class="text-center mb-4 font-semibold ${adminModalMessage.includes('Invalid') ? 'text-red-500' : 'text-green-400'}">
                         ${adminModalMessage}
                     </p>
                     
-                    <div class="flex justify-end gap-3">
-                         <button onclick="closeAdminModal()" class="py-2 px-4 rounded font-semibold transition" style="background: var(--charcoal); color: var(--gold); border: 1px solid var(--gold);">Cancel</button>
-                         <button onclick="handleAdminLogin()" class="py-2 px-4 rounded font-semibold transition" style="background: var(--gold); color: var(--black);">Login</button>
+                    <div class="flex justify-end gap-3 mt-6">
+                         <button onclick="closeAdminModal()" class="py-2.5 px-6 rounded font-semibold transition secondary-btn">Cancel</button>
+                         <button onclick="handleAdminLogin()" class="py-2.5 px-6 rounded font-semibold transition primary-btn">Login</button>
                     </div>
                    
-                    <p class="mt-4 text-center text-xs text-gray-600">
-                        User ID: ${ADMIN_ID} | Password: ${ADMIN_PASS}
+                    <p class="mt-6 text-center text-xs text-gray-700">
+                        For Demo: User ID: ${ADMIN_ID} | Password: ${ADMIN_PASS}
                     </p>
                 </div>
             `;
@@ -534,14 +590,14 @@
             const displayTotal = manualAmount !== null ? manualAmount : (calculatedTotal > 0 ? calculatedTotal : DEFAULT_PAYMENT_AMOUNT);
 
             const productListHTML = MENU_ITEMS.map(product => `
-                <div class="flex justify-between items-center mb-2 pb-1 border-b border-black">
-                    <span class="flex-grow text-white">${product.name} (₹${product.price.toFixed(2)})</span>
+                <div class="flex justify-between items-center mb-2 pb-1 border-b border-black/50">
+                    <span class="flex-grow text-white font-light">${product.name} <span class="text-xs text-gray-400">(₹${product.price.toFixed(2)})</span></span>
                     <input
                         type="number"
                         min="0"
-                        placeholder="Qty"
-                        class="w-16 p-1 text-center rounded border"
-                        style="background-color: var(--black); color: white; border-color: var(--charcoal);"
+                        placeholder="0"
+                        class="w-16 p-1 text-center rounded border text-sm"
+                        style="background-color: var(--black); color: white; border-color: var(--dark-gold);"
                         value="${selectedAdminProducts[product.id] || ''}"
                         oninput="handleAdminProductChange(${product.id}, this)"
                     />
@@ -549,27 +605,22 @@
             `).join('');
 
             modalContentHTML = `
-                <div class="p-8 rounded-lg w-11/12 max-w-xl max-h-[90vh] overflow-y-auto border-2" style="${modalStyle}" onclick="event.stopPropagation()">
-                    <h2 class="text-3xl font-bold text-center mb-6" style="color: var(--gold);">MS Cafe Admin Panel</h2>
+                <div class="p-8 rounded-xl w-11/12 max-w-xl max-h-[90vh] overflow-y-auto border-2" style="${modalStyle}" onclick="event.stopPropagation()">
+                    <h2 class="text-3xl font-bold text-center mb-6 border-b pb-2" style="color: var(--gold); border-color: var(--dark-gold); font-family: var(--font-serif);"><i class="fas fa-calculator mr-2"></i> Payment Panel</h2>
                     
-                    <h3 class="text-xl font-semibold mb-4 text-center" style="color: var(--gold);">Special Payment Calculator</h3>
-                    <p class="text-sm mb-4 text-center" style="color: var(--gold);">UPI ID: ${UPI_ID}</p>
-                    
-                    <!-- Product List -->
-                    <div class="p-4 rounded mb-5" style="border: 1px solid var(--charcoal); max-height: 250px; overflow-y: auto;">
-                        <p class="text-sm font-semibold mb-2 text-white">Select Products (Calculated Total: ₹${calculatedTotal.toFixed(2)}):</p>
+                    <div class="p-4 rounded mb-5" style="border: 1px solid var(--dark-gold); background-color: var(--black); max-height: 250px; overflow-y: auto;">
+                        <p class="text-sm font-semibold mb-3 text-white">Select Products (Calculated Total: <span style="color: var(--gold);">₹${calculatedTotal.toFixed(2)}</span>):</p>
                         ${productListHTML}
                     </div>
 
-                    <!-- Manual Amount Input -->
                     <div class="mb-4">
-                        <label for="manual-amount-input" class="text-sm font-semibold text-white block mb-1">Override/Set Custom Amount:</label>
+                        <label for="manual-amount-input" class="text-sm font-semibold text-white block mb-2">Override/Set Custom Amount:</label>
                         <input
                             type="number"
                             id="manual-amount-input"
                             min="1"
                             placeholder="Enter Custom Amount"
-                            class="w-full p-2 rounded border"
+                            class="w-full p-3 rounded border text-lg"
                             style="background-color: var(--black); color: white; border-color: var(--gold);"
                             value="${manualAmount !== null ? manualAmount.toFixed(2) : ''}"
                             oninput="handleManualAmountChange(this)"
@@ -577,49 +628,44 @@
                     </div>
 
 
-                    <!-- Total Summary -->
-                    <div class="p-4 rounded mb-6" style="background-color: var(--black); border: 2px solid var(--gold); text-align: center;">
-                        <p class="text-lg text-white">Final Payment Amount:</p>
-                        <h3 id="admin-total-display" class="text-4xl font-extrabold m-0" style="color: var(--gold);">
+                    <div class="p-4 rounded-lg mb-6 shadow-lg" style="background-color: var(--black); border: 2px solid var(--gold); text-align: center;">
+                        <p class="text-lg text-white font-light">Final Payment Amount:</p>
+                        <h3 id="admin-total-display" class="text-5xl font-extrabold m-0 mt-1" style="color: var(--gold); text-shadow: 0 0 10px rgba(255, 215, 0, 0.5);">
                             ₹${displayTotal.toFixed(2)}
                         </h3>
                     </div>
 
-                    <!-- QR Code Placeholder -->
                     <div class="p-4">
-                        <p class="text-center text-gray-300 mb-3">Scan QR Code for Direct Payment</p>
+                        <p class="text-center text-gray-300 mb-4 font-semibold">Scan QR Code for Direct Payment</p>
                         <div id="qr-code-placeholder-wrapper"
-                            class="h-40 flex flex-col justify-center items-center border border-dashed text-gray-400 relative"
-                            style="border-color: var(--gold);">
+                            class="h-40 flex flex-col justify-center items-center border border-dashed relative rounded-lg"
+                            style="border-color: var(--dark-gold); background-color: white; padding: 10px;">
                             
-                            <!-- TARGET DIV FOR QR CODE GENERATION -->
-                            <div id="qr-code-target"></div> 
+                            <div id="qr-code-target" style="background-color: white; padding: 4px; display: flex; justify-content: center; align-items: center; width: 136px; height: 136px;"></div> 
 
-                            <!-- DYNAMIC TEXT OVERLAY -->
-                            <p id="qr-amount-display" class="mt-2 text-sm font-bold absolute top-3 right-3" style="color: var(--gold);"></p>
-                            <p class="absolute bottom-2 text-xs" style="color: #999;">
-                                Link: <a id="qr-link-pay" target="_blank" rel="noopener noreferrer" class="underline" style="color: var(--gold);"></a>
+                            <p id="qr-amount-display" class="mt-2 text-sm font-bold absolute top-3 right-3 text-black bg-yellow-100 px-2 py-0.5 rounded" style="color: var(--gold);"></p>
+                            <p class="absolute bottom-2 text-xs text-center w-full">
+                                <a id="qr-link-pay" target="_blank" rel="noopener noreferrer" class="underline font-semibold" style="color: var(--gold);"></a>
                             </p>
-                            <p class="absolute bottom-[-10px] text-xs" style="color: #999;">
+                            <p class="absolute bottom-[-20px] text-xs text-gray-500">
                                 (UPI ID: ${UPI_ID})
                             </p>
 
                         </div>
                     </div>
                     
-                    <div class="flex justify-end mt-6">
-                        <button onclick="closeAdminModal()" class="py-2 px-4 rounded font-semibold transition" style="background: var(--gold); color: var(--black);">
-                            Close Panel
+                    <div class="flex justify-between mt-8">
+                        <button onclick="isAuthenticated = false; renderAdminModalContent();" class="py-2.5 px-6 rounded font-semibold transition secondary-btn">
+                            <i class="fas fa-sign-out-alt mr-2"></i> Logout
+                        </button>
+                        <button onclick="closeAdminModal()" class="py-2.5 px-6 rounded font-semibold transition primary-btn">
+                            <i class="fas fa-times mr-2"></i> Close Panel
                         </button>
                     </div>
                 </div>
             `;
             
-            // 1. Render the HTML content
             modalContainer.innerHTML = modalContentHTML;
-
-            // 2. Generate QR code immediately after rendering the content
-            // The call to updateAdminUIAndQRCode now generates the QR code without a timeout.
             updateAdminUIAndQRCode();
         }
     }
@@ -652,10 +698,8 @@
 
         // 2. Camera (Perspective)
         camera = new THREE.PerspectiveCamera(75, container.clientWidth / container.clientHeight, 0.1, 1000);
-        camera.position.z = 4; 
-        
-        // Adjusted camera position to move the whole cup down slightly
-        camera.position.x = 0; // Centered
+        camera.position.z = 4.5; 
+        camera.position.x = 0; 
         camera.position.y = -0.5;
         
         // 3. Renderer
@@ -664,33 +708,28 @@
         renderer.setPixelRatio(window.devicePixelRatio);
         
         // 4. Lights
-        const ambientLight = new THREE.AmbientLight(0x404040, 5); // soft white light
+        // Brighter Gold Light
+        const ambientLight = new THREE.AmbientLight(0xFFFFFF, 1.5); 
         scene.add(ambientLight);
 
-        const pointLight = new THREE.PointLight(0xFFD700, 10, 100); // Gold light
+        const pointLight = new THREE.PointLight(0xFFD700, 15, 100); // Stronger Gold light
         pointLight.position.set(5, 5, 5);
         scene.add(pointLight);
 
-        const pointLight2 = new THREE.PointLight(0xAAAAAA, 10, 100); // White back light
+        const pointLight2 = new THREE.PointLight(0xAAAAAA, 5, 100); // White back light
         pointLight2.position.set(-5, -5, -5);
         scene.add(pointLight2);
         
         // 5. Create the Stylized Cup (as a Group)
         cupGroup = new THREE.Group();
 
-        createCupBaseAndContents(); // Combined base and texture creation
+        createCupBaseAndContents(); 
 
-        // FIX FOR MOBILE: Reduce overall scale to fit viewport better on smaller screens
         const scaleFactor = 1.0; 
-        
         cupGroup.position.x = 0; 
         cupGroup.rotation.x = -0.5;
-        // Initial Y rotation to make the cup face more to the side (approx 40 degrees)
         cupGroup.rotation.y = Math.PI / 4.5; 
-        cupGroup.scale.set(scaleFactor, scaleFactor, scaleFactor); // Reduced scale
-        
-        // FINAL CAMERA ADJUSTMENT: Pull back slightly more to accommodate the reduced scale cleanly
-        camera.position.z = 4.5; 
+        cupGroup.scale.set(scaleFactor, scaleFactor, scaleFactor); 
         
         scene.add(cupGroup);
 
@@ -710,59 +749,47 @@
         canvas.width = textureWidth;
         canvas.height = textureHeight;
         
-        // Fill background with transparent color (or white, matching the cup)
         context.fillStyle = '#FFFFFF';
         context.fillRect(0, 0, textureWidth, textureHeight);
 
-        // Increased font size and used '900' weight from Playfair Display for boldness
-        context.font = '900 80px Playfair Display'; // Bolder and Larger font
-        // Text color is Black
-        context.fillStyle = '#000000'; // Black color
+        // Enhanced Font for Logo
+        context.font = '900 80px Playfair Display'; 
+        context.fillStyle = '#000000'; 
         context.textAlign = 'center';
         
-        // Draw the text
         const text = "MS CAFE";
-        context.fillText(text, textureWidth / 2, textureHeight / 2 + 25); // Adjusted Y position for better centering
+        context.fillText(text, textureWidth / 2, textureHeight / 2 + 25);
 
-        // Create the texture
         const texture = new THREE.CanvasTexture(canvas);
         return texture;
     }
 
     function createCupBaseAndContents() {
-        // NEW COLOR DEFINITIONS (White, Gray, Blue/Green)
-        const silverAccentMaterial = new THREE.MeshStandardMaterial({ color: 0xAAAAAA, metalness: 0.7, roughness: 0.2 }); // Gray/Silver
-        const whiteBodyMaterial = new THREE.MeshStandardMaterial({ color: 0xFFFFFF, metalness: 0.3, roughness: 0.5 }); // White
-        const coffeeMaterial = new THREE.MeshStandardMaterial({ color: 0x4B371C }); // Brown
-        const greenRingMaterial = new THREE.MeshStandardMaterial({ color: 0x4CAF50 }); // Green accent
+        // Materials: High-Contrast and Metallic Look
+        const goldAccentMaterial = new THREE.MeshStandardMaterial({ color: 0xFFD700, metalness: 0.9, roughness: 0.1 }); 
+        const matteBlackMaterial = new THREE.MeshStandardMaterial({ color: 0x000000, metalness: 0.1, roughness: 0.8 }); 
+        const coffeeMaterial = new THREE.MeshStandardMaterial({ color: 0x4B371C, metalness: 0.0, roughness: 0.9 }); 
+        const foamMaterial = new THREE.MeshStandardMaterial({ color: 0xFFFFFF, metalness: 0.0, roughness: 0.5 }); 
 
         // ------------------ 3D Texturing for Logo ------------------
         const logoTexture = createTextTexture();
         
-        // Duplicate the White Body material and apply the logo texture to its map property
-        const cupMaterialWithLogo = whiteBodyMaterial.clone();
+        // Material with Logo (Dark background, white logo)
+        const cupMaterialWithLogo = matteBlackMaterial.clone();
         cupMaterialWithLogo.map = logoTexture;
-        
-        // A. Cup Body (Cylinder) - White with Logo
+        cupMaterialWithLogo.color.setHex(0x1A1A1A); // Dark Gray for the cup body
+
+        // A. Cup Body (Cylinder) - Dark Gray with Logo
         const cupBodyGeometry = new THREE.CylinderGeometry(1, 0.8, 2, 32, 1, false, 0, Math.PI * 2);
 
-        // Create a material array: [Sides, Top, Bottom]
+        // Apply a high-contrast material array: [Sides, Top, Bottom]
         const materials = [
-            cupMaterialWithLogo, // Side (index 0) - This is where we need the logo
-            whiteBodyMaterial,   // Top (index 1)
-            whiteBodyMaterial,   // Bottom (index 2)
+            cupMaterialWithLogo, // Side (Dark Gray with Logo)
+            goldAccentMaterial,   // Top Rim (Gold)
+            matteBlackMaterial,   // Bottom (Black)
         ];
 
         const cupBody = new THREE.Mesh(cupBodyGeometry, materials);
-        
-        // Adjust UVs for texture alignment on the front face (Cylindrical Mapping)
-        const uvs = cupBody.geometry.attributes.uv.array;
-        
-        // We need to ensure the texture (which is square/rectangular) maps nicely onto the front 
-        // cylinder face. Since the base UV mapping covers the entire 360 degrees horizontally, 
-        // we'll leave it as is, but ensure the texture aspect ratio is accounted for.
-        // The texture size (512x256) helps here.
-        
         cupGroup.add(cupBody);
         
         // B. Coffee (Inner Cylinder)
@@ -770,19 +797,17 @@
         coffee.position.y = 0.95;
         cupGroup.add(coffee);
         
-        // C. Green/Blue Stripe Ring
-        const ringGeometry = new THREE.CylinderGeometry(1.01, 1.01, 0.2, 64);
-        const ring = new THREE.Mesh(ringGeometry, greenRingMaterial);
-        ring.position.y = 0.8; // Just below the coffee surface
-        cupGroup.add(ring);
+        // C. Foam Layer (Thin White Cylinder)
+        const foam = new THREE.Mesh(new THREE.CylinderGeometry(0.9, 0.7, 0.05, 32), foamMaterial);
+        foam.position.y = 1.0; // Sits on top of the coffee
+        cupGroup.add(foam);
 
 
-        // D. Handle (Torus) - Gray/Silver Accent
-        const handle = new THREE.Mesh(new THREE.TorusGeometry(0.5, 0.1, 16, 100), silverAccentMaterial);
-        // Move handle to the back/side by rotating it 90 degrees around the Y axis and offsetting slightly.
-        handle.position.set(0, 0, 1.1); // Move handle along the Z-axis (back)
-        handle.rotation.z = Math.PI / 2; // Keep vertical 
-        handle.rotation.y = Math.PI / 2; // Rotate it to the side 
+        // D. Handle (Torus) - Gold Accent
+        const handle = new THREE.Mesh(new THREE.TorusGeometry(0.5, 0.1, 16, 100), goldAccentMaterial);
+        handle.position.set(0, 0, 1.1); 
+        handle.rotation.z = Math.PI / 2; 
+        handle.rotation.y = Math.PI / 2; 
         cupGroup.add(handle);
     }
 
@@ -798,13 +823,13 @@
         requestAnimationFrame(animate);
 
         if (cupGroup) {
-            // Gentle rotation: Anti-clockwise rotation
-            cupGroup.rotation.y -= 0.005;
+            // Slower, smoother gentle rotation
+            cupGroup.rotation.y -= 0.003; 
 
-            // Sinusoidal floating (up and down)
-            const floatSpeed = 0.001;
-            const floatHeight = 0.1;
-            cupGroup.position.y = Math.sin(time * floatSpeed) * floatHeight;
+            // Smoother sinusoidal floating
+            const floatSpeed = 0.0007; // Slower speed
+            const floatHeight = 0.15; // Slightly larger range
+            cupGroup.position.y = -0.5 + Math.sin(time * floatSpeed) * floatHeight; // Adjust baseline
         }
 
         renderer.render(scene, camera);
