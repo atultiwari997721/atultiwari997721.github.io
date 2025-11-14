@@ -1,0 +1,750 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>MS Cafe — 3D Experience</title>
+
+  <!-- Three.js for 3D hero -->
+  <script src="https://unpkg.com/three@0.160.0/build/three.min.js"></script>
+  <script src="https://unpkg.com/three@0.160.0/examples/js/controls/OrbitControls.js"></script>
+
+  <!-- QRCode.js (browser-friendly QR generator) -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+
+  <style>
+    :root{
+      --bg-dark: #0f0f14;
+      --bg-darker: #0b0b10;
+      --card: #17171f;
+      --primary: #ff6f3d;
+      --secondary: #ffd166;
+      --accent: #6cffc3;
+      --text: #f2f2f5;
+      --muted: #b8b8c2;
+      --border: #242432;
+      --success: #20c997;
+      --danger: #ff4d6d;
+    }
+
+    * { box-sizing: border-box; }
+    html, body {
+      margin: 0; padding: 0;
+      background: radial-gradient(1200px 600px at 20% 10%, #14141b 0%, var(--bg-dark) 50%, var(--bg-darker) 100%);
+      color: var(--text);
+      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, "Helvetica Neue", Arial;
+      scroll-behavior: smooth;
+    }
+
+    /* Header / hero */
+    header {
+      position: relative;
+      height: 55vh;
+      min-height: 420px;
+      max-height: 700px;
+      overflow: hidden;
+      border-bottom: 1px solid var(--border);
+    }
+    #hero3d { position: absolute; inset: 0; }
+    .hero-overlay {
+      position: absolute; inset: 0;
+      pointer-events: none;
+      background: linear-gradient(180deg, rgba(10,10,15,0.25) 0%, rgba(10,10,15,0.65) 80%, rgba(10,10,15,0.9) 100%);
+    }
+    .hero-content {
+      position: absolute; left: 5vw; bottom: 8vh;
+      max-width: 680px; pointer-events: auto;
+    }
+    .brand {
+      display: inline-flex; align-items: center; gap: 10px;
+      padding: 8px 12px; border-radius: 999px;
+      background: rgba(255,255,255,0.06);
+      backdrop-filter: blur(4px);
+      border: 1px solid rgba(255,255,255,0.08);
+      font-weight: 600; letter-spacing: 0.4px;
+    }
+    .brand-dot {
+      width: 10px; height: 10px; border-radius: 50%;
+      background: conic-gradient(from 220deg, var(--primary), var(--secondary), var(--accent), var(--primary));
+      box-shadow: 0 0 8px rgba(255, 120, 70, 0.7);
+      animation: pulse 3s infinite ease-in-out;
+    }
+    @keyframes pulse {
+      0%, 100% { transform: scale(1); filter: drop-shadow(0 0 0px rgba(255,111,61,0.6)); }
+      50% { transform: scale(1.2); filter: drop-shadow(0 0 12px rgba(255,111,61,0.9)); }
+    }
+    h1 {
+      font-size: clamp(32px, 6vw, 56px);
+      margin: 18px 0 8px; line-height: 1.05;
+      background: linear-gradient(90deg, #fff, #ffd8c1 50%, #fff);
+      -webkit-background-clip: text; background-clip: text; color: transparent;
+      text-shadow: 0 1px 10px rgba(255,255,255,0.06);
+    }
+    .subtitle {
+      font-size: clamp(14px, 2.2vw, 18px);
+      color: var(--muted);
+      max-width: 56ch;
+    }
+    .cta-row { margin-top: 16px; display:flex; gap:12px; flex-wrap: wrap; }
+    .btn {
+      padding: 10px 16px; border-radius: 12px; border: 1px solid var(--border);
+      display:inline-flex; align-items:center; gap:10px; cursor:pointer;
+      background: linear-gradient(180deg, #1b1b24 0%, #12121a 100%);
+      color: var(--text); text-decoration:none; font-weight:600;
+      transition: transform .2s ease, box-shadow .2s ease, border-color .2s ease;
+    }
+    .btn:hover { transform: translateY(-2px); border-color: #2d2d3a; box-shadow: 0 8px 22px rgba(0,0,0,0.45); }
+    .btn-primary { background: linear-gradient(180deg, var(--primary), #ff4f2f); border-color: #ff7b59; color:#0d0d12; }
+    .btn-outline { background: transparent; border-color: #2d2d3a; }
+    .tag {
+      font-size: 12px; color: #0d0d12; background: #ffd166; border-radius: 999px; padding: 6px 10px; font-weight: 700;
+    }
+
+    /* Cart icon with sprinkle effect */
+    .cart-icon {
+      position: absolute; top: 16px; right: 20px; cursor: pointer;
+      width: 42px; height: 42px; border-radius: 50%;
+      display:flex; align-items:center; justify-content:center;
+      background: linear-gradient(180deg, #232534, #191a25);
+      border: 1px solid var(--border);
+      box-shadow: 0 6px 18px rgba(0,0,0,0.35);
+      user-select: none;
+    }
+    .cart-count {
+      position: absolute; top: -6px; right: -6px;
+      background: var(--primary); color: #0d0d12;
+      font-weight: 800; font-size: 12px; border-radius: 999px;
+      padding: 4px 8px; border: 1px solid #ff9b78;
+      min-width: 24px; text-align: center;
+    }
+    .sprinkle {
+      position: absolute; width: 6px; height: 6px; border-radius: 50%;
+      background: var(--secondary);
+      animation: sprinkle 0.8s forwards ease-out;
+    }
+    @keyframes sprinkle {
+      0% { transform: scale(1) translate(0,0); opacity: 1; }
+      100% { transform: scale(0.5) translate(var(--x), var(--y)); opacity: 0; }
+    }
+
+    main { padding: 28px 6vw 64px; }
+
+    /* Products */
+    .section-title {
+      display:flex; align-items:center; justify-content:space-between; gap:12px;
+      margin: 12px 0 18px;
+    }
+    .section-title h2 {
+      font-size: clamp(22px, 3.2vw, 28px);
+      margin: 0; letter-spacing: 0.4px;
+    }
+    /* 2x2 layout, collapses to 1 column on small screens */
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 14px;
+    }
+    @media (max-width: 560px) { .grid { grid-template-columns: 1fr; } }
+
+    .card {
+      position: relative;
+      background: linear-gradient(180deg, #191922, #13131a);
+      border: 1px solid var(--border);
+      border-radius: 18px; overflow: hidden;
+      box-shadow: 0 10px 28px rgba(0,0,0,0.35);
+      transition: transform .25s ease, box-shadow .25s ease, border-color .25s ease;
+    }
+    .card:hover { transform: translateY(-4px); box-shadow: 0 18px 36px rgba(0,0,0,0.45); border-color: #2d2d3a; }
+    .card-media {
+      height: 170px; background: radial-gradient(400px 140px at 50% 10%, rgba(255,255,255,0.08), rgba(0,0,0,0));
+      display:flex; align-items:center; justify-content:center; position:relative;
+    }
+    .art {
+      width: 120px; height: 120px; border-radius: 50%;
+      background: conic-gradient(from 320deg, var(--primary), var(--secondary), var(--accent), var(--primary));
+      filter: brightness(1.05) saturate(1.1);
+      box-shadow: 0 16px 40px rgba(255, 120, 70, 0.35);
+      transform: translateY(6px) rotate(8deg);
+    }
+    .card-body { padding: 14px 14px 16px; }
+    .title { font-weight: 700; letter-spacing: 0.3px; }
+    .category { font-size: 12px; color: var(--accent); margin-top: 4px; }
+    .desc { color: var(--muted); font-size: 14px; margin: 6px 0 10px; min-height: 38px; }
+    .meta { display:flex; align-items:center; justify-content:space-between; margin-top: 6px; }
+    .price { font-weight: 800; font-size: 18px; letter-spacing: 0.4px; }
+    .add { padding: 8px 12px; border-radius: 12px; border: 1px solid #333649; background: #232534; color: var(--text); font-weight: 700; cursor:pointer; }
+    .add:hover { background: #2b2e42; }
+
+    /* Cart drawer */
+    .cart-panel {
+      position: fixed; top: 0; right: 0; width: min(92vw, 360px); height: 100vh;
+      background: linear-gradient(180deg, #171722, #121219);
+      border-left: 1px solid var(--border);
+      box-shadow: -12px 0 30px rgba(0,0,0,0.45);
+      z-index: 1000; transform: translateX(100%); transition: transform .3s ease;
+      display:flex; flex-direction: column;
+    }
+    .cart-panel.open { transform: translateX(0%); }
+    .cart-header {
+      display:flex; align-items:center; justify-content:space-between; padding: 14px 16px; border-bottom: 1px solid var(--border);
+    }
+    .cart-items { padding: 12px; display:grid; gap:8px; flex:1; overflow:auto; }
+    .cart-row {
+      display:grid; grid-template-columns: 1fr auto auto; gap: 10px; align-items:center;
+      background: #1a1a23; border: 1px solid #252539; border-radius: 12px; padding: 10px;
+    }
+    @media (max-width: 520px) {
+      .cart-row { grid-template-columns: 1fr; gap: 6px; }
+    }
+    .qty-btn { padding: 8px 12px; border-radius: 10px; background:#23253a; border:1px solid #333649; color:#fff; cursor:pointer; }
+    .remove { color: var(--danger); cursor: pointer; font-weight:700; }
+    .cart-footer {
+      display:flex; align-items:center; justify-content:space-between; gap:12px;
+      padding: 14px 16px; border-top: 1px solid var(--border);
+      flex-wrap: wrap;
+    }
+    .total { font-size: 18px; font-weight:800; letter-spacing: 0.4px; }
+    .btn-whatsapp {
+      background: linear-gradient(180deg, #25D366, #1ebc58);
+      color: #08130d; border-color: #32e276;
+      padding: 10px 16px; border-radius: 12px; border: 1px solid #2a2a3a; font-weight: 700; cursor: pointer;
+    }
+
+    /* Admin */
+    .admin-panel {
+      margin-top: 36px; background: linear-gradient(180deg, #151520, #101018);
+      border: 1px solid var(--border); border-radius: 18px; overflow:hidden;
+    }
+    .admin-header { padding: 14px 16px; border-bottom: 1px solid var(--border); display:flex; justify-content:space-between; align-items:center; }
+    .admin-body { padding: 14px; display:grid; gap: 14px; }
+    .admin-grid {
+      display:grid; grid-template-columns: repeat(2, 1fr); gap: 12px;
+    }
+    @media (min-width: 960px) { .admin-grid { grid-template-columns: repeat(4, 1fr); } }
+    @media (max-width: 600px) { .admin-grid { grid-template-columns: 1fr; } }
+
+    .admin-card {
+      background:#191a25; border:1px solid #2a2a3a; border-radius:14px; padding:12px;
+      display:grid; gap:10px;
+    }
+    .admin-row { display:flex; justify-content:space-between; align-items:center; gap:10px; flex-wrap:wrap; }
+    .admin-total { padding: 12px; border-top: 1px solid var(--border); display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:12px; }
+    .login-box {
+      padding: 14px; display:grid; gap: 10px;
+    }
+    .input {
+      width: 100%; padding: 12px 14px; border-radius: 12px; border:1px solid #2a2a3a;
+      background:#14141c; color:#fff; outline:none;
+    }
+    .qr-box {
+      display:flex; align-items:center; gap:14px; flex-wrap:wrap;
+    }
+    .qr-image {
+      width: 220px; height: 220px; border-radius: 12px; border:1px solid #2a2a3a; background:#0f0f15;
+      object-fit: cover;
+    }
+    .upi-link {
+      display:inline-flex; align-items:center; gap:8px; color: var(--accent); text-decoration: none; font-weight:700; word-break: break-all;
+    }
+
+    footer {
+      padding: 22px 6vw; color: var(--muted);
+      border-top: 1px solid var(--border);
+      display:flex; justify-content:space-between; flex-wrap: wrap; gap:10px;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <canvas id="hero3d"></canvas>
+    <div class="hero-overlay"></div>
+    <div class="hero-content">
+      <div class="brand">
+        <span class="brand-dot"></span>
+        MS Cafe
+        <span class="tag">Indore · Since 2025</span>
+      </div>
+      <h1>Aesthetic, creative, and rich in color — a 3D cafe experience.</h1>
+      <p class="subtitle">Explore our signature drinks and bites. Add to cart and order via WhatsApp. Admins can generate UPI QR for instant payment.</p>
+      <div class="cta-row">
+        <a href="#menu" class="btn btn-primary">Explore menu</a>
+        <a href="#admin" class="btn btn-outline">Admin panel</a>
+      </div>
+    </div>
+    <!-- Cart icon -->
+    <div class="cart-icon" id="cartIcon" title="Open cart">
+      🛒
+      <div class="cart-count" id="cartCount">0</div>
+    </div>
+  </header>
+
+  <main>
+    <section id="menu">
+      <div class="section-title">
+        <h2>Our products</h2>
+        <div class="brand"><span class="brand-dot"></span> Freshly roasted · Hand crafted</div>
+      </div>
+      <div class="grid" id="productGrid"></div>
+    </section>
+
+    <section id="admin" class="admin-panel">
+      <div class="admin-header">
+        <strong>Admin panel</strong>
+        <span id="adminStatus" class="tag">Locked</span>
+      </div>
+
+      <div class="admin-body" id="adminBody">
+        <div class="login-box" id="loginBox">
+          <div style="display:grid; gap:8px;">
+            <label>User ID</label>
+            <input class="input" id="adminUser" placeholder="Enter user ID" />
+          </div>
+          <div style="display:grid; gap:8px;">
+            <label>Password</label>
+            <input class="input" id="adminPass" placeholder="Enter password" type="password" />
+          </div>
+          <button class="btn btn-primary" id="adminLoginBtn">Login</button>
+          <small style="color:var(--muted)">Hint: user “mscafe”, password “atul”</small>
+        </div>
+
+        <div id="adminContent" style="display:none;">
+          <div class="section-title">
+            <h2>Select products to bill</h2>
+            <div class="brand"><span class="brand-dot"></span> UPI: atultiwari997721-1@oksbi</div>
+          </div>
+
+          <div class="admin-grid" id="adminGrid"></div>
+
+          <div class="admin-total">
+            <div class="total">Bill total: ₹<span id="adminTotal">0</span></div>
+            <div class="qr-box">
+              <div id="qrContainer">
+                <div id="qrImage" class="qr-image" aria-label="UPI QR"></div>
+              </div>
+              <div>
+                <div style="margin-bottom:8px; font-weight:700;">UPI payment link</div>
+                <a class="upi-link" id="upiLink" target="_blank" rel="noopener">Open payment link</a>
+                <div style="color:var(--muted); margin-top:6px; max-width: 420px;">
+                  Scan the QR or use the link to pay the exact bill total. If no products are selected, a default QR for the same UPI ID is shown.
+                </div>
+              </div>
+            </div>
+            <button class="btn" id="resetAdmin">Reset selection</button>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- Cart drawer -->
+  <div class="cart-panel" id="cartPanel" aria-hidden="true">
+    <div class="cart-header">
+      <strong>Cart</strong>
+      <button class="btn" id="closeCartBtn">Close</button>
+    </div>
+    <div class="cart-items" id="cartItems"></div>
+    <div class="cart-footer">
+      <div class="total">Total: ₹<span id="cartTotal">0</span></div>
+      <button class="btn-whatsapp" id="whatsAppBtn">Order on WhatsApp</button>
+    </div>
+  </div>
+
+  <footer>
+    <div>© 2025 MS Cafe · Crafted in Indore</div>
+    <div>Made for mobile. Best viewed on modern browsers.</div>
+  </footer>
+
+  <script>
+    // --------- Config ----------
+    const ADMIN_UID = 'mscafe';
+    const ADMIN_PWD = 'atul';
+    const UPI_ID = 'atultiwari997721-1@oksbi';
+
+    // --------- Products ----------
+    const products = [
+      { id: 'p1', name: 'Signature Cappuccino', price: 149, desc: 'Rich crema, velvety milk, artisanal roast.', category: 'Beverage' },
+      { id: 'p2', name: 'Dark Mocha', price: 179, desc: 'Single-origin cocoa with espresso shot.', category: 'Beverage' },
+      { id: 'p3', name: 'Masala Chai', price: 99, desc: 'Spiced Indian chai, slow-brewed.', category: 'Beverage' },
+      { id: 'p4', name: 'Cold Brew', price: 169, desc: '12-hour brew, smooth and refreshing.', category: 'Beverage' },
+      { id: 'p5', name: 'Paneer Sandwich', price: 129, desc: 'Grilled, herbed paneer with fresh veggies.', category: 'Food' },
+      { id: 'p6', name: 'Veg Wrap', price: 139, desc: 'Whole wheat wrap with tangy fillings.', category: 'Food' },
+      { id: 'p7', name: 'Choco Brownie', price: 119, desc: 'Fudgy center with a crisp top.', category: 'Dessert' },
+      { id: 'p8', name: 'Blueberry Muffin', price: 109, desc: 'Buttery, soft, and berry-studded.', category: 'Dessert' },
+    ];
+
+    // Render product cards
+    const grid = document.getElementById('productGrid');
+    products.forEach(p => {
+      const card = document.createElement('div');
+      card.className = 'card';
+      card.innerHTML = `
+        <div class="card-media">
+          <div class="art" aria-hidden="true"></div>
+        </div>
+        <div class="card-body">
+          <div class="title">${p.name}</div>
+          <div class="category">${p.category}</div>
+          <div class="desc">${p.desc}</div>
+          <div class="meta">
+            <div class="price">₹${p.price}</div>
+            <button class="add" data-id="${p.id}">Add to cart</button>
+          </div>
+        </div>
+      `;
+      grid.appendChild(card);
+    });
+
+    // --------- Cart logic ----------
+    const cart = new Map(); // id -> { product, qty }
+    const cartIcon = document.getElementById('cartIcon');
+    const cartCount = document.getElementById('cartCount');
+    const cartPanel = document.getElementById('cartPanel');
+    const cartItems = document.getElementById('cartItems');
+    const cartTotalEl = document.getElementById('cartTotal');
+    const closeCartBtn = document.getElementById('closeCartBtn');
+    const whatsAppBtn = document.getElementById('whatsAppBtn');
+
+    function openCart() {
+      cartPanel.classList.add('open');
+      cartPanel.setAttribute('aria-hidden', 'false');
+    }
+    function closeCart() {
+      cartPanel.classList.remove('open');
+      cartPanel.setAttribute('aria-hidden', 'true');
+    }
+
+    function updateCartUI() {
+      cartItems.innerHTML = '';
+      let total = 0; let items = 0;
+      cart.forEach(({ product, qty }) => {
+        const row = document.createElement('div');
+        row.className = 'cart-row';
+        const subtotal = product.price * qty;
+        total += subtotal;
+        items += qty;
+        row.innerHTML = `
+          <div>
+            <strong>${product.name}</strong>
+            <div style="color:var(--muted); font-size:12px;">₹${product.price} × ${qty} = ₹${subtotal}</div>
+          </div>
+          <div style="justify-self:center;">
+            <button class="qty-btn" data-act="dec" data-id="${product.id}">−</button>
+            <button class="qty-btn" data-act="inc" data-id="${product.id}">+</button>
+          </div>
+          <div class="remove" data-act="rem" data-id="${product.id}">Remove</div>
+        `;
+        cartItems.appendChild(row);
+      });
+      cartTotalEl.textContent = total;
+      cartCount.textContent = items;
+    }
+
+    function addToCart(id) {
+      const product = products.find(p => p.id === id);
+      if (!product) return;
+      const current = cart.get(id);
+      if (current) current.qty += 1;
+      else cart.set(id, { product, qty: 1 });
+      updateCartUI();
+      sprinkleEffect();
+    }
+
+    grid.addEventListener('click', (e) => {
+      if (e.target.matches('.add')) {
+        addToCart(e.target.dataset.id);
+        // Optional: auto open cart on small screens
+        if (window.innerWidth < 560) openCart();
+      }
+    });
+
+    cartItems.addEventListener('click', (e) => {
+      const id = e.target.dataset.id;
+      const act = e.target.dataset.act;
+      if (!id || !act) return;
+      const entry = cart.get(id);
+      if (!entry) return;
+      if (act === 'inc') entry.qty += 1;
+      if (act === 'dec') entry.qty = Math.max(1, entry.qty - 1);
+      if (act === 'rem') cart.delete(id);
+      updateCartUI();
+    });
+
+    cartIcon.addEventListener('click', openCart);
+    closeCartBtn.addEventListener('click', closeCart);
+
+    // WhatsApp ordering (prefilled message)
+    whatsAppBtn.addEventListener('click', () => {
+      const lines = [];
+      lines.push('*MS Cafe Order*');
+      lines.push('---------------------------');
+      let total = 0;
+      cart.forEach(({ product, qty }) => {
+        const subtotal = product.price * qty;
+        total += subtotal;
+        lines.push(`${product.name} — ₹${product.price} × ${qty} = ₹${subtotal}`);
+      });
+      lines.push('---------------------------');
+      lines.push(`Total: ₹${total}`);
+      lines.push('Payment method: UPI available.');
+      const msg = encodeURIComponent(lines.join('\n'));
+      const wa = `https://wa.me/?text=${msg}`; // To target a specific number: https://wa.me/91XXXXXXXXXX?text=${msg}
+      window.open(wa, '_blank');
+    });
+
+    // Sprinkle animation from cart icon
+    function sprinkleEffect(){
+      for(let i=0;i<10;i++){
+        const s=document.createElement('div');
+        s.className='sprinkle';
+        const angle = Math.random() * Math.PI * 2;
+        const radius = 60 + Math.random()*30;
+        const x = Math.cos(angle) * radius;
+        const y = Math.sin(angle) * radius;
+        s.style.setProperty('--x', `${x}px`);
+        s.style.setProperty('--y', `${y}px`);
+        s.style.background = i % 3 === 0 ? 'var(--primary)' : (i % 3 === 1 ? 'var(--secondary)' : 'var(--accent)');
+        cartIcon.appendChild(s);
+        setTimeout(()=>s.remove(), 900);
+      }
+    }
+
+    // --------- Admin login & billing ----------
+    const adminLoginBtn = document.getElementById('adminLoginBtn');
+    const adminUser = document.getElementById('adminUser');
+    const adminPass = document.getElementById('adminPass');
+    const adminStatus = document.getElementById('adminStatus');
+    const loginBox = document.getElementById('loginBox');
+    const adminContent = document.getElementById('adminContent');
+    const adminGrid = document.getElementById('adminGrid');
+    const adminTotalEl = document.getElementById('adminTotal');
+    const qrImageDiv = document.getElementById('qrImage');
+    const upiLinkEl = document.getElementById('upiLink');
+    const resetAdminBtn = document.getElementById('resetAdmin');
+
+    let adminSelection = new Map(); // id -> qty
+
+    adminLoginBtn.addEventListener('click', () => {
+      const u = adminUser.value.trim();
+      const p = adminPass.value.trim();
+      if (u === ADMIN_UID && p === ADMIN_PWD) {
+        adminStatus.textContent = 'Unlocked';
+        adminStatus.style.background = 'linear-gradient(180deg, #20c997, #149e79)';
+        loginBox.style.display = 'none';
+        adminContent.style.display = 'block';
+        renderAdminGrid();
+        renderAdminTotals();
+      } else {
+        adminStatus.textContent = 'Invalid credentials';
+        adminStatus.style.background = 'linear-gradient(180deg, #ff4d6d, #e5385d)';
+      }
+    });
+
+    function renderAdminGrid() {
+      adminGrid.innerHTML = '';
+      products.forEach(p => {
+        const qty = adminSelection.get(p.id) || 0;
+        const card = document.createElement('div');
+        card.className = 'admin-card';
+        card.innerHTML = `
+          <div class="admin-row">
+            <strong>${p.name} <span style="color:var(--accent); font-weight:600;">(${p.category})</span></strong>
+            <span>₹${p.price}</span>
+          </div>
+          <div style="color:var(--muted)">${p.desc}</div>
+          <div class="admin-row">
+            <div>Qty: <strong>${qty}</strong></div>
+            <div style="display:flex; gap:8px; flex-wrap:wrap;">
+              <button class="qty-btn" data-act="dec" data-id="${p.id}">−</button>
+              <button class="qty-btn" data-act="inc" data-id="${p.id}">+</button>
+              <button class="qty-btn" data-act="clr" data-id="${p.id}">Clear</button>
+            </div>
+          </div>
+        `;
+        adminGrid.appendChild(card);
+      });
+    }
+
+    adminGrid.addEventListener('click', (e) => {
+      const id = e.target.dataset.id;
+      const act = e.target.dataset.act;
+      if (!id || !act) return;
+      const qty = adminSelection.get(id) || 0;
+      if (act === 'inc') adminSelection.set(id, qty + 1);
+      if (act === 'dec') adminSelection.set(id, Math.max(0, qty - 1));
+      if (act === 'clr') adminSelection.delete(id);
+      renderAdminGrid();
+      renderAdminTotals();
+    });
+
+    resetAdminBtn.addEventListener('click', () => {
+      adminSelection = new Map();
+      renderAdminGrid();
+      renderAdminTotals();
+    });
+
+    function calculateAdminTotal() {
+      let total = 0;
+      adminSelection.forEach((qty, id) => {
+        const p = products.find(x => x.id === id);
+        if (p) total += p.price * qty;
+      });
+      return total;
+    }
+
+    // Create UPI Intent URL (default when amount <= 0)
+    function createUpiIntentUrl(upiId, name, amount){
+      const payeeVPA = encodeURIComponent(upiId);
+      const payeeName = encodeURIComponent(name);
+      let url = `upi://pay?pa=${payeeVPA}&pn=${payeeName}&cu=INR`;
+      if (amount > 0) {
+        url += `&am=${encodeURIComponent(amount.toFixed(2))}`;
+      }
+      return url;
+    }
+
+    // Generate QR using qrcode.js (reliable, no external API)
+    function renderQr(upiUrl){
+      qrImageDiv.innerHTML = ''; // clear previous
+      new QRCode(qrImageDiv, {
+        text: upiUrl,
+        width: 220,
+        height: 220,
+        colorDark: "#000000",
+        colorLight: "#ffffff",
+        correctLevel: QRCode.CorrectLevel.M
+      });
+    }
+
+    function renderAdminTotals() {
+      const total = calculateAdminTotal();
+      adminTotalEl.textContent = total;
+      const upi = createUpiIntentUrl(UPI_ID, 'MS Cafe', total);
+      renderQr(upi);
+      upiLinkEl.textContent = upi;
+      upiLinkEl.href = upi;
+    }
+
+    // --------- Three.js 3D hero ----------
+    const canvas = document.getElementById('hero3d');
+    const scene = new THREE.Scene();
+    scene.background = null;
+
+    const camera = new THREE.PerspectiveCamera(60, canvas.clientWidth / canvas.clientHeight, 0.1, 100);
+    camera.position.set(0, 1.2, 4);
+
+    const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true });
+    function resizeRenderer() {
+      const w = canvas.parentElement.clientWidth;
+      const h = canvas.parentElement.clientHeight;
+      renderer.setSize(w, h, false);
+      camera.aspect = w / h;
+      camera.updateProjectionMatrix();
+    }
+    const controls = new THREE.OrbitControls(camera, canvas);
+    controls.enablePan = false;
+    controls.enableZoom = false;
+    controls.autoRotate = true;
+    controls.autoRotateSpeed = 1.0;
+
+    const hemi = new THREE.HemisphereLight(0xffffff, 0x333344, 1.0);
+    scene.add(hemi);
+    const dir = new THREE.DirectionalLight(0xfff1e0, 1.0);
+    dir.position.set(2, 3, 2);
+    scene.add(dir);
+
+    // Floor disc
+    const floorGeom = new THREE.CircleGeometry(4.5, 64);
+    const floorMat = new THREE.MeshStandardMaterial({
+      color: 0x151520, roughness: 0.9, metalness: 0.1
+    });
+    const floor = new THREE.Mesh(floorGeom, floorMat);
+    floor.rotation.x = -Math.PI / 2;
+    floor.position.y = -1.2;
+    scene.add(floor);
+
+    // Stylized cup
+    const cupGeom = new THREE.CylinderGeometry(0.8, 1.0, 1.4, 64, 1, true);
+    const cupMat = new THREE.MeshPhysicalMaterial({
+      color: 0x4b3c37, roughness: 0.35, metalness: 0.2, clearcoat: 0.8, clearcoatRoughness: 0.25
+    });
+    const cup = new THREE.Mesh(cupGeom, cupMat);
+    cup.position.y = 0.2;
+    scene.add(cup);
+
+    // Rim
+    const rimGeom = new THREE.TorusGeometry(0.85, 0.06, 24, 100);
+    const rimMat = new THREE.MeshStandardMaterial({ color: 0xff6f3d, metalness: 0.6, roughness: 0.35 });
+    const rim = new THREE.Mesh(rimGeom, rimMat);
+    rim.rotation.x = Math.PI / 2;
+    rim.position.y = 0.92;
+    scene.add(rim);
+
+    // Saucer
+    const saucerGeom = new THREE.TorusGeometry(1.25, 0.22, 32, 80);
+    const saucerMat = new THREE.MeshStandardMaterial({ color: 0x232534, roughness: 0.85, metalness: 0.1 });
+    const saucer = new THREE.Mesh(saucerGeom, saucerMat);
+    saucer.rotation.x = Math.PI / 2;
+    saucer.position.y = -0.4;
+    scene.add(saucer);
+
+    // Steam particles
+    const steamGeom = new THREE.BufferGeometry();
+    const count = 120;
+    const positions = new Float32Array(count * 3);
+    for (let i = 0; i < count; i++) {
+      positions[i * 3] = (Math.random() - 0.5) * 0.3;
+      positions[i * 3 + 1] = 0.9 + Math.random() * 0.5;
+      positions[i * 3 + 2] = (Math.random() - 0.5) * 0.3;
+    }
+    steamGeom.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+    const steamMat = new THREE.PointsMaterial({ color: 0xffffff, size: 0.02, transparent: true, opacity: 0.9 });
+    const steam = new THREE.Points(steamGeom, steamMat);
+    scene.add(steam);
+
+    function animate() {
+      requestAnimationFrame(animate);
+      controls.update();
+      cup.rotation.y += 0.002;
+      rim.rotation.y += 0.002;
+      saucer.rotation.z += 0.001;
+
+      const pos = steam.geometry.attributes.position.array;
+      for (let i = 0; i < count; i++) {
+        let y = pos[i * 3 + 1];
+        y += 0.005 + Math.random() * 0.003;
+        if (y > 2.0) y = 0.9 + Math.random() * 0.3;
+        pos[i * 3 + 1] = y;
+        pos[i * 3] += (Math.random() - 0.5) * 0.002;
+        pos[i * 3 + 2] += (Math.random() - 0.5) * 0.002;
+      }
+      steam.geometry.attributes.position.needsUpdate = true;
+
+      resizeRenderer();
+      renderer.render(scene, camera);
+    }
+    animate();
+
+    window.addEventListener('resize', resizeRenderer);
+    resizeRenderer();
+
+    // --------- Persist cart in session ----------
+    window.addEventListener('beforeunload', () => {
+      const dump = [];
+      cart.forEach(({ product, qty }) => dump.push({ id: product.id, qty }));
+      sessionStorage.setItem('mscafe-cart', JSON.stringify(dump));
+    });
+    (function restoreCart(){
+      const raw = sessionStorage.getItem('mscafe-cart');
+      if (!raw) return;
+      try {
+        const arr = JSON.parse(raw);
+        arr.forEach(({ id, qty }) => {
+          const p = products.find(x => x.id === id);
+          if (p) cart.set(id, { product: p, qty: Math.max(1, qty|0) });
+        });
+        updateCartUI();
+      } catch {}
+    })();
+  </script>
+</body>
+</html>
